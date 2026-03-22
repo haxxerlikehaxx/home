@@ -77,28 +77,31 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .lights-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px;margin-bottom:12px;}
 .light-card{
   padding:16px 14px 14px;cursor:pointer;border-radius:var(--r-xl);
-  transition:transform .18s cubic-bezier(.34,1.56,.64,1);
+  transition:transform .18s cubic-bezier(.34,1.56,.64,1), background .22s, border-color .22s;
   user-select:none;
-  height:140px; /* fixed — never changes */
+  height:130px; /* strictly fixed — never changes size */
   display:flex;flex-direction:column;justify-content:space-between;
+  overflow:hidden; /* belt-and-suspenders: prevent any child from stretching */
 }
 .light-card:active{transform:scale(.93);}
 .light-card.off{background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.07);}
-.light-card.on{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);}
+.light-card.on{background:rgba(255,255,255,0.065);border-color:rgba(255,255,255,0.13);}
 .light-card.loading-state{opacity:.5;pointer-events:none;}
 
 /* Top row: name + toggle */
 .lc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
 .lc-name{font-size:14px;font-weight:700;color:var(--t1);letter-spacing:-.2px;line-height:1.2;}
 
-/* Bottom row: status + brightness */
+/* Bottom row: status + brightness — always present */
 .lc-bottom{display:flex;flex-direction:column;gap:6px;}
-.lc-status{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);}
+.lc-status{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);transition:color .22s;}
 .light-card.on .lc-status{color:var(--t2);}
 .lc-slider-row{display:flex;align-items:center;gap:6px;}
-.lc-slider{flex:1;height:3px;border-radius:2px;outline:none;border:none;-webkit-appearance:none;cursor:pointer;background:rgba(255,255,255,0.15);}
+.lc-slider{flex:1;height:3px;border-radius:2px;outline:none;border:none;-webkit-appearance:none;cursor:pointer;background:rgba(255,255,255,0.12);transition:opacity .22s;}
+.light-card.off .lc-slider{opacity:.35;pointer-events:none;}
 .lc-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:white;box-shadow:0 1px 5px rgba(0,0,0,0.5);}
-.lc-pct{font-size:10px;color:var(--t3);min-width:28px;text-align:right;font-weight:700;}
+.lc-pct{font-size:10px;color:var(--t3);min-width:28px;text-align:right;font-weight:700;transition:opacity .22s;}
+.light-card.off .lc-pct{opacity:.35;}
 
 /* Toggle */
 .sw{position:relative;width:46px;height:26px;border-radius:13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12);cursor:pointer;transition:background .22s,border-color .22s;flex-shrink:0;}
@@ -189,7 +192,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   <!-- Calendar -->
   <div class="g cal-card" style="animation:fadeUp .4s ease both .08s">
     <div class="cal-header">
-      <div class="cal-title">Today</div>
+      <div class="cal-title">Upcoming</div>
       <div class="cal-date" id="cal-date">—</div>
     </div>
     <div id="cal-events"></div>
@@ -271,8 +274,8 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 const CFG_KEY='tuya_home_config';
 let CFG={worker:'',devices:[{id:'bf8b0e945d8c5f9861fjzy',name:'Led Lights Tak',icon:'ceiling'},{id:'bf1cf6aca13749cf898g3p',name:'Led Lights Skrivbord',icon:'desk'}]};
 try{const s=localStorage.getItem(CFG_KEY);if(s)CFG=JSON.parse(s);}catch(e){}
-function saveConfig(){const w=document.getElementById('cfg-worker').value.trim();const n0=document.getElementById('cfg-name0').value.trim();const d0=document.getElementById('cfg-dev0').value.trim();const n1=document.getElementById('cfg-name1').value.trim();const d1=document.getElementById('cfg-dev1').value.trim();if(!w){showToast('Enter your Worker URL','error');return;}if(!d0||!d1){showToast('Enter both Device IDs','error');return;}CFG.worker=w;if(n0)CFG.devices[0].name=n0;if(d0)CFG.devices[0].id=d0;if(n1)CFG.devices[1].name=n1;if(d1)CFG.devices[1].id=d1;try{localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){}closePanel(document.getElementById('config-panel'));showToast('Saved — connecting…');setTimeout(()=>syncAllLights(),400);}
-function loadConfigIntoPanel(){document.getElementById('cfg-worker').value=CFG.worker||'';document.getElementById('cfg-name0').value=CFG.devices[0].name||'';document.getElementById('cfg-dev0').value=CFG.devices[0].id||'';document.getElementById('cfg-name1').value=CFG.devices[1].name||'';document.getElementById('cfg-dev1').value=CFG.devices[1].id||'';}
+function saveConfig(){const w=document.getElementById('cfg-worker').value.trim();const n0=document.getElementById('cfg-name0').value.trim();const d0=document.getElementById('cfg-dev0').value.trim();const n1=document.getElementById('cfg-name1').value.trim();const d1=document.getElementById('cfg-dev1').value.trim();const ics=document.getElementById('cfg-ics').value.trim();if(!w){showToast('Enter your Worker URL','error');return;}if(!d0||!d1){showToast('Enter both Device IDs','error');return;}CFG.worker=w;if(n0)CFG.devices[0].name=n0;if(d0)CFG.devices[0].id=d0;if(n1)CFG.devices[1].name=n1;if(d1)CFG.devices[1].id=d1;if(ics)saveIcsUrl(ics);try{localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){}closePanel(document.getElementById('config-panel'));showToast('Saved — connecting…');setTimeout(()=>{syncAllLights();fetchAndRenderCalendar();},400);}
+function loadConfigIntoPanel(){document.getElementById('cfg-worker').value=CFG.worker||'';document.getElementById('cfg-name0').value=CFG.devices[0].name||'';document.getElementById('cfg-dev0').value=CFG.devices[0].id||'';document.getElementById('cfg-name1').value=CFG.devices[1].name||'';document.getElementById('cfg-dev1').value=CFG.devices[1].id||'';document.getElementById('cfg-ics').value=getIcsUrl();}
 
 /* ── Lights ── */
 const LIGHTS=[{idx:0,on:false,bright:100},{idx:1,on:false,bright:100}];
@@ -331,15 +334,16 @@ const CAL_COLORS=['rgba(100,170,220,0.9)','rgba(130,200,150,0.9)','rgba(210,155,
 const CAL_KEY='home_ics_url';
 let calPollTimer=null;
 
-function getIcsUrl(){return localStorage.getItem(CAL_KEY)||'';}
-function saveIcsUrl(url){localStorage.setItem(CAL_KEY,url);}
+const PRESET_ICS='https://im2-api.infomentor.se/V1/CalendarV2/IcalSubscription/Subscription/b6c2f3af-6a60-47d4-8575-fabfb5c2b9d9';
+function getIcsUrl(){return(localStorage.getItem(CAL_KEY)||PRESET_ICS).replace(/^webcal:\/\//,'https://');}
+function saveIcsUrl(url){localStorage.setItem(CAL_KEY,(url||PRESET_ICS).replace(/^webcal:\/\//,'https://'));}
 
 /* Parse an .ics text string → array of today's events sorted by start time */
-function parseICS(text){
+function parseICS(text, windowDays=14){
   const events=[];
   const blocks=text.split('BEGIN:VEVENT');
-  const today=new Date();today.setHours(0,0,0,0);
-  const tomorrow=new Date(today);tomorrow.setDate(today.getDate()+1);
+  const now=new Date();
+  const cutoff=new Date(now.getFullYear(),now.getMonth(),now.getDate()+windowDays);
 
   for(let i=1;i<blocks.length;i++){
     const b=blocks[i];
@@ -351,31 +355,26 @@ function parseICS(text){
     const location=get('LOCATION')||'';
     const dtstart=get('DTSTART');
     const dtend=get('DTEND');
-
     if(!dtstart)continue;
 
-    /* Parse YYYYMMDDTHHMMSS or YYYYMMDD */
     function parseICSDate(s){
       s=s.replace(/Z$/,'');
-      if(s.length===8){
-        // all-day: YYYYMMDD
-        return new Date(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8));
-      }
-      // datetime: YYYYMMDDTHHmmSS
+      if(s.length===8) return new Date(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8));
       return new Date(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8),+s.slice(9,11),+s.slice(11,13),+s.slice(13,15));
     }
 
     let start,end,allDay=false;
     try{
-      if(dtstart.length===8){allDay=true;}
-      start=parseICSDate(dtstart);
-      end=dtend?parseICSDate(dtend):new Date(start.getTime()+3600000);
+      allDay=dtstart.length===8||dtstart.includes('VALUE=DATE');
+      start=parseICSDate(dtstart.replace('VALUE=DATE:',''));
+      end=dtend?parseICSDate(dtend.replace('VALUE=DATE:','').replace(/Z$/,'')):new Date(start.getTime()+3600000);
     }catch(e){continue;}
 
-    // Only include events that are today
-    if(start>=today && start<tomorrow){
+    // Include if in the future (or started within last hour) and within window
+    const relevantStart=allDay?start:new Date(start.getTime()-3600000);
+    if(relevantStart>now && start<cutoff){
       const fmt=(d)=>allDay?'All day':`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-      const duration=allDay?'':(()=>{const m=Math.round((end-start)/60000);if(m<60)return`${m} min`;const h=Math.floor(m/60),rm=m%60;return rm?`${h}h ${rm}m`:`${h}h`;})();
+      const duration=allDay?'':(()=>{const m=Math.round((end-start)/60000);if(m<60)return`${m}m`;const h=Math.floor(m/60),rm=m%60;return rm?`${h}h ${rm}m`:`${h}h`;})();
       events.push({start,timeStr:fmt(start),name:summary,sub:[location,duration].filter(Boolean).join(' · '),allDay});
     }
   }
@@ -395,28 +394,59 @@ async function fetchAndRenderCalendar(){
   el.innerHTML=`<div class="cal-empty" style="opacity:.5">Loading…</div>`;
 
   try{
-    // Use a CORS proxy since iCloud .ics needs it from a web page
-    const proxyUrl=`https://corsproxy.io/?${encodeURIComponent(url)}`;
-    const res=await fetch(proxyUrl,{cache:'no-store'});
-    if(!res.ok)throw new Error('fetch failed');
-    const text=await res.text();
+    const icsUrl=url.replace(/^webcal:\/\//i,'https://');
+    let text=null;
+
+    // Try allorigins /get (returns JSON wrapper — more reliable than /raw)
+    try{
+      const r=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(icsUrl)}`,{cache:'no-store'});
+      if(r.ok){const j=await r.json();if(j.contents&&j.contents.includes('VCALENDAR'))text=j.contents;}
+    }catch(e){}
+
+    // Fallback: corsproxy.io
+    if(!text){
+      try{
+        const r=await fetch(`https://corsproxy.io/?${encodeURIComponent(icsUrl)}`,{cache:'no-store'});
+        if(r.ok){const t=await r.text();if(t.includes('VCALENDAR'))text=t;}
+      }catch(e){}
+    }
+
+    if(!text)throw new Error('all proxies failed');
     const events=parseICS(text);
 
     const now=new Date();
-    const upcoming=events.filter(e=>e.allDay||(e.start.getTime()+3600000>now.getTime()));
+    const events=parseICS(text);
 
-    if(upcoming.length===0){
-      el.innerHTML=`<div class="cal-empty">Nothing else today 🎉</div>`;
+    if(events.length===0){
+      el.innerHTML=`<div class="cal-empty">Nothing coming up 🎉</div>`;
     }else{
-      el.innerHTML=upcoming.map((e,i)=>`
+      const dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const todayMidnight=new Date(now.getFullYear(),now.getMonth(),now.getDate());
+      const tomorrowMidnight=new Date(todayMidnight.getTime()+86400000);
+
+      function dayLabel(d){
+        const dm=new Date(d.getFullYear(),d.getMonth(),d.getDate());
+        if(dm.getTime()===todayMidnight.getTime()) return'Today';
+        if(dm.getTime()===tomorrowMidnight.getTime()) return'Tomorrow';
+        return`${dayNames[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
+      }
+
+      el.innerHTML=events.slice(0,6).map((e,i)=>`
         <div class="cal-event">
           <div class="cal-dot" style="background:${CAL_COLORS[i%CAL_COLORS.length]}"></div>
           <div class="cal-time">${e.timeStr}</div>
-          <div><div class="cal-name">${e.name}</div>${e.sub?`<div class="cal-sub">${e.sub}</div>`:''}</div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:baseline;gap:6px">
+              <div class="cal-name" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.name}</div>
+              <div style="font-size:10px;font-weight:700;color:var(--t3);white-space:nowrap;flex-shrink:0">${dayLabel(e.start)}</div>
+            </div>
+            ${e.sub?`<div class="cal-sub">${e.sub}</div>`:''}
+          </div>
         </div>`).join('');
     }
   }catch(err){
-    el.innerHTML=`<div class="cal-empty" style="color:var(--red)">Couldn't load calendar</div>`;
+    el.innerHTML=`<div class="cal-empty" style="color:var(--red);cursor:pointer" onclick="fetchAndRenderCalendar()">Couldn't load calendar — tap to retry</div>`;
   }
 }
 
@@ -448,9 +478,11 @@ async function loadWeather(){try{let lat=59.3293,lon=18.0686,city='Stockholm';tr
 
 /* ── Boot ── */
 renderGrid();
-buildCalendar();
+fetchAndRenderCalendar();
 loadWeather();
 syncAllLights();
+// Refresh calendar every 5 minutes so new events appear automatically
+setInterval(fetchAndRenderCalendar, 5*60*1000);
 </script>
 </body>
 </html>
