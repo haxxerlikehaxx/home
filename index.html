@@ -291,119 +291,125 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 
 <script>
 /* ══════════════════════════════════════════
-   SOUNDS — Web Audio API, no external files
+   SOUNDS — smooth, bubbly, mindful
+   All sine waves, slow attack, long gentle
+   tail. Nothing sharp or harsh.
    ══════════════════════════════════════════ */
 let audioCtx = null;
 function getAudio(){
   if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  // Resume if suspended (browser autoplay policy)
+  if(audioCtx.state==='suspended') audioCtx.resume();
   return audioCtx;
 }
 
-function playTone(freq, type, duration, vol=0.18, fadeOut=true){
+// Core helper — one sine note with soft bubble envelope
+function bubble(freq, startTime, vol=0.09, attack=0.06, hold=0.08, decay=0.55){
   try{
     const ctx = getAudio();
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
-    osc.connect(gain); gain.connect(ctx.destination);
-    osc.type = type;
-    osc.frequency.setValueAtTime(freq, ctx.currentTime);
-    gain.gain.setValueAtTime(vol, ctx.currentTime);
-    if(fadeOut) gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
-    osc.start(ctx.currentTime);
-    osc.stop(ctx.currentTime + duration);
+    // Gentle low-pass to round off any edge
+    const lpf = ctx.createBiquadFilter();
+    lpf.type = 'lowpass'; lpf.frequency.value = 1800; lpf.Q.value = 0.5;
+    osc.connect(lpf); lpf.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, startTime);
+    // Soft attack → hold peak → long smooth decay to silence
+    gain.gain.setValueAtTime(0.0001, startTime);
+    gain.gain.linearRampToValueAtTime(vol, startTime + attack);
+    gain.gain.setValueAtTime(vol, startTime + attack + hold);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + attack + hold + decay);
+    osc.start(startTime);
+    osc.stop(startTime + attack + hold + decay + 0.05);
   }catch(e){}
 }
 
+// Light ON — three gentle rising bubbles, soft and warm
 function soundOn(){
-  // Warm rising two-note chime — light turning on
   try{
-    const ctx = getAudio();
-    const t = ctx.currentTime;
-    [[523,0],[659,0.1],[784,0.18]].forEach(([f,d])=>{
-      const o=ctx.createOscillator(),g=ctx.createGain();
-      o.connect(g);g.connect(ctx.destination);
-      o.type='sine'; o.frequency.value=f;
-      g.gain.setValueAtTime(0,t+d);
-      g.gain.linearRampToValueAtTime(0.14,t+d+0.03);
-      g.gain.exponentialRampToValueAtTime(0.001,t+d+0.35);
-      o.start(t+d); o.stop(t+d+0.4);
-    });
+    const ctx = getAudio(); const t = ctx.currentTime;
+    bubble(392, t,       0.07, 0.07, 0.05, 0.6);  // G4
+    bubble(523, t+0.13,  0.08, 0.07, 0.05, 0.65); // C5
+    bubble(659, t+0.26,  0.07, 0.08, 0.06, 0.75); // E5
+    // Soft shimmer overtone on last note
+    bubble(1318, t+0.26, 0.025, 0.1, 0.04, 0.55); // E6 whisper
   }catch(e){}
 }
 
+// Light OFF — three gentle falling bubbles, fading away
 function soundOff(){
-  // Gentle descending — light turning off
   try{
-    const ctx = getAudio();
-    const t = ctx.currentTime;
-    [[784,0],[659,0.08],[523,0.16]].forEach(([f,d])=>{
-      const o=ctx.createOscillator(),g=ctx.createGain();
-      o.connect(g);g.connect(ctx.destination);
-      o.type='sine'; o.frequency.value=f;
-      g.gain.setValueAtTime(0.12,t+d);
-      g.gain.exponentialRampToValueAtTime(0.001,t+d+0.28);
-      o.start(t+d); o.stop(t+d+0.32);
-    });
+    const ctx = getAudio(); const t = ctx.currentTime;
+    bubble(523, t,       0.07, 0.06, 0.04, 0.55); // C5
+    bubble(440, t+0.14,  0.06, 0.07, 0.04, 0.65); // A4
+    bubble(330, t+0.28,  0.055,0.08, 0.05, 0.8);  // E4 — long fade out
   }catch(e){}
 }
 
+// UI tap — single tiny airy bubble, barely-there
 function soundClick(){
-  // Subtle soft click — toggle/UI interaction
   try{
-    const ctx = getAudio();
-    const buf = ctx.createBuffer(1,ctx.sampleRate*0.05,ctx.sampleRate);
-    const data = buf.getChannelData(0);
-    for(let i=0;i<data.length;i++) data[i]=(Math.random()*2-1)*Math.pow(1-i/data.length,4)*0.3;
-    const src = ctx.createBufferSource();
-    const gain = ctx.createGain();
-    const filter = ctx.createBiquadFilter();
-    filter.type = 'bandpass'; filter.frequency.value = 1200; filter.Q.value = 0.8;
-    src.buffer = buf;
-    src.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
-    gain.gain.value = 0.6;
-    src.start();
+    const ctx = getAudio(); const t = ctx.currentTime;
+    bubble(880, t, 0.045, 0.04, 0.02, 0.28);
+    bubble(1100, t+0.03, 0.02, 0.04, 0.01, 0.2); // soft harmonic
   }catch(e){}
 }
 
+// Save / confirm — two warm rising tones, resolved and calm
 function soundSave(){
-  // Double chime — saved/confirmed
   try{
-    const ctx = getAudio();
-    const t = ctx.currentTime;
-    [[880,0,0.2],[1100,0.2,0.25]].forEach(([f,d,dur])=>{
-      const o=ctx.createOscillator(),g=ctx.createGain();
-      o.connect(g);g.connect(ctx.destination);
-      o.type='sine'; o.frequency.value=f;
-      g.gain.setValueAtTime(0.1,t+d);
-      g.gain.exponentialRampToValueAtTime(0.001,t+d+dur);
-      o.start(t+d); o.stop(t+d+dur+0.05);
-    });
+    const ctx = getAudio(); const t = ctx.currentTime;
+    bubble(523, t,      0.07, 0.07, 0.06, 0.7);  // C5
+    bubble(784, t+0.18, 0.08, 0.08, 0.07, 0.9);  // G5 — long warm resolution
+    bubble(1046,t+0.18, 0.03, 0.09, 0.05, 0.8);  // C6 whisper overtone
   }catch(e){}
 }
 
+// Error — low gentle wobble, soft not alarming
 function soundError(){
-  // Low buzz — something failed
-  playTone(180,'sawtooth',0.22,0.08);
-}
-
-function soundAdd(){
-  // Soft pop — item added
-  playTone(900,'sine',0.18,0.12);
-}
-
-function soundDelete(){
-  // Downward tick — item removed
   try{
-    const ctx = getAudio();
-    const t = ctx.currentTime;
-    const o=ctx.createOscillator(),g=ctx.createGain();
-    o.connect(g);g.connect(ctx.destination);
-    o.type='sine';
-    o.frequency.setValueAtTime(600,t);
-    o.frequency.exponentialRampToValueAtTime(200,t+0.15);
-    g.gain.setValueAtTime(0.1,t);
-    g.gain.exponentialRampToValueAtTime(0.001,t+0.18);
-    o.start(t); o.stop(t+0.2);
+    const ctx = getAudio(); const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const lpf = ctx.createBiquadFilter();
+    lpf.type='lowpass'; lpf.frequency.value=400; lpf.Q.value=0.6;
+    osc.connect(lpf); lpf.connect(gain); gain.connect(ctx.destination);
+    osc.type='sine';
+    osc.frequency.setValueAtTime(220, t);
+    osc.frequency.linearRampToValueAtTime(190, t+0.3);
+    gain.gain.setValueAtTime(0.0001,t);
+    gain.gain.linearRampToValueAtTime(0.07,t+0.08);
+    gain.gain.exponentialRampToValueAtTime(0.0001,t+0.55);
+    osc.start(t); osc.stop(t+0.6);
+  }catch(e){}
+}
+
+// Add — light airy rising pop
+function soundAdd(){
+  try{
+    const ctx = getAudio(); const t = ctx.currentTime;
+    bubble(660, t,      0.065, 0.05, 0.04, 0.45);
+    bubble(880, t+0.1,  0.055, 0.06, 0.03, 0.5);
+  }catch(e){}
+}
+
+// Delete — soft downward dissolve, gentle let-go
+function soundDelete(){
+  try{
+    const ctx = getAudio(); const t = ctx.currentTime;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const lpf = ctx.createBiquadFilter();
+    lpf.type='lowpass'; lpf.frequency.value=700; lpf.Q.value=0.4;
+    osc.connect(lpf); lpf.connect(gain); gain.connect(ctx.destination);
+    osc.type='sine';
+    osc.frequency.setValueAtTime(440, t);
+    osc.frequency.exponentialRampToValueAtTime(260, t+0.45);
+    gain.gain.setValueAtTime(0.0001,t);
+    gain.gain.linearRampToValueAtTime(0.065,t+0.06);
+    gain.gain.exponentialRampToValueAtTime(0.0001,t+0.55);
+    osc.start(t); osc.stop(t+0.6);
   }catch(e){}
 }
 
