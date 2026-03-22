@@ -9,289 +9,148 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 :root{
-  --bg-deep:#05070a;
-  --primary:#6366f1;--primary-bright:#818cf8;--primary-glow:rgba(99,102,241,0.35);
-  --secondary:#10b981;--secondary-bright:#34d399;
-  --glass-bg:rgba(255,255,255,0.03);--glass-border:rgba(255,255,255,0.08);
-  --transition:all 0.5s cubic-bezier(0.16,1,0.3,1);
-  --blue:#4A9EFF;--green:#30D158;--yellow:#FFD60A;
-  --purple:#BF5AF2;--orange:#FF9F0A;--red:#FF453A;--teal:#5AC8FA;
-  --t1:rgba(255,255,255,0.96);--t2:rgba(255,255,255,0.55);--t3:rgba(255,255,255,0.3);
-  --blur:blur(30px) saturate(180%);--blur-sm:blur(16px) saturate(160%);
-  --r-xl:32px;--r-lg:22px;--r-md:16px;--r-sm:10px;
+  --bg:#1a1c1f;
+  --bg2:#151719;
+  --glass:rgba(255,255,255,0.045);
+  --glass-hi:rgba(255,255,255,0.07);
+  --glass-border:rgba(255,255,255,0.085);
+  --glass-border-hi:rgba(255,255,255,0.13);
+  --on-bg:rgba(255,255,255,0.12);
+  --on-border:rgba(255,255,255,0.2);
+  --t1:rgba(255,255,255,0.92);
+  --t2:rgba(255,255,255,0.42);
+  --t3:rgba(255,255,255,0.18);
+  --green:rgba(120,210,140,0.9);
+  --red:rgba(215,100,90,0.9);
+  --orange:rgba(210,155,80,0.9);
+  --blur:blur(40px) saturate(140%);
+  --blur-sm:blur(20px) saturate(130%);
+  --r-xl:26px;--r-lg:20px;--r-md:14px;
 }
 html,body{height:100%;font-family:-apple-system,'SF Pro Display','Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;}
-body{background:var(--bg-deep);color:var(--t1);overflow-x:hidden;overscroll-behavior:none;position:relative;}
-
-/* ── Ambient ── */
-#bg-canvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none;}
-.blobs{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;filter:blur(80px);opacity:0.35;pointer-events:none;}
-.blob{position:absolute;border-radius:50%;will-change:transform;animation:drift 30s infinite alternate ease-in-out;}
-.blob-a{width:70vw;height:70vw;left:-15vw;top:-15vh;background:radial-gradient(circle,#1a3a7a,transparent 70%);}
-.blob-b{width:60vw;height:60vw;right:-10vw;bottom:-10vh;background:radial-gradient(circle,#0d4a3a,transparent 70%);animation-delay:-8s;}
-.blob-c{width:40vw;height:40vw;left:30%;top:40%;background:radial-gradient(circle,#2a1a6a,transparent 70%);animation-delay:-15s;}
-@keyframes drift{0%{transform:translate(-5%,-5%) scale(1);}100%{transform:translate(10%,10%) scale(1.1);}}
-
-/* ── Layout ── */
-.app{position:relative;z-index:1;max-width:430px;margin:0 auto;padding:0 0 110px;}
-
-/* ── Glass card ── */
-.g{
-  background:var(--glass-bg);
-  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
-  border:1px solid var(--glass-border);border-radius:var(--r-xl);
-  position:relative;overflow:hidden;
-}
-.g::before{
-  content:'';position:absolute;inset:0;border-radius:inherit;
-  background:linear-gradient(145deg,rgba(255,255,255,0.055) 0%,transparent 60%);
-  pointer-events:none;
-}
-
-/* ── Page header ── */
-.page-header{padding:24px 24px 10px;display:flex;align-items:center;justify-content:space-between;}
-.page-title{font-size:34px;font-weight:700;color:var(--t1);letter-spacing:-1px;}
-.header-actions{display:flex;gap:10px;}
-.icon-btn{
-  width:40px;height:40px;border-radius:50%;
-  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);
-  display:flex;align-items:center;justify-content:center;
-  cursor:pointer;transition:background .2s,transform .15s;
-}
-.icon-btn:active{transform:scale(.88);background:rgba(255,255,255,0.1);}
-
-/* ── Weather ── */
-.weather-card{
-  margin:0 16px 14px;padding:24px 22px 20px;
-  background:linear-gradient(145deg,rgba(20,60,140,0.45),rgba(10,35,90,0.4));
-  border-color:rgba(99,102,241,0.2);
-}
+body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:none;}
+.app{position:relative;z-index:1;max-width:430px;margin:0 auto;padding:0 0 108px;}
+.g{background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--glass-border);border-radius:var(--r-xl);position:relative;overflow:hidden;}
+.g::before{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(150deg,rgba(255,255,255,0.05) 0%,transparent 50%);pointer-events:none;}
+.page-header{padding:58px 22px 10px;display:flex;align-items:center;justify-content:space-between;}
+.page-title{font-size:34px;font-weight:700;letter-spacing:-1px;color:var(--t1);}
+.header-actions{display:flex;gap:9px;}
+.icon-btn{width:36px;height:36px;border-radius:50%;background:var(--glass);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s,transform .14s;}
+.icon-btn:active{transform:scale(.84);background:var(--glass-hi);}
+.weather-card{margin:0 14px 12px;padding:22px 20px 18px;background:rgba(28,30,34,0.85);border-color:rgba(255,255,255,0.07);}
 .wc-top{display:flex;justify-content:space-between;align-items:flex-start;}
-.wc-loc{display:flex;align-items:center;gap:5px;font-size:13px;font-weight:600;color:rgba(160,180,255,0.75);margin-bottom:6px;text-transform:uppercase;letter-spacing:.8px;}
-.wc-temp{font-size:76px;font-weight:200;color:white;letter-spacing:-4px;line-height:1;margin-bottom:3px;}
-.wc-desc{font-size:16px;color:rgba(190,210,255,0.75);font-weight:500;}
-.wc-icon{width:80px;height:80px;display:flex;align-items:center;justify-content:center;animation:bob 5s ease-in-out infinite;}
-@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-.wc-details{display:flex;margin-top:18px;padding-top:16px;border-top:1px solid rgba(99,102,241,0.15);}
-.wc-detail{flex:1;display:flex;flex-direction:column;gap:3px;}
-.wc-dl{font-size:10px;text-transform:uppercase;letter-spacing:1px;color:rgba(130,150,255,0.5);font-weight:600;}
-.wc-dv{font-size:16px;font-weight:600;color:rgba(215,225,255,0.95);}
-.forecast{display:flex;margin-top:16px;}
+.wc-loc{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--t2);margin-bottom:5px;text-transform:uppercase;letter-spacing:1.4px;}
+.wc-temp{font-size:70px;font-weight:200;color:var(--t1);letter-spacing:-4px;line-height:1;margin-bottom:2px;}
+.wc-desc{font-size:14px;color:var(--t2);font-weight:500;}
+.wc-icon{width:72px;height:72px;display:flex;align-items:center;justify-content:center;animation:bob 5s ease-in-out infinite;}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+.wc-details{display:flex;margin-top:16px;padding-top:14px;border-top:1px solid rgba(255,255,255,0.07);}
+.wc-detail{flex:1;}
+.wc-dl{font-size:9px;text-transform:uppercase;letter-spacing:1.3px;color:var(--t3);font-weight:700;margin-bottom:3px;}
+.wc-dv{font-size:15px;font-weight:600;color:rgba(255,255,255,0.8);}
+.forecast{display:flex;margin-top:14px;}
 .fc-item{flex:1;text-align:center;}
-.fc-day{font-size:10px;color:rgba(130,150,255,0.55);font-weight:600;letter-spacing:.6px;}
+.fc-day{font-size:9px;color:var(--t3);font-weight:700;letter-spacing:.9px;}
 .fc-icon{margin:5px 0;display:flex;justify-content:center;}
-.fc-hi{font-size:13px;font-weight:600;color:rgba(215,225,255,0.9);}
-.fc-lo{font-size:11px;color:rgba(130,150,255,0.45);}
-.wc-loading{display:flex;align-items:center;gap:8px;color:rgba(160,180,255,0.6);font-size:14px;}
-.spin{width:16px;height:16px;border:2px solid rgba(99,102,241,0.3);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite;}
+.fc-hi{font-size:13px;font-weight:600;color:rgba(255,255,255,0.75);}
+.fc-lo{font-size:11px;color:var(--t3);}
+.wc-loading{display:flex;align-items:center;gap:8px;color:var(--t2);font-size:13px;}
+.spin{width:14px;height:14px;border:1.5px solid rgba(255,255,255,0.12);border-top-color:rgba(255,255,255,0.55);border-radius:50%;animation:spin .85s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* ── Section ── */
-.section-head{display:flex;justify-content:space-between;align-items:center;padding:6px 24px 10px;}
-.section-title{font-size:22px;font-weight:700;color:var(--t1);letter-spacing:-.5px;}
-.section-link{font-size:14px;font-weight:600;color:var(--primary-bright);cursor:pointer;}
-
-/* ── Scenes ── */
-.scenes-wrap{padding:0 16px 6px;overflow-x:auto;overflow-y:hidden;display:flex;gap:9px;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-bottom:14px;}
+.section-head{display:flex;justify-content:space-between;align-items:center;padding:4px 22px 8px;}
+.section-title{font-size:20px;font-weight:700;color:var(--t1);letter-spacing:-.4px;}
+.section-link{font-size:13px;font-weight:600;color:var(--t2);cursor:pointer;}
+.scenes-wrap{padding:0 14px 4px;overflow-x:auto;display:flex;gap:8px;scrollbar-width:none;-webkit-overflow-scrolling:touch;margin-bottom:12px;}
 .scenes-wrap::-webkit-scrollbar{display:none;}
-.scene-pill{
-  flex-shrink:0;display:flex;align-items:center;gap:7px;padding:10px 16px;border-radius:50px;
-  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);
-  font-size:13px;font-weight:600;color:var(--t1);
-  cursor:pointer;white-space:nowrap;letter-spacing:.3px;
-  transition:background .25s,border-color .25s,transform .15s;
-}
-.scene-pill:active{transform:scale(.92);}
-.scene-pill.active{background:rgba(99,102,241,0.25);border-color:rgba(129,140,248,0.5);}
-.scene-pill svg{width:14px;height:14px;}
-
-/* ── Master card ── */
-.master-card{
-  margin:0 16px 14px;padding:16px 20px;
-  display:flex;align-items:center;justify-content:space-between;
-  border-radius:var(--r-lg);cursor:pointer;
-}
-.master-left{display:flex;align-items:center;gap:14px;}
-.master-icon{
-  width:40px;height:40px;border-radius:12px;
-  background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.25);
-  display:flex;align-items:center;justify-content:center;
-}
-.master-name{font-size:16px;font-weight:700;color:var(--t1);}
+.scene-pill{flex-shrink:0;display:flex;align-items:center;gap:6px;padding:9px 15px;border-radius:50px;background:var(--glass);border:1px solid var(--glass-border);font-size:13px;font-weight:600;color:var(--t2);cursor:pointer;white-space:nowrap;transition:background .22s,border-color .22s,color .22s,transform .14s;}
+.scene-pill:active{transform:scale(.9);}
+.scene-pill.active{background:var(--on-bg);border-color:var(--on-border);color:var(--t1);}
+.scene-pill svg{width:13px;height:13px;}
+.master-card{margin:0 14px 12px;padding:14px 18px;display:flex;align-items:center;justify-content:space-between;border-radius:var(--r-lg);cursor:pointer;}
+.master-left{display:flex;align-items:center;gap:12px;}
+.master-icon{width:36px;height:36px;border-radius:10px;background:var(--on-bg);border:1px solid var(--glass-border-hi);display:flex;align-items:center;justify-content:center;}
+.master-name{font-size:15px;font-weight:700;color:var(--t1);}
 .master-sub{font-size:12px;color:var(--t2);margin-top:2px;}
-
-/* ── Toggle ── */
-.sw{
-  position:relative;width:48px;height:28px;border-radius:14px;
-  background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.15);
-  cursor:pointer;transition:background .25s,border-color .25s;flex-shrink:0;
-}
-.sw.on{background:var(--primary);border-color:rgba(129,140,248,0.6);}
-.sw::after{
-  content:'';position:absolute;width:22px;height:22px;border-radius:50%;
-  background:white;top:2px;left:2px;
-  transition:transform .28s cubic-bezier(.34,1.56,.64,1);
-  box-shadow:0 2px 6px rgba(0,0,0,0.4);
-}
-.sw.on::after{transform:translateX(20px);}
-
-/* ── Lights grid ── */
-.lights-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 16px;margin-bottom:14px;}
-.light-card{
-  padding:18px 16px 16px;cursor:pointer;border-radius:var(--r-xl);
-  transition:transform .2s cubic-bezier(.34,1.56,.64,1);
-  user-select:none;min-height:170px;display:flex;flex-direction:column;
-}
-.light-card:active{transform:scale(.92);}
-.light-card.off{background:rgba(255,255,255,0.035);border-color:rgba(255,255,255,0.07);}
-.light-card.loading-state{opacity:.6;pointer-events:none;}
-.lc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
-.lc-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;transition:opacity .3s;flex-shrink:0;}
-.light-card.off .lc-icon{opacity:.25;}
-.lc-lamp{flex:1;display:flex;justify-content:flex-end;align-items:flex-start;margin:-6px -6px 6px 0;opacity:0;transition:opacity .4s;pointer-events:none;}
+.sw{position:relative;width:46px;height:26px;border-radius:13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12);cursor:pointer;transition:background .22s,border-color .22s;flex-shrink:0;}
+.sw.on{background:rgba(255,255,255,0.88);border-color:rgba(255,255,255,0.4);}
+.sw::after{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:white;top:2px;left:2px;transition:transform .26s cubic-bezier(.34,1.56,.64,1);box-shadow:0 2px 5px rgba(0,0,0,0.5);}
+.sw.on::after{transform:translateX(20px);background:#1a1c1f;}
+.lights-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px;margin-bottom:12px;}
+.light-card{padding:16px 14px 13px;cursor:pointer;border-radius:var(--r-xl);transition:transform .18s cubic-bezier(.34,1.56,.64,1);user-select:none;min-height:162px;display:flex;flex-direction:column;}
+.light-card:active{transform:scale(.91);}
+.light-card.off{background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.07);}
+.light-card.on{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.12);}
+.light-card.loading-state{opacity:.5;pointer-events:none;}
+.lc-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.lc-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;transition:opacity .25s;flex-shrink:0;}
+.light-card.off .lc-icon{opacity:.18;}
+.light-card.on .lc-icon{opacity:1;background:rgba(255,255,255,0.08);}
+.lc-lamp{flex:1;display:flex;justify-content:flex-end;align-items:flex-start;margin:-4px -4px 4px 0;opacity:0;transition:opacity .35s;pointer-events:none;}
 .light-card.on .lc-lamp{opacity:1;}
-.lc-name{font-size:15px;font-weight:700;color:var(--t1);letter-spacing:-.3px;margin-top:auto;}
-.lc-status{font-size:11px;color:var(--t2);margin-top:3px;margin-bottom:10px;font-weight:500;text-transform:uppercase;letter-spacing:.5px;}
+.lc-name{font-size:14px;font-weight:700;color:var(--t1);letter-spacing:-.2px;margin-top:auto;}
+.lc-status{font-size:10px;color:var(--t2);margin-top:3px;margin-bottom:8px;font-weight:600;text-transform:uppercase;letter-spacing:.6px;}
 .light-card.off .lc-status{color:var(--t3);}
 .lc-slider-wrap{display:none;align-items:center;gap:0;margin-top:2px;}
 .light-card.on .lc-slider-wrap{display:flex;}
-.lc-slider{
-  flex:1;height:5px;border-radius:3px;outline:none;border:none;
-  -webkit-appearance:none;cursor:pointer;
-}
-.lc-slider::-webkit-slider-thumb{
-  -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
-  background:white;box-shadow:0 1px 6px rgba(0,0,0,0.5);
-}
-.lc-slider::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:white;border:none;}
-.lc-pct{font-size:11px;color:rgba(255,255,255,.45);min-width:30px;text-align:right;padding-left:6px;font-weight:600;}
-
-/* ── Status strip ── */
-.status-strip{margin:0 16px 14px;padding:14px 20px;display:flex;align-items:center;gap:12px;border-radius:var(--r-lg);}
-.pulse-dot{width:10px;height:10px;border-radius:50%;background:var(--primary);box-shadow:0 0 8px var(--primary);flex-shrink:0;animation:pulse 2.5s ease-in-out infinite;}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.3)}}
-.status-text{font-size:14px;font-weight:600;color:var(--t1);}
-.status-sub{font-size:12px;color:var(--t2);margin-top:1px;}
-
-/* ── Toast ── */
-.toast{
-  position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(20px);
-  background:rgba(20,22,35,0.97);backdrop-filter:var(--blur-sm);-webkit-backdrop-filter:var(--blur-sm);
-  border:1px solid rgba(255,255,255,0.12);border-radius:50px;
-  padding:10px 20px;font-size:13px;font-weight:600;color:var(--t1);
-  opacity:0;transition:opacity .3s,transform .3s;pointer-events:none;z-index:300;
-  white-space:nowrap;letter-spacing:.2px;
-}
+.lc-slider{flex:1;height:3px;border-radius:2px;outline:none;border:none;-webkit-appearance:none;cursor:pointer;background:rgba(255,255,255,0.15);}
+.lc-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:white;box-shadow:0 1px 5px rgba(0,0,0,0.5);}
+.lc-pct{font-size:10px;color:var(--t3);min-width:26px;text-align:right;padding-left:5px;font-weight:700;}
+.status-strip{margin:0 14px 12px;padding:13px 18px;display:flex;align-items:center;gap:11px;border-radius:var(--r-lg);}
+.pulse-dot{width:8px;height:8px;border-radius:50%;background:var(--green);flex-shrink:0;animation:pulse 2.8s ease-in-out infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+.status-text{font-size:13px;font-weight:600;color:var(--t1);}
+.status-sub{font-size:11px;color:var(--t2);margin-top:1px;}
+.toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(30,32,36,0.97);backdrop-filter:var(--blur-sm);-webkit-backdrop-filter:var(--blur-sm);border:1px solid rgba(255,255,255,0.1);border-radius:50px;padding:9px 18px;font-size:13px;font-weight:600;color:var(--t1);opacity:0;transition:opacity .28s,transform .28s;pointer-events:none;z-index:300;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-.toast.error{border-color:rgba(244,63,94,0.4);color:#ff8f88;}
-
-/* ── Bottom nav ── */
-.bottom-nav{
-  position:fixed;bottom:0;left:50%;transform:translateX(-50%);
-  width:100%;max-width:430px;display:flex;
-  background:rgba(5,7,10,0.85);
-  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
-  border-top:1px solid rgba(255,255,255,0.07);
-  padding:10px 0 max(20px,env(safe-area-inset-bottom));z-index:100;
-}
-.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer;padding:4px 0;position:relative;}
-.nav-item svg{width:24px;height:24px;transition:transform .2s cubic-bezier(.34,1.56,.64,1);}
-.nav-item:active svg{transform:scale(.82);}
-.nav-label{font-size:10px;font-weight:600;letter-spacing:.4px;text-transform:uppercase;}
-.nav-item.active .nav-label{color:var(--primary-bright);}
-.nav-item:not(.active){opacity:.4;}
-.nav-item:not(.active) .nav-label{color:var(--t2);}
-.nav-badge{
-  position:absolute;top:1px;right:calc(50% - 22px);
-  width:16px;height:16px;background:var(--red);border-radius:50%;
-  font-size:10px;font-weight:700;color:white;
-  display:flex;align-items:center;justify-content:center;border:2px solid var(--bg-deep);
-}
-
-/* ── Panel ── */
-.panel-overlay{
-  position:fixed;inset:0;z-index:200;
-  background:rgba(0,0,0,0.6);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
-  opacity:0;pointer-events:none;transition:opacity .3s;
-}
+.toast.error{border-color:rgba(215,100,90,0.3);color:var(--red);}
+.bottom-nav{position:fixed;bottom:max(14px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:398px;display:flex;background:rgba(28,30,34,0.82);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid rgba(255,255,255,0.1);border-radius:26px;padding:11px 8px;z-index:100;box-shadow:0 10px 40px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.07);}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:2px 0;position:relative;}
+.nav-item svg{width:22px;height:22px;transition:transform .18s cubic-bezier(.34,1.56,.64,1);}
+.nav-item:active svg{transform:scale(.78);}
+.nav-label{font-size:9px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;}
+.nav-item.active svg{stroke:var(--t1);}
+.nav-item.active .nav-label{color:var(--t1);}
+.nav-item:not(.active){opacity:.3;}
+.nav-badge{position:absolute;top:-1px;right:calc(50% - 20px);width:14px;height:14px;background:var(--red);border-radius:50%;font-size:8px;font-weight:700;color:white;display:flex;align-items:center;justify-content:center;border:2px solid var(--bg2);}
+.panel-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:0;pointer-events:none;transition:opacity .28s;}
 .panel-overlay.open{opacity:1;pointer-events:all;}
-.panel{
-  position:absolute;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);
-  width:100%;max-width:430px;
-  background:rgba(8,10,18,0.98);
-  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
-  border-radius:32px 32px 0 0;border-top:1px solid rgba(255,255,255,0.1);
-  padding:0 0 max(30px,env(safe-area-inset-bottom));
-  transition:transform .4s cubic-bezier(.32,.72,0,1);max-height:82vh;overflow-y:auto;
-}
+.panel{position:absolute;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:430px;background:rgba(22,24,28,0.98);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border-radius:28px 28px 0 0;border:1px solid rgba(255,255,255,0.09);border-bottom:none;padding:0 0 max(28px,env(safe-area-inset-bottom));transition:transform .38s cubic-bezier(.32,.72,0,1);max-height:82vh;overflow-y:auto;}
 .panel-overlay.open .panel{transform:translateX(-50%) translateY(0);}
-.panel-handle{width:36px;height:5px;border-radius:3px;background:rgba(255,255,255,0.2);margin:12px auto 20px;}
-.panel-title{font-size:22px;font-weight:700;color:var(--t1);padding:0 22px 16px;letter-spacing:-.5px;}
-.panel-row{display:flex;align-items:center;padding:14px 22px;border-bottom:1px solid rgba(255,255,255,0.05);gap:14px;}
+.panel-handle{width:32px;height:4px;border-radius:2px;background:rgba(255,255,255,0.16);margin:11px auto 18px;}
+.panel-title{font-size:20px;font-weight:700;color:var(--t1);padding:0 20px 14px;letter-spacing:-.4px;}
+.panel-row{display:flex;align-items:center;padding:13px 20px;border-bottom:1px solid rgba(255,255,255,0.05);gap:13px;}
 .panel-row:last-child{border:none;}
-.panel-row-icon{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.panel-row-name{font-size:15px;font-weight:600;color:var(--t1);}
-.panel-row-sub{font-size:12px;color:var(--t2);margin-top:2px;}
+.panel-row-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(255,255,255,0.06);}
+.panel-row-name{font-size:14px;font-weight:600;color:var(--t1);}
+.panel-row-sub{font-size:11px;color:var(--t2);margin-top:2px;}
 .panel-row-text{flex:1;}
-.panel-close-btn{
-  margin:16px 22px 0;width:calc(100% - 44px);padding:16px;border-radius:var(--r-md);
-  background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);
-  color:var(--t1);font-size:16px;font-weight:700;cursor:pointer;text-align:center;
-  letter-spacing:.3px;transition:background .2s,transform .15s;
-}
-.panel-close-btn:active{background:rgba(255,255,255,0.12);transform:scale(.97);}
-
-/* ── Config inputs ── */
-.config-input{
-  width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);
-  border-radius:var(--r-md);padding:12px 14px;font-size:14px;color:white;
-  font-family:inherit;outline:none;margin-top:6px;transition:border-color .2s;
-}
-.config-input:focus{border-color:rgba(99,102,241,0.6);}
-.config-label{font-size:11px;color:var(--t2);font-weight:600;letter-spacing:.5px;text-transform:uppercase;}
-.config-section{padding:0 22px 16px;}
-
-/* ── Ripple ── */
-.ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.12);pointer-events:none;transform:scale(0);animation:rpl .55s ease-out forwards;}
+.panel-close-btn{margin:14px 20px 0;width:calc(100% - 40px);padding:14px;border-radius:var(--r-md);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);color:var(--t1);font-size:15px;font-weight:700;cursor:pointer;text-align:center;transition:background .18s,transform .14s;}
+.panel-close-btn:active{background:rgba(255,255,255,0.09);transform:scale(.97);}
+.config-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:var(--r-md);padding:11px 13px;font-size:14px;color:white;font-family:inherit;outline:none;margin-top:5px;transition:border-color .18s;}
+.config-input:focus{border-color:rgba(255,255,255,0.28);}
+.config-label{font-size:10px;color:var(--t2);font-weight:700;letter-spacing:.6px;text-transform:uppercase;}
+.config-section{padding:0 20px 14px;}
+.ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.08);pointer-events:none;transform:scale(0);animation:rpl .5s ease-out forwards;}
 @keyframes rpl{to{transform:scale(4);opacity:0}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
 </style>
 </head>
 <body>
-
-<!-- Ambient -->
-<div class="blobs">
-  <div class="blob blob-a"></div>
-  <div class="blob blob-b"></div>
-  <div class="blob blob-c"></div>
-</div>
-<canvas id="bg-canvas"></canvas>
-
 <div class="app">
-
-  <!-- Header -->
-  <div class="page-header" style="animation:fadeUp .5s ease both">
+  <div class="page-header" style="animation:fadeUp .4s ease both">
     <div class="page-title">Home</div>
     <div class="header-actions">
-      <div class="icon-btn" onclick="openPanel('config-panel')" title="Settings">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M16.24 7.76a6 6 0 0 1 0 8.49M4.93 19.07a10 10 0 0 1 0-14.14M7.76 16.24a6 6 0 0 1 0-8.49"/></svg>
-      </div>
-      <div class="icon-btn" onclick="syncAllLights()" id="refresh-btn" title="Refresh">
-        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
-      </div>
+      <div class="icon-btn" onclick="openPanel('config-panel')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M16.24 7.76a6 6 0 0 1 0 8.49M4.93 19.07a10 10 0 0 1 0-14.14M7.76 16.24a6 6 0 0 1 0-8.49"/></svg></div>
+      <div class="icon-btn" onclick="syncAllLights()" id="refresh-btn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg></div>
     </div>
   </div>
 
-  <!-- Weather -->
-  <div class="g weather-card" style="animation:fadeUp .5s ease both .05s">
+  <div class="g weather-card" style="animation:fadeUp .4s ease both .05s">
     <div class="wc-loading" id="wc-loading"><div class="spin"></div><span>Fetching weather…</span></div>
     <div id="wc-content" style="display:none">
       <div class="wc-top">
         <div>
-          <div class="wc-loc">
-            <svg width="11" height="11" viewBox="0 0 24 24" fill="rgba(140,160,255,0.75)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg>
-            <span id="wc-city">—</span>
-          </div>
+          <div class="wc-loc"><svg width="9" height="9" viewBox="0 0 24 24" fill="rgba(255,255,255,0.35)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span id="wc-city">—</span></div>
           <div class="wc-temp" id="wc-temp">—</div>
           <div class="wc-desc" id="wc-desc">—</div>
         </div>
@@ -307,749 +166,124 @@ body{background:var(--bg-deep);color:var(--t1);overflow-x:hidden;overscroll-beha
     </div>
   </div>
 
-  <!-- Master -->
-  <div class="g master-card" id="masterCard" onclick="toggleAll()" style="animation:fadeUp .5s ease both .1s">
+  <div class="g master-card" onclick="toggleAll()" style="animation:fadeUp .4s ease both .09s">
     <div class="master-left">
-      <div class="master-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary-bright)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6M10 22h4"/></svg>
-      </div>
-      <div>
-        <div class="master-name" id="master-name">Loading…</div>
-        <div class="master-sub" id="master-sub">Syncing with devices</div>
-      </div>
+      <div class="master-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6M10 22h4"/></svg></div>
+      <div><div class="master-name" id="master-name">Loading…</div><div class="master-sub" id="master-sub">Syncing with devices</div></div>
     </div>
     <div class="sw" id="master-sw"></div>
   </div>
 
-  <!-- Scenes -->
-  <div class="section-head" style="animation:fadeUp .5s ease both .12s"><div class="section-title">Scenes</div></div>
-  <div class="scenes-wrap" style="animation:fadeUp .5s ease both .14s">
-    <div class="scene-pill" onclick="applyScene(this,'evening')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Evening
-    </div>
-    <div class="scene-pill" onclick="applyScene(this,'morning')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>Morning
-    </div>
-    <div class="scene-pill" onclick="applyScene(this,'movie')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>Movie
-    </div>
-    <div class="scene-pill" onclick="applyScene(this,'focus')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Focus
-    </div>
-    <div class="scene-pill" onclick="applyScene(this,'party')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Party
-    </div>
-    <div class="scene-pill" onclick="applyScene(this,'away')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Away
-    </div>
+  <div class="section-head" style="animation:fadeUp .4s ease both .11s"><div class="section-title">Scenes</div></div>
+  <div class="scenes-wrap" style="animation:fadeUp .4s ease both .13s">
+    <div class="scene-pill" onclick="applyScene(this,'evening')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>Evening</div>
+    <div class="scene-pill" onclick="applyScene(this,'morning')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>Morning</div>
+    <div class="scene-pill" onclick="applyScene(this,'movie')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="2"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/></svg>Movie</div>
+    <div class="scene-pill" onclick="applyScene(this,'focus')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>Focus</div>
+    <div class="scene-pill" onclick="applyScene(this,'party')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>Party</div>
+    <div class="scene-pill" onclick="applyScene(this,'away')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>Away</div>
   </div>
 
-  <!-- Lights -->
-  <div class="section-head" style="animation:fadeUp .5s ease both .16s">
-    <div class="section-title">Lights</div>
-    <div class="section-link" onclick="syncAllLights()">Refresh</div>
-  </div>
-  <div class="lights-grid" id="lightsGrid" style="animation:fadeUp .5s ease both .18s"></div>
+  <div class="section-head" style="animation:fadeUp .4s ease both .15s"><div class="section-title">Lights</div><div class="section-link" onclick="syncAllLights()">Refresh</div></div>
+  <div class="lights-grid" id="lightsGrid" style="animation:fadeUp .4s ease both .17s"></div>
 
-  <!-- Status -->
-  <div class="g status-strip" style="animation:fadeUp .5s ease both .22s">
-    <div class="pulse-dot"></div>
-    <div>
-      <div class="status-text" id="status-text">Connecting…</div>
-      <div class="status-sub" id="status-sub">Reaching Tuya cloud</div>
-    </div>
+  <div class="g status-strip" style="animation:fadeUp .4s ease both .2s">
+    <div class="pulse-dot" id="pulse-dot"></div>
+    <div><div class="status-text" id="status-text">Connecting…</div><div class="status-sub" id="status-sub">Reaching Tuya cloud</div></div>
   </div>
-
 </div>
 
-<!-- Nav -->
 <nav class="bottom-nav">
-  <div class="nav-item active" onclick="navTo(this)">
-    <svg viewBox="0 0 24 24" fill="none" stroke="var(--primary-bright)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-    <span class="nav-label">Home</span>
-  </div>
-  <div class="nav-item" onclick="navTo(this);openPanel('auto-panel')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 17.5h7M17.5 14v7"/></svg>
-    <span class="nav-label">Auto</span>
-  </div>
-  <div class="nav-item" onclick="navTo(this);openPanel('alerts-panel')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-    <div class="nav-badge" id="alert-badge">2</div>
-    <span class="nav-label">Alerts</span>
-  </div>
-  <div class="nav-item" onclick="navTo(this);openPanel('about-panel')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-    <span class="nav-label">Profile</span>
-  </div>
+  <div class="nav-item active" onclick="navTo(this)"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span class="nav-label">Home</span></div>
+  <div class="nav-item" onclick="navTo(this);openPanel('auto-panel')"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 17.5h7M17.5 14v7"/></svg><span class="nav-label">Auto</span></div>
+  <div class="nav-item" onclick="navTo(this);openPanel('alerts-panel')"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg><div class="nav-badge" id="alert-badge">2</div><span class="nav-label">Alerts</span></div>
+  <div class="nav-item" onclick="navTo(this);openPanel('about-panel')"><svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span class="nav-label">Profile</span></div>
 </nav>
 
 <div class="toast" id="toast"></div>
 
-<!-- Config Panel -->
 <div class="panel-overlay" id="config-panel" onclick="closePanel(this)">
   <div class="panel" onclick="event.stopPropagation()">
-    <div class="panel-handle"></div>
-    <div class="panel-title">Settings</div>
-    <div class="config-section">
-      <div class="config-label">Cloudflare Worker URL</div>
-      <input class="config-input" id="cfg-worker" type="url" placeholder="https://your-worker.workers.dev" autocomplete="off">
-    </div>
-    <div class="config-section">
-      <div class="config-label">Light 1 — Name</div>
-      <input class="config-input" id="cfg-name0" type="text" placeholder="Led Lights Tak">
-      <div class="config-label" style="margin-top:10px">Light 1 — Device ID</div>
-      <input class="config-input" id="cfg-dev0" type="text" placeholder="bf8b0e945d8c5f9861fjzy" autocomplete="off">
-    </div>
-    <div class="config-section">
-      <div class="config-label">Light 2 — Name</div>
-      <input class="config-input" id="cfg-name1" type="text" placeholder="Led Lights Skrivbord">
-      <div class="config-label" style="margin-top:10px">Light 2 — Device ID</div>
-      <input class="config-input" id="cfg-dev1" type="text" placeholder="bf1cf6aca13749cf898g3p" autocomplete="off">
-    </div>
-    <div style="padding:0 22px">
-      <div class="panel-close-btn" style="margin:0 0 10px;background:rgba(99,102,241,0.2);border-color:rgba(129,140,248,0.4);color:var(--primary-bright)" onclick="saveConfig()">Save &amp; Connect</div>
-      <div class="panel-close-btn" onclick="closePanel(document.getElementById('config-panel'))">Cancel</div>
-    </div>
+    <div class="panel-handle"></div><div class="panel-title">Settings</div>
+    <div class="config-section"><div class="config-label">Cloudflare Worker URL</div><input class="config-input" id="cfg-worker" type="url" placeholder="https://your-worker.workers.dev" autocomplete="off"></div>
+    <div class="config-section"><div class="config-label">Light 1 — Name</div><input class="config-input" id="cfg-name0" type="text" placeholder="Led Lights Tak"><div class="config-label" style="margin-top:10px">Light 1 — Device ID</div><input class="config-input" id="cfg-dev0" type="text" placeholder="bf8b0e945d8c5f9861fjzy" autocomplete="off"></div>
+    <div class="config-section"><div class="config-label">Light 2 — Name</div><input class="config-input" id="cfg-name1" type="text" placeholder="Led Lights Skrivbord"><div class="config-label" style="margin-top:10px">Light 2 — Device ID</div><input class="config-input" id="cfg-dev1" type="text" placeholder="bf1cf6aca13749cf898g3p" autocomplete="off"></div>
+    <div style="padding:0 20px"><div class="panel-close-btn" style="margin:0 0 10px;background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.16)" onclick="saveConfig()">Save &amp; Connect</div><div class="panel-close-btn" onclick="closePanel(document.getElementById('config-panel'))">Cancel</div></div>
   </div>
 </div>
 
-<!-- Automations Panel -->
 <div class="panel-overlay" id="auto-panel" onclick="closePanel(this)">
   <div class="panel" onclick="event.stopPropagation()">
-    <div class="panel-handle"></div>
-    <div class="panel-title">Automations</div>
-    <div class="panel-row">
-      <div class="panel-row-icon" style="background:rgba(255,213,10,.12)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FFD60A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div>
-      <div class="panel-row-text"><div class="panel-row-name">Sunrise wake-up</div><div class="panel-row-sub">On at 07:00 weekdays</div></div>
-      <div class="sw on" onclick="event.stopPropagation();this.classList.toggle('on')"></div>
-    </div>
-    <div class="panel-row">
-      <div class="panel-row-icon" style="background:rgba(99,102,241,.15)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary-bright)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div>
-      <div class="panel-row-text"><div class="panel-row-name">Bedtime dim</div><div class="panel-row-sub">Dims to 15% at 22:30</div></div>
-      <div class="sw on" onclick="event.stopPropagation();this.classList.toggle('on')"></div>
-    </div>
-    <div class="panel-row">
-      <div class="panel-row-icon" style="background:rgba(16,185,129,.12)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div>
-      <div class="panel-row-text"><div class="panel-row-name">Away mode</div><div class="panel-row-sub">All off when everyone leaves</div></div>
-      <div class="sw" onclick="event.stopPropagation();this.classList.toggle('on')"></div>
-    </div>
+    <div class="panel-handle"></div><div class="panel-title">Automations</div>
+    <div class="panel-row"><div class="panel-row-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div><div class="panel-row-text"><div class="panel-row-name">Sunrise wake-up</div><div class="panel-row-sub">On at 07:00 weekdays</div></div><div class="sw on" onclick="event.stopPropagation();this.classList.toggle('on')"></div></div>
+    <div class="panel-row"><div class="panel-row-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div class="panel-row-text"><div class="panel-row-name">Bedtime dim</div><div class="panel-row-sub">Dims to 15% at 22:30</div></div><div class="sw on" onclick="event.stopPropagation();this.classList.toggle('on')"></div></div>
+    <div class="panel-row"><div class="panel-row-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div><div class="panel-row-text"><div class="panel-row-name">Away mode</div><div class="panel-row-sub">All off when everyone leaves</div></div><div class="sw" onclick="event.stopPropagation();this.classList.toggle('on')"></div></div>
     <div class="panel-close-btn" onclick="closePanel(document.getElementById('auto-panel'))">Done</div>
   </div>
 </div>
 
-<!-- Alerts Panel -->
 <div class="panel-overlay" id="alerts-panel" onclick="closePanel(this)">
   <div class="panel" onclick="event.stopPropagation()">
-    <div class="panel-handle"></div>
-    <div class="panel-title">Alerts</div>
-    <div class="panel-row" id="alert-1">
-      <div style="width:8px;height:8px;border-radius:50%;background:var(--orange);box-shadow:0 0 6px var(--orange);flex-shrink:0;margin-top:4px"></div>
-      <div class="panel-row-text"><div class="panel-row-name">Office light left on</div><div class="panel-row-sub">No motion for 2 hours</div></div>
-      <div class="icon-btn" style="width:30px;height:30px" onclick="dismissAlert('alert-1')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
-    </div>
-    <div class="panel-row" id="alert-2">
-      <div style="width:8px;height:8px;border-radius:50%;background:var(--primary-bright);box-shadow:0 0 6px var(--primary);flex-shrink:0;margin-top:4px"></div>
-      <div class="panel-row-text"><div class="panel-row-name">Software update ready</div><div class="panel-row-sub">Version 3.4 available</div></div>
-      <div class="icon-btn" style="width:30px;height:30px" onclick="dismissAlert('alert-2')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div>
-    </div>
+    <div class="panel-handle"></div><div class="panel-title">Alerts</div>
+    <div class="panel-row" id="alert-1"><div style="width:7px;height:7px;border-radius:50%;background:var(--orange);flex-shrink:0;margin-top:4px"></div><div class="panel-row-text"><div class="panel-row-name">Office light left on</div><div class="panel-row-sub">No motion for 2 hours</div></div><div class="icon-btn" style="width:28px;height:28px" onclick="dismissAlert('alert-1')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div></div>
+    <div class="panel-row" id="alert-2"><div style="width:7px;height:7px;border-radius:50%;background:rgba(255,255,255,0.55);flex-shrink:0;margin-top:4px"></div><div class="panel-row-text"><div class="panel-row-name">Software update ready</div><div class="panel-row-sub">Version 3.4 available</div></div><div class="icon-btn" style="width:28px;height:28px" onclick="dismissAlert('alert-2')"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div></div>
     <div class="panel-close-btn" onclick="clearAllAlerts()">Clear all</div>
   </div>
 </div>
 
-<!-- About Panel -->
 <div class="panel-overlay" id="about-panel" onclick="closePanel(this)">
   <div class="panel" onclick="event.stopPropagation()">
-    <div class="panel-handle"></div>
-    <div class="panel-title">Profile</div>
-    <div style="padding:0 22px 18px;display:flex;align-items:center;gap:14px;border-bottom:1px solid rgba(255,255,255,.06)">
-      <div style="width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,var(--primary),var(--primary-bright));display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:white">H</div>
-      <div><div style="font-size:17px;font-weight:700;color:var(--t1)">Home</div><div style="font-size:13px;color:var(--t2);margin-top:2px">2 Tuya devices · EU Cloud</div></div>
-    </div>
-    <div class="panel-row">
-      <div class="panel-row-icon" style="background:rgba(99,102,241,.15)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--primary-bright)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M16.24 7.76a6 6 0 0 1 0 8.49M4.93 19.07a10 10 0 0 1 0-14.14M7.76 16.24a6 6 0 0 1 0-8.49"/></svg></div>
-      <div class="panel-row-text"><div class="panel-row-name">Tuya EU Cloud</div><div class="panel-row-sub">openapi.tuyaeu.com</div></div>
-      <div style="width:8px;height:8px;border-radius:50%;background:var(--secondary);box-shadow:0 0 6px var(--secondary)"></div>
-    </div>
-    <div class="panel-row">
-      <div class="panel-row-icon" style="background:rgba(16,185,129,.12)"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      <div class="panel-row-text"><div class="panel-row-name">Privacy</div><div class="panel-row-sub">Credentials stored locally on device</div></div>
-    </div>
+    <div class="panel-handle"></div><div class="panel-title">Profile</div>
+    <div style="padding:0 20px 15px;display:flex;align-items:center;gap:13px;border-bottom:1px solid rgba(255,255,255,.06)"><div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:rgba(255,255,255,0.65)">H</div><div><div style="font-size:16px;font-weight:700">Home</div><div style="font-size:12px;color:var(--t2);margin-top:2px">2 Tuya devices · EU Cloud</div></div></div>
+    <div class="panel-row"><div class="panel-row-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M16.24 7.76a6 6 0 0 1 0 8.49M4.93 19.07a10 10 0 0 1 0-14.14M7.76 16.24a6 6 0 0 1 0-8.49"/></svg></div><div class="panel-row-text"><div class="panel-row-name">Tuya EU Cloud</div><div class="panel-row-sub">openapi.tuyaeu.com</div></div><div style="width:7px;height:7px;border-radius:50%;background:var(--green)"></div></div>
+    <div class="panel-row"><div class="panel-row-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="panel-row-text"><div class="panel-row-name">Privacy</div><div class="panel-row-sub">Credentials stored locally on device</div></div></div>
     <div class="panel-close-btn" onclick="closePanel(document.getElementById('about-panel'))">Done</div>
   </div>
 </div>
 
-
 <script>
-
-/* ── Alerts ── */
 let alertCount=2;
-function dismissAlert(id){
-  const el=document.getElementById(id);if(!el)return;
-  el.style.transition='opacity .3s,max-height .35s,padding .35s';
-  el.style.opacity='0';el.style.maxHeight='0';el.style.padding='0';el.style.overflow='hidden';
-  alertCount--;
-  const b=document.getElementById('alert-badge');
-  b.textContent=alertCount;if(alertCount<=0)b.style.display='none';
-}
-function clearAllAlerts(){
-  ['alert-1','alert-2'].forEach(dismissAlert);
-  closePanel(document.getElementById('alerts-panel'));
-}
-
-
-
-/* ── Particles ── */
-(function(){
-  const c=document.getElementById('bg-canvas'),ctx=c.getContext('2d');
-  let p=[];
-  function resize(){c.width=window.innerWidth;c.height=window.innerHeight;}
-  window.addEventListener('resize',resize);resize();
-  const count=window.innerWidth<600?30:55;
-  for(let i=0;i<count;i++) p.push({x:Math.random()*c.width,y:Math.random()*c.height,s:Math.random()*1.5,vx:(Math.random()-.5)*.25,vy:(Math.random()-.5)*.25});
-  function anim(){
-    ctx.clearRect(0,0,c.width,c.height);
-    p.forEach(i=>{
-      i.x+=i.vx;i.y+=i.vy;
-      if(i.x<0||i.x>c.width)i.vx*=-1;
-      if(i.y<0||i.y>c.height)i.vy*=-1;
-      ctx.fillStyle='rgba(255,255,255,0.12)';
-      ctx.beginPath();ctx.arc(i.x,i.y,i.s,0,Math.PI*2);ctx.fill();
-    });
-    requestAnimationFrame(anim);
-  }
-  anim();
-})();
-
-
-
-/* ── Config (stored in localStorage) ── */
-const CFG_KEY = 'tuya_home_config';
-let CFG = {
-  worker: '',
-  devices: [
-    { id: 'bf8b0e945d8c5f9861fjzy', name: 'Led Lights Tak',      icon: 'ceiling' },
-    { id: 'bf1cf6aca13749cf898g3p', name: 'Led Lights Skrivbord', icon: 'desk'    },
-  ]
-};
-try { const s=localStorage.getItem(CFG_KEY); if(s) CFG=JSON.parse(s); } catch(e){}
-
-function saveConfig(){
-  const w=document.getElementById('cfg-worker').value.trim();
-  const n0=document.getElementById('cfg-name0').value.trim();
-  const d0=document.getElementById('cfg-dev0').value.trim();
-  const n1=document.getElementById('cfg-name1').value.trim();
-  const d1=document.getElementById('cfg-dev1').value.trim();
-  if(!w){ showToast('Enter your Worker URL','error'); return; }
-  if(!d0||!d1){ showToast('Enter both Device IDs','error'); return; }
-  CFG.worker=w;
-  if(n0) CFG.devices[0].name=n0;
-  if(d0) CFG.devices[0].id=d0;
-  if(n1) CFG.devices[1].name=n1;
-  if(d1) CFG.devices[1].id=d1;
-  try{localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){}
-  closePanel(document.getElementById('config-panel'));
-  showToast('Saved — connecting…');
-  setTimeout(()=>syncAllLights(),400);
-}
-
-function loadConfigIntoPanel(){
-  document.getElementById('cfg-worker').value=CFG.worker||'';
-  document.getElementById('cfg-name0').value=CFG.devices[0].name||'';
-  document.getElementById('cfg-dev0').value=CFG.devices[0].id||'';
-  document.getElementById('cfg-name1').value=CFG.devices[1].name||'';
-  document.getElementById('cfg-dev1').value=CFG.devices[1].id||'';
-}
-
-/* ── Light state ── */
-const LIGHTS = [
-  { idx:0, on:false, bright:100, color:'#FFD60A', hue:30,  sat:255 },
-  { idx:1, on:false, bright:100, color:'#FFD60A', hue:30,  sat:255 },
-];
-const COLORS=['#FFD60A','#FF9F0A','#FF453A','#30D158','#4A9EFF','#5AC8FA','#BF5AF2','#ffffff'];
-
-const SCENES={
-  evening: [{on:true,bright:40,hue:30,sat:200},{on:true,bright:20,hue:250,sat:200}],
-  morning: [{on:true,bright:100,hue:30,sat:50},{on:true,bright:100,hue:30,sat:50}],
-  movie:   [{on:false,bright:0,hue:30,sat:255},{on:true,bright:10,hue:250,sat:220}],
-  focus:   [{on:true,bright:100,hue:30,sat:0},{on:true,bright:100,hue:30,sat:0}],
-  party:   [{on:true,bright:100,hue:0,sat:255},{on:true,bright:100,hue:170,sat:255}],
-  away:    [{on:false,bright:0,hue:30,sat:255},{on:false,bright:0,hue:30,sat:255}],
-};
-
-/* ── Tuya API helpers ── */
-function workerUrl(path){ return (CFG.worker||'').replace(/\/$/,'')+path; }
-
-async function tuyaStatus(deviceId){
-  if(!CFG.worker) throw new Error('no-worker');
-  const r=await fetch(workerUrl(`/status?device=${deviceId}`));
-  if(!r.ok) throw new Error('HTTP '+r.status);
-  return r.json();
-}
-
-async function tuyaCommand(deviceId, commands){
-  if(!CFG.worker) throw new Error('no-worker');
-  const r=await fetch(workerUrl('/command'),{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({device:deviceId,commands})
-  });
-  if(!r.ok) throw new Error('HTTP '+r.status);
-  return r.json();
-}
-
-/* Parse Tuya status array into our state */
-function parseTuyaStatus(statusArr, lightIdx){
-  if(!Array.isArray(statusArr)) return;
-  const find=(code)=>statusArr.find(s=>s.code===code)?.value;
-  const sw=find('switch_led');
-  // Parse colour_data — stored as JSON string or object
-  let colourData = find('colour_data_v2') ?? find('colour_data');
-  if(typeof colourData === 'string') { try { colourData = JSON.parse(colourData); } catch(e) { colourData = null; } }
-  if(sw!==undefined) LIGHTS[lightIdx].on=sw;
-  // Brightness comes from v inside colour_data (0-1000 scale)
-  if(colourData?.v !== undefined) LIGHTS[lightIdx].bright = Math.round(colourData.v / 10);
-  if(colourData?.h !== undefined) LIGHTS[lightIdx].hue = colourData.h;
-  if(colourData?.s !== undefined) LIGHTS[lightIdx].sat = colourData.s;
-}
-
-/* ── Sync all lights from cloud ── */
+function dismissAlert(id){const el=document.getElementById(id);if(!el)return;el.style.transition='opacity .28s,max-height .32s,padding .32s';el.style.opacity='0';el.style.maxHeight='0';el.style.padding='0';el.style.overflow='hidden';alertCount--;const b=document.getElementById('alert-badge');b.textContent=alertCount;if(alertCount<=0)b.style.display='none';}
+function clearAllAlerts(){['alert-1','alert-2'].forEach(dismissAlert);closePanel(document.getElementById('alerts-panel'));}
+const CFG_KEY='tuya_home_config';
+let CFG={worker:'',devices:[{id:'bf8b0e945d8c5f9861fjzy',name:'Led Lights Tak',icon:'ceiling'},{id:'bf1cf6aca13749cf898g3p',name:'Led Lights Skrivbord',icon:'desk'}]};
+try{const s=localStorage.getItem(CFG_KEY);if(s)CFG=JSON.parse(s);}catch(e){}
+function saveConfig(){const w=document.getElementById('cfg-worker').value.trim();const n0=document.getElementById('cfg-name0').value.trim();const d0=document.getElementById('cfg-dev0').value.trim();const n1=document.getElementById('cfg-name1').value.trim();const d1=document.getElementById('cfg-dev1').value.trim();if(!w){showToast('Enter your Worker URL','error');return;}if(!d0||!d1){showToast('Enter both Device IDs','error');return;}CFG.worker=w;if(n0)CFG.devices[0].name=n0;if(d0)CFG.devices[0].id=d0;if(n1)CFG.devices[1].name=n1;if(d1)CFG.devices[1].id=d1;try{localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){}closePanel(document.getElementById('config-panel'));showToast('Saved — connecting…');setTimeout(()=>syncAllLights(),400);}
+function loadConfigIntoPanel(){document.getElementById('cfg-worker').value=CFG.worker||'';document.getElementById('cfg-name0').value=CFG.devices[0].name||'';document.getElementById('cfg-dev0').value=CFG.devices[0].id||'';document.getElementById('cfg-name1').value=CFG.devices[1].name||'';document.getElementById('cfg-dev1').value=CFG.devices[1].id||'';}
+const LIGHTS=[{idx:0,on:false,bright:100},{idx:1,on:false,bright:100}];
+const SCENES={evening:[{on:true,bright:40,hue:30,sat:200},{on:true,bright:20,hue:250,sat:200}],morning:[{on:true,bright:100,hue:30,sat:50},{on:true,bright:100,hue:30,sat:50}],movie:[{on:false,bright:0},{on:true,bright:10,hue:250,sat:220}],focus:[{on:true,bright:100,hue:30,sat:0},{on:true,bright:100,hue:30,sat:0}],party:[{on:true,bright:100,hue:0,sat:255},{on:true,bright:100,hue:170,sat:255}],away:[{on:false,bright:0},{on:false,bright:0}]};
+function workerUrl(p){return(CFG.worker||'').replace(/\/$/,'')+p;}
+async function tuyaStatus(id){if(!CFG.worker)throw new Error('no-worker');const r=await fetch(workerUrl(`/status?device=${id}`));if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}
+async function tuyaCommand(id,commands){if(!CFG.worker)throw new Error('no-worker');const r=await fetch(workerUrl('/command'),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({device:id,commands})});if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}
+function parseTuyaStatus(arr,i){if(!Array.isArray(arr))return;const find=c=>arr.find(s=>s.code===c)?.value;const sw=find('switch_led');let cd=find('colour_data_v2')??find('colour_data');if(typeof cd==='string'){try{cd=JSON.parse(cd);}catch(e){cd=null;}}if(sw!==undefined)LIGHTS[i].on=sw;if(cd?.v!==undefined)LIGHTS[i].bright=Math.round(cd.v/10);}
 let syncing=false;
-async function syncAllLights(){
-  if(syncing) return;
-  syncing=true;
-  setStatus('Syncing…','Reaching Tuya cloud');
-  const btn=document.getElementById('refresh-btn');
-  btn.style.opacity='.5';btn.style.pointerEvents='none';
-
-  if(!CFG.worker){
-    setStatus('Not configured','Open Settings and enter your Worker URL','warn');
-    syncing=false;btn.style.opacity='';btn.style.pointerEvents='';
-    showToast('Open Settings to configure','error');
-    renderGrid();updateMaster();
-    return;
-  }
-
-  try {
-    const results = await Promise.all(CFG.devices.map(async(dev,i)=>{
-      const d=await tuyaStatus(dev.id);
-      if(d.success && d.result) parseTuyaStatus(d.result, i);
-      return d.success;
-    }));
-    renderGrid();
-    updateMaster();
-    const ok=results.every(Boolean);
-    setStatus(ok?'Connected':'Partial sync', ok?'Tuya EU cloud · Live':'Some devices unreachable', ok?'ok':'warn');
-  } catch(e){
-    setStatus('Connection failed','Check your Worker URL in Settings','err');
-    showToast('Could not reach Worker','error');
-    renderGrid();updateMaster();
-  }
-  syncing=false;btn.style.opacity='';btn.style.pointerEvents='';
-}
-
-/* ── Toggle a light ── */
-async function toggleLight(idx){
-  const L=LIGHTS[idx];
-  const newState=!L.on;
-  L.on=newState;
-  refreshCard(idx);
-  updateMaster();
-
-  const card=document.getElementById('lc-'+idx);
-  card.classList.add('loading-state');
-  try{
-    await tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:newState}]);
-    showToast((CFG.devices[idx].name)+' '+(newState?'on':'off'));
-  }catch(e){
-    L.on=!newState;refreshCard(idx);updateMaster();
-    showToast('Failed to reach device','error');
-  }
-  card.classList.remove('loading-state');
-}
-
-/* ── Set brightness ── */
+async function syncAllLights(){if(syncing)return;syncing=true;setStatus('Syncing…','Reaching Tuya cloud');const btn=document.getElementById('refresh-btn');btn.style.opacity='.4';btn.style.pointerEvents='none';if(!CFG.worker){setStatus('Not configured','Open Settings and enter your Worker URL','warn');syncing=false;btn.style.opacity='';btn.style.pointerEvents='';showToast('Open Settings to configure','error');renderGrid();updateMaster();return;}try{const res=await Promise.all(CFG.devices.map(async(dev,i)=>{const d=await tuyaStatus(dev.id);if(d.success&&d.result)parseTuyaStatus(d.result,i);return d.success;}));renderGrid();updateMaster();const ok=res.every(Boolean);setStatus(ok?'Connected':'Partial sync',ok?'Tuya EU cloud · Live':'Some devices unreachable',ok?'ok':'warn');}catch(e){setStatus('Connection failed','Check your Worker URL in Settings','err');showToast('Could not reach Worker','error');renderGrid();updateMaster();}syncing=false;btn.style.opacity='';btn.style.pointerEvents='';}
+async function toggleLight(idx){const L=LIGHTS[idx];const ns=!L.on;L.on=ns;refreshCard(idx);updateMaster();const card=document.getElementById('lc-'+idx);card.classList.add('loading-state');try{await tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:ns}]);showToast(CFG.devices[idx].name+' '+(ns?'on':'off'));}catch(e){L.on=!ns;refreshCard(idx);updateMaster();showToast('Failed to reach device','error');}card.classList.remove('loading-state');}
 let brightTimers={};
-function setBright(idx,val){
-  const rounded=Math.round(parseInt(val)/10)*10||10;
-  LIGHTS[idx].bright=rounded;
-  const p=document.getElementById('pct-'+idx);if(p)p.textContent=rounded+'%';
-  const card=document.getElementById('lc-'+idx);
-  if(card){
-    const sl=card.querySelector('.lc-slider');
-    if(sl){ sl.value=rounded; sl.style.background=sliderGradient(LIGHTS[idx].color||'#4A9EFF'); }
-    const lamp=card.querySelector('.lc-lamp');
-    if(lamp) lamp.innerHTML=lampSVG(LIGHTS[idx].color||'#FFD60A',rounded);
-  }
-  clearTimeout(brightTimers[idx]);
-  brightTimers[idx]=setTimeout(async()=>{
-    try{
-      const v=Math.max(10,LIGHTS[idx].bright*10);
-      const h=LIGHTS[idx].hue??0;
-      const s=LIGHTS[idx].sat??1000;
-      await tuyaCommand(CFG.devices[idx].id,[
-        {code:'work_mode',value:'colour'},
-        {code:'colour_data',value:JSON.stringify({h,s,v})}
-      ]);
-    }catch(e){ showToast('Brightness update failed','error'); }
-  },400);
-}
-
-/* ── Set color ── */
-async function setColor(idx, hexColor){
-  LIGHTS[idx].color=hexColor;
-  const rgb=hexToRgb(hexColor);
-  const hsv=rgbToHsv(rgb.r,rgb.g,rgb.b);
-  LIGHTS[idx].hue=Math.round(hsv.h*360);
-  LIGHTS[idx].sat=Math.round(hsv.s*1000);
-  refreshCard(idx);
-  try{
-    const v=Math.max(10,LIGHTS[idx].bright*10);
-    if(hexColor==='#ffffff'){
-      await tuyaCommand(CFG.devices[idx].id,[
-        {code:'work_mode',value:'colour'},
-        {code:'colour_data',value:JSON.stringify({h:0,s:0,v})}
-      ]);
-    } else {
-      await tuyaCommand(CFG.devices[idx].id,[
-        {code:'work_mode',value:'colour'},
-        {code:'colour_data',value:JSON.stringify({h:LIGHTS[idx].hue,s:LIGHTS[idx].sat,v})}
-      ]);
-    }
-  }catch(e){ showToast('Color update failed','error'); }
-}
-
-/* ── Toggle all ── */
-async function toggleAll(){
-  const anyOn=LIGHTS.some(l=>l.on);
-  const newState=!anyOn;
-  LIGHTS.forEach(l=>l.on=newState);
-  renderGrid();updateMaster();
-  try{
-    await Promise.all(CFG.devices.map((dev,i)=>tuyaCommand(dev.id,[{code:'switch_led',value:newState}])));
-    showToast(newState?'All lights on':'All lights off');
-  }catch(e){ showToast('Could not reach all devices','error'); }
-}
-
-/* ── Apply scene ── */
-async function applyScene(el, key){
-  document.querySelectorAll('.scene-pill').forEach(p=>p.classList.remove('active'));
-  el.classList.add('active');
-  const cfg=SCENES[key];
-  LIGHTS.forEach((l,i)=>{ Object.assign(l,cfg[i]); });
-  renderGrid();updateMaster();
-  try{
-    await Promise.all(CFG.devices.map(async(dev,i)=>{
-      const sc=cfg[i];
-      const cmds=[{code:'switch_led',value:sc.on}];
-      if(sc.on){
-        if(sc.sat===0){
-          cmds.push({code:'work_mode',value:'colour'},{code:'colour_data',value:JSON.stringify({h:0,s:0,v:Math.max(10,sc.bright*10)})});
-        } else {
-          cmds.push({code:'work_mode',value:'colour'},{code:'colour_data',value:JSON.stringify({h:sc.hue,s:sc.sat,v:Math.max(10,sc.bright*10)})});
-        }
-      }
-      return tuyaCommand(dev.id,cmds);
-    }));
-    showToast(`${key.charAt(0).toUpperCase()+key.slice(1)} scene applied`);
-  }catch(e){ showToast('Scene partially applied','error'); }
-}
-
-/* ── Render ── */
-function h2r(hex){const r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);return`${r},${g},${b}`}
-function hexToRgb(hex){return{r:parseInt(hex.slice(1,3),16),g:parseInt(hex.slice(3,5),16),b:parseInt(hex.slice(5,7),16)}}
-function rgbToHsv(r,g,b){r/=255;g/=255;b/=255;const max=Math.max(r,g,b),min=Math.min(r,g,b),d=max-min;let h=0,s=max===0?0:d/max,v=max;if(d){if(max===r)h=(g-b)/d%6;else if(max===g)h=(b-r)/d+2;else h=(r-g)/d+4;h/=6;if(h<0)h+=1;}return{h,s,v};}
-function ibg(c,on){return on?`rgba(${h2r(c)},0.18)`:'rgba(255,255,255,0.06)'}
-
-const ICONS={
-  ceiling:(c)=>`<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><path d="M5 12a7 7 0 1 1 14 0"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="8" y1="16" x2="16" y2="16"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`,
-  desk:   (c)=>`<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 1 6 6c0 3-2 5-4 6v2H10v-2c-2-1-4-3-4-6a6 6 0 0 1 6-6z"/><line x1="10" y1="17" x2="14" y2="17"/><line x1="11" y1="20" x2="13" y2="20"/></svg>`,
-};
-
-function lampSVG(color, bright){
-  const a=bright/100;
-  const glow=color;
-  return `<svg width="72" height="80" viewBox="0 0 72 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <radialGradient id="lg${color.replace('#','')}" cx="50%" cy="100%" r="80%">
-        <stop offset="0%" stop-color="${glow}" stop-opacity="${0.55*a}"/>
-        <stop offset="100%" stop-color="${glow}" stop-opacity="0"/>
-      </radialGradient>
-    </defs>
-    <!-- glow pool -->
-    <ellipse cx="36" cy="74" rx="30" ry="8" fill="url(#lg${color.replace('#','')})"/>
-    <!-- shade -->
-    <path d="M20 38 L28 18 H44 L52 38 Z" fill="${glow}" opacity="${0.25+0.45*a}"/>
-    <path d="M20 38 L28 18 H44 L52 38 Z" fill="url(#lg${color.replace('#','')})" opacity="0.4"/>
-    <!-- shade rim -->
-    <line x1="20" y1="38" x2="52" y2="38" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
-    <!-- bulb -->
-    <circle cx="36" cy="40" r="4" fill="${glow}" opacity="${0.6+0.4*a}"/>
-    <!-- pole -->
-    <rect x="34.5" y="44" width="3" height="22" rx="1.5" fill="rgba(255,255,255,0.2)"/>
-    <!-- base -->
-    <path d="M26 66 Q36 62 46 66 L48 70 H24 Z" fill="rgba(255,255,255,0.15)"/>
-  </svg>`;
-}
-
-function sliderGradient(color){
-  return `linear-gradient(to right, rgba(255,255,255,0.15), ${color})`;
-}
-
-function renderCard(i){
-  const l=LIGHTS[i],dev=CFG.devices[i];
-  const ic=l.on?l.color:'rgba(255,255,255,0.3)';
-  const icon=ICONS[dev.icon]||ICONS.desk;
-  const col=l.on?l.color:'#4A9EFF';
-  return `<div class="g light-card ${l.on?'on':'off'}" id="lc-${i}" onclick="tapCard(${i},event)">
-    <div class="lc-top">
-      <div class="lc-icon" style="background:${ibg(l.color,l.on)}">${icon(ic)}</div>
-      <div style="display:flex;align-items:center;gap:8px">
-        <div class="lc-lamp">${l.on?lampSVG(col,l.bright):''}</div>
-        <div class="sw ${l.on?'on':''}" onclick="event.stopPropagation();toggleLight(${i})"></div>
-      </div>
-    </div>
-    <div class="lc-name">${dev.name}</div>
-    <div class="lc-status">${l.on?'On':'Off'}</div>
-    <div class="lc-slider-wrap">
-      <input class="lc-slider" type="range" min="10" max="100" step="10" value="${l.bright}"
-        style="background:${sliderGradient(col)}"
-        oninput="setBright(${i},this.value)" onclick="event.stopPropagation()">
-      <span class="lc-pct" id="pct-${i}">${l.bright}%</span>
-    </div>
-  </div>`;
-}
-
-function renderGrid(){ document.getElementById('lightsGrid').innerHTML=LIGHTS.map((_,i)=>renderCard(i)).join(''); }
-function refreshCard(i){
-  const l=LIGHTS[i],dev=CFG.devices[i],card=document.getElementById('lc-'+i);
-  if(!card)return;
-  card.className=`g light-card ${l.on?'on':'off'}`;
-  const ic=l.on?l.color:'rgba(255,255,255,0.3)';
-  const icon=ICONS[dev.icon]||ICONS.desk;
-  card.querySelector('.lc-icon').style.background=ibg(l.color,l.on);
-  card.querySelector('.lc-icon').innerHTML=icon(ic);
-  card.querySelector('.sw').className=`sw ${l.on?'on':''}`;
-  card.querySelector('.lc-status').textContent=l.on?`On · ${l.bright}%`:'Off';
-  const p=document.getElementById('pct-'+i);if(p)p.textContent=l.bright+'%';
-  // update slider gradient and lamp
-  const sliderEl=card.querySelector('.lc-slider');
-  if(sliderEl){
-    sliderEl.style.background=sliderGradient(l.on?l.color:'#4A9EFF');
-    sliderEl.value=l.bright;
-  }
-  // update lamp illustration
-  const lampEl=card.querySelector('.lc-lamp');
-  if(lampEl) lampEl.innerHTML=l.on?lampSVG(l.color,l.bright):'';
-}
-
-function updateMaster(){
-  const on=LIGHTS.filter(l=>l.on).length;
-  document.getElementById('master-name').textContent=on===0?'All lights off':`${on} light${on===1?'':'s'} on`;
-  document.getElementById('master-sub').textContent=on>0?'Tap to turn all off':'Tap to turn all on';
-  document.getElementById('master-sw').className='sw'+(on>0?' on':'');
-}
-
-function tapCard(i,e){ addRipple(document.getElementById('lc-'+i),e); }
-
-function setStatus(text,sub,type='ok'){
-  document.getElementById('status-text').textContent=text;
-  document.getElementById('status-sub').textContent=sub;
-  const dot=document.querySelector('.pulse-dot');
-  dot.style.background=type==='err'?'var(--red)':type==='warn'?'var(--orange)':'var(--green)';
-  dot.style.boxShadow=`0 0 8px ${type==='err'?'var(--red)':type==='warn'?'var(--orange)':'var(--green)'}`;
-}
-
-/* ── Toast ── */
+function setBright(idx,val){const v=Math.round(parseInt(val)/10)*10||10;LIGHTS[idx].bright=v;const p=document.getElementById('pct-'+idx);if(p)p.textContent=v+'%';const sl=document.querySelector(`#lc-${idx} .lc-slider`);if(sl)sl.value=v;clearTimeout(brightTimers[idx]);brightTimers[idx]=setTimeout(async()=>{try{await tuyaCommand(CFG.devices[idx].id,[{code:'work_mode',value:'colour'},{code:'colour_data',value:JSON.stringify({h:0,s:0,v:Math.max(10,v*10)})}]);}catch(e){showToast('Brightness update failed','error');}},400);}
+async function toggleAll(){const anyOn=LIGHTS.some(l=>l.on);const ns=!anyOn;LIGHTS.forEach(l=>l.on=ns);renderGrid();updateMaster();try{await Promise.all(CFG.devices.map(dev=>tuyaCommand(dev.id,[{code:'switch_led',value:ns}])));showToast(ns?'All lights on':'All lights off');}catch(e){showToast('Could not reach all devices','error');}}
+async function applyScene(el,key){document.querySelectorAll('.scene-pill').forEach(p=>p.classList.remove('active'));el.classList.add('active');const cfg=SCENES[key];LIGHTS.forEach((l,i)=>{Object.assign(l,cfg[i]);});renderGrid();updateMaster();try{await Promise.all(CFG.devices.map(async(dev,i)=>{const sc=cfg[i];const cmds=[{code:'switch_led',value:sc.on}];if(sc.on){if(sc.sat===0){cmds.push({code:'work_mode',value:'colour'},{code:'colour_data',value:JSON.stringify({h:0,s:0,v:Math.max(10,sc.bright*10)})});}else if(sc.hue!==undefined){cmds.push({code:'work_mode',value:'colour'},{code:'colour_data',value:JSON.stringify({h:sc.hue,s:sc.sat||0,v:Math.max(10,sc.bright*10)})});}}return tuyaCommand(dev.id,cmds);}));showToast(`${key.charAt(0).toUpperCase()+key.slice(1)} scene applied`);}catch(e){showToast('Scene partially applied','error');}}
+const ICONS={ceiling:()=>`<svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="2" x2="12" y2="6"/><path d="M5 12a7 7 0 1 1 14 0"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="8" y1="16" x2="16" y2="16"/><line x1="9" y1="19" x2="15" y2="19"/></svg>`,desk:()=>`<svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.7)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 1 6 6c0 3-2 5-4 6v2H10v-2c-2-1-4-3-4-6a6 6 0 0 1 6-6z"/><line x1="10" y1="17" x2="14" y2="17"/><line x1="11" y1="20" x2="13" y2="20"/></svg>`};
+function lampSVG(bright){const a=bright/100;return`<svg width="64" height="72" viewBox="0 0 64 72" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="lg" cx="50%" cy="100%" r="80%"><stop offset="0%" stop-color="white" stop-opacity="${0.4*a}"/><stop offset="100%" stop-color="white" stop-opacity="0"/></radialGradient></defs><ellipse cx="32" cy="67" rx="22" ry="6" fill="url(#lg)"/><path d="M17 34 L25 14 H40 L48 34 Z" fill="white" opacity="${0.08+0.18*a}"/><line x1="17" y1="34" x2="48" y2="34" stroke="rgba(255,255,255,0.2)" stroke-width="1.5" stroke-linecap="round"/><circle cx="32" cy="36" r="3.5" fill="white" opacity="${0.5+0.5*a}"/><rect x="30.5" y="39.5" width="3" height="18" rx="1.5" fill="rgba(255,255,255,0.13)"/><path d="M22 57.5 Q32 54 42 57.5 L44 61 H20 Z" fill="rgba(255,255,255,0.08)"/></svg>`;}
+function renderCard(i){const l=LIGHTS[i],dev=CFG.devices[i];const icon=ICONS[dev.icon]||ICONS.desk;return`<div class="g light-card ${l.on?'on':'off'}" id="lc-${i}" onclick="tapCard(${i},event)"><div class="lc-top"><div class="lc-icon">${icon()}</div><div style="display:flex;align-items:center;gap:7px"><div class="lc-lamp">${l.on?lampSVG(l.bright):''}</div><div class="sw ${l.on?'on':''}" onclick="event.stopPropagation();toggleLight(${i})"></div></div></div><div class="lc-name">${dev.name}</div><div class="lc-status">${l.on?'On':'Off'}</div><div class="lc-slider-wrap"><input class="lc-slider" type="range" min="10" max="100" step="10" value="${l.bright}" oninput="setBright(${i},this.value)" onclick="event.stopPropagation()"><span class="lc-pct" id="pct-${i}">${l.bright}%</span></div></div>`;}
+function renderGrid(){document.getElementById('lightsGrid').innerHTML=LIGHTS.map((_,i)=>renderCard(i)).join('');}
+function refreshCard(i){const l=LIGHTS[i],card=document.getElementById('lc-'+i);if(!card)return;card.className=`g light-card ${l.on?'on':'off'}`;card.querySelector('.sw').className=`sw ${l.on?'on':''}`;card.querySelector('.lc-status').textContent=l.on?`On · ${l.bright}%`:'Off';const p=document.getElementById('pct-'+i);if(p)p.textContent=l.bright+'%';const sl=card.querySelector('.lc-slider');if(sl)sl.value=l.bright;const lmp=card.querySelector('.lc-lamp');if(lmp)lmp.innerHTML=l.on?lampSVG(l.bright):'';}
+function updateMaster(){const on=LIGHTS.filter(l=>l.on).length;document.getElementById('master-name').textContent=on===0?'All lights off':`${on} light${on===1?'':'s'} on`;document.getElementById('master-sub').textContent=on>0?'Tap to turn all off':'Tap to turn all on';document.getElementById('master-sw').className='sw'+(on>0?' on':'');}
+function tapCard(i,e){addRipple(document.getElementById('lc-'+i),e);}
+function setStatus(text,sub,type='ok'){document.getElementById('status-text').textContent=text;document.getElementById('status-sub').textContent=sub;const dot=document.getElementById('pulse-dot');dot.style.background=type==='err'?'var(--red)':type==='warn'?'var(--orange)':'var(--green)';}
 let toastTimer;
-function showToast(msg,type=''){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.className='toast'+(type==='error'?' error':'');
-  clearTimeout(toastTimer);
-  requestAnimationFrame(()=>{ t.classList.add('show'); toastTimer=setTimeout(()=>t.classList.remove('show'),2500); });
-}
-
-/* ── Panels / Nav ── */
-function openPanel(id){
-  if(id==='config-panel') loadConfigIntoPanel();
-  document.getElementById(id).classList.add('open');
-}
-function closePanel(el){ el.classList.remove('open'); }
-function navTo(el){
-  document.querySelectorAll('.nav-item').forEach(n=>{n.classList.remove('active');const sv=n.querySelector('svg');if(sv)sv.setAttribute('stroke','rgba(255,255,255,0.6)');});
-  el.classList.add('active');const sv=el.querySelector('svg');if(sv)sv.setAttribute('stroke','var(--blue)');
-}
-function addRipple(el,e){
-  if(!el)return;const r=el.getBoundingClientRect(),d=document.createElement('div'),size=60;
-  d.className='ripple-el';d.style.cssText=`width:${size}px;height:${size}px;left:${(e?e.clientX:r.left+r.width/2)-r.left-size/2}px;top:${(e?e.clientY:r.top+r.height/2)-r.top-size/2}px`;
-  el.appendChild(d);setTimeout(()=>d.remove(),600);
-}
-
-/* ── Weather ── */
-const WX={
-  sun:`<svg width="64" height="64" viewBox="0 0 64 64" fill="none" stroke="#FFD60A" stroke-width="3" stroke-linecap="round"><circle cx="32" cy="32" r="13" fill="rgba(255,213,10,0.18)"/><line x1="32" y1="6" x2="32" y2="13"/><line x1="32" y1="51" x2="32" y2="58"/><line x1="6" y1="32" x2="13" y2="32"/><line x1="51" y1="32" x2="58" y2="32"/><line x1="14" y1="14" x2="19" y2="19"/><line x1="45" y1="45" x2="50" y2="50"/><line x1="50" y1="14" x2="45" y2="19"/><line x1="19" y1="45" x2="14" y2="50"/></svg>`,
-  partly:`<svg width="64" height="64" viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-width="3"><circle cx="26" cy="26" r="11" stroke="#FFD60A" fill="rgba(255,213,10,0.15)"/><line x1="26" y1="8" x2="26" y2="14" stroke="#FFD60A"/><line x1="8" y1="26" x2="14" y2="26" stroke="#FFD60A"/><line x1="14" y1="14" x2="18" y2="18" stroke="#FFD60A"/><path d="M44 50H30a11 11 0 1 1 2.3-21.7A12 12 0 1 1 44 50z" stroke="#B0C4DE" fill="rgba(176,196,222,0.15)"/></svg>`,
-  cloud:`<svg width="64" height="64" viewBox="0 0 64 64" fill="none" stroke="#B0C4DE" stroke-width="3" stroke-linecap="round"><path d="M44 44H20a13 13 0 1 1 2.7-25.7A15 15 0 1 1 44 44z" fill="rgba(176,196,222,0.15)"/></svg>`,
-  rain:`<svg width="64" height="64" viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-width="3"><path d="M42 40H20a12 12 0 1 1 2.5-23.7A14 14 0 1 1 42 40z" stroke="#90A4B8" fill="rgba(176,196,222,0.12)"/><line x1="22" y1="48" x2="20" y2="56" stroke="#4A9EFF"/><line x1="32" y1="48" x2="30" y2="56" stroke="#4A9EFF"/><line x1="42" y1="48" x2="40" y2="56" stroke="#4A9EFF"/></svg>`,
-  snow:`<svg width="64" height="64" viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-width="3"><path d="M42 38H20a12 12 0 1 1 2.5-23.7A14 14 0 1 1 42 38z" stroke="#90A4B8" fill="rgba(176,196,222,0.12)"/><line x1="24" y1="47" x2="24" y2="57" stroke="#9EC8FF"/><line x1="19" y1="52" x2="29" y2="52" stroke="#9EC8FF"/><line x1="38" y1="47" x2="38" y2="57" stroke="#9EC8FF"/><line x1="33" y1="52" x2="43" y2="52" stroke="#9EC8FF"/></svg>`,
-  storm:`<svg width="64" height="64" viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-width="3"><path d="M42 38H20a12 12 0 1 1 2.5-23.7A14 14 0 1 1 42 38z" stroke="#888" fill="rgba(100,100,100,0.15)"/><polyline points="34,40 27,52 34,52 27,64" stroke="#FFD60A"/></svg>`,
-};
-function wxI(w){if(w===0)return WX.sun;if(w<=2)return WX.partly;if(w<=3)return WX.cloud;if(w<=49)return WX.cloud;if(w<=67)return WX.rain;if(w<=77)return WX.snow;if(w<=82)return WX.rain;if(w<=86)return WX.snow;return WX.storm;}
-function wxIs(w,sz){return wxI(w).replace('width="64" height="64"',`width="${sz}" height="${sz}"`);}
+function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(type==='error'?' error':'');clearTimeout(toastTimer);requestAnimationFrame(()=>{t.classList.add('show');toastTimer=setTimeout(()=>t.classList.remove('show'),2400);});}
+function openPanel(id){if(id==='config-panel')loadConfigIntoPanel();document.getElementById(id).classList.add('open');}
+function closePanel(el){el.classList.remove('open');}
+function navTo(el){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active');}
+function addRipple(el,e){if(!el)return;const r=el.getBoundingClientRect(),d=document.createElement('div'),sz=60;d.className='ripple-el';d.style.cssText=`width:${sz}px;height:${sz}px;left:${(e?e.clientX:r.left+r.width/2)-r.left-sz/2}px;top:${(e?e.clientY:r.top+r.height/2)-r.top-sz/2}px`;el.appendChild(d);setTimeout(()=>d.remove(),550);}
+const WX={sun:`<svg width="58" height="58" viewBox="0 0 64 64" fill="none" stroke="rgba(255,255,255,0.75)" stroke-width="2.2" stroke-linecap="round"><circle cx="32" cy="32" r="12" fill="rgba(255,255,255,0.08)"/><line x1="32" y1="7" x2="32" y2="13"/><line x1="32" y1="51" x2="32" y2="57"/><line x1="7" y1="32" x2="13" y2="32"/><line x1="51" y1="32" x2="57" y2="32"/><line x1="15" y1="15" x2="19.5" y2="19.5"/><line x1="44.5" y1="44.5" x2="49" y2="49"/><line x1="49" y1="15" x2="44.5" y2="19.5"/><line x1="19.5" y1="44.5" x2="15" y2="49"/></svg>`,partly:`<svg width="58" height="58" viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-width="2.2"><circle cx="26" cy="26" r="10" stroke="rgba(255,255,255,0.7)" fill="rgba(255,255,255,0.07)"/><line x1="26" y1="9" x2="26" y2="14" stroke="rgba(255,255,255,0.7)"/><line x1="9" y1="26" x2="14" y2="26" stroke="rgba(255,255,255,0.7)"/><line x1="14.5" y1="14.5" x2="18" y2="18" stroke="rgba(255,255,255,0.7)"/><path d="M43 49H29a10 10 0 1 1 2.1-19.8A11 11 0 1 1 43 49z" stroke="rgba(255,255,255,0.4)" fill="rgba(255,255,255,0.05)"/></svg>`,cloud:`<svg width="58" height="58" viewBox="0 0 64 64" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2.2" stroke-linecap="round"><path d="M43 43H19a12 12 0 1 1 2.5-23.7A14 14 0 1 1 43 43z" fill="rgba(255,255,255,0.05)"/></svg>`,rain:`<svg width="58" height="58" viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-width="2.2"><path d="M41 39H19a11 11 0 1 1 2.3-21.8A13 13 0 1 1 41 39z" stroke="rgba(255,255,255,0.4)" fill="rgba(255,255,255,0.04)"/><line x1="21" y1="47" x2="19" y2="55" stroke="rgba(255,255,255,0.45)"/><line x1="31" y1="47" x2="29" y2="55" stroke="rgba(255,255,255,0.45)"/><line x1="41" y1="47" x2="39" y2="55" stroke="rgba(255,255,255,0.45)"/></svg>`,snow:`<svg width="58" height="58" viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-width="2.2"><path d="M41 37H19a11 11 0 1 1 2.3-21.8A13 13 0 1 1 41 37z" stroke="rgba(255,255,255,0.4)" fill="rgba(255,255,255,0.04)"/><line x1="23" y1="46" x2="23" y2="55" stroke="rgba(255,255,255,0.4)"/><line x1="18.5" y1="50.5" x2="27.5" y2="50.5" stroke="rgba(255,255,255,0.4)"/><line x1="37" y1="46" x2="37" y2="55" stroke="rgba(255,255,255,0.4)"/><line x1="32.5" y1="50.5" x2="41.5" y2="50.5" stroke="rgba(255,255,255,0.4)"/></svg>`,storm:`<svg width="58" height="58" viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-width="2.2"><path d="M41 37H19a11 11 0 1 1 2.3-21.8A13 13 0 1 1 41 37z" stroke="rgba(255,255,255,0.35)" fill="rgba(255,255,255,0.03)"/><polyline points="33,39 26,51 33,51 26,63" stroke="rgba(255,255,255,0.7)"/></svg>`};
+function wxI(w){if(w===0)return WX.sun;if(w<=2)return WX.partly;if(w<=49)return WX.cloud;if(w<=67)return WX.rain;if(w<=77)return WX.snow;if(w<=86)return WX.rain;return WX.storm;}
+function wxIs(w,sz){return wxI(w).replace('width="58" height="58"',`width="${sz}" height="${sz}"`);}
 function wxD(w){if(w===0)return'Clear sky';if(w<=1)return'Mainly clear';if(w<=2)return'Partly cloudy';if(w<=3)return'Overcast';if(w<=49)return'Foggy';if(w<=55)return'Drizzle';if(w<=67)return'Rain';if(w<=77)return'Snow';if(w<=82)return'Showers';if(w<=86)return'Snow showers';return'Thunderstorm';}
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-async function loadWeather(){
-  try{
-    let lat=59.3293,lon=18.0686,city='Stockholm';
-    try{const p=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:4000}));lat=p.coords.latitude;lon=p.coords.longitude;try{const g=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`).then(r=>r.json());city=g.address?.city||g.address?.town||g.address?.village||city;}catch(e){}}catch(e){}
-    const d=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode,windspeed_10m,precipitation_probability&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=celsius&wind_speed_unit=kmh&forecast_days=5&timezone=auto`).then(r=>r.json());
-    const cur=d.current,daily=d.daily;
-    document.getElementById('wc-city').textContent=city;
-    document.getElementById('wc-temp').textContent=Math.round(cur.temperature_2m)+'°';
-    document.getElementById('wc-desc').textContent=wxD(cur.weathercode);
-    document.getElementById('wc-icon').innerHTML=wxI(cur.weathercode);
-    document.getElementById('wc-hi').textContent=Math.round(daily.temperature_2m_max[0])+'°';
-    document.getElementById('wc-lo').textContent=Math.round(daily.temperature_2m_min[0])+'°';
-    document.getElementById('wc-rain').textContent=(cur.precipitation_probability||daily.precipitation_probability_max[0]||0)+'%';
-    document.getElementById('wc-wind').textContent=Math.round(cur.windspeed_10m)+' km/h';
-    document.getElementById('wc-forecast').innerHTML=daily.weathercode.slice(0,5).map((_,i)=>{const dt=new Date(daily.time[i]+'T12:00:00');return`<div class="fc-item"><div class="fc-day">${DAYS[dt.getDay()].toUpperCase()}</div><div class="fc-icon">${wxIs(daily.weathercode[i],28)}</div><div class="fc-hi">${Math.round(daily.temperature_2m_max[i])}°</div><div class="fc-lo">${Math.round(daily.temperature_2m_min[i])}°</div></div>`;}).join('');
-    document.getElementById('wc-loading').style.display='none';
-    document.getElementById('wc-content').style.display='block';
-  }catch(e){document.getElementById('wc-loading').innerHTML='<span style="color:rgba(255,100,100,0.7);font-size:13px">Weather unavailable</span>';}
-}
-
-
-/* ── Color Wheel ── */
-function drawWheel(canvas){
-  const ctx=canvas.getContext('2d');
-  const cx=canvas.width/2,cy=canvas.height/2,r=cx-2;
-  for(let angle=0;angle<360;angle++){
-    const grad=ctx.createRadialGradient(cx,cy,0,cx,cy,r);
-    grad.addColorStop(0,'white');
-    grad.addColorStop(1,`hsl(${angle},100%,50%)`);
-    ctx.beginPath();
-    ctx.moveTo(cx,cy);
-    ctx.arc(cx,cy,r,angle*Math.PI/180,(angle+2)*Math.PI/180);
-    ctx.fillStyle=grad;
-    ctx.fill();
-  }
-  // dark ring
-  const dark=ctx.createRadialGradient(cx,cy,r*0.7,cx,cy,r);
-  dark.addColorStop(0,'transparent');
-  dark.addColorStop(1,'rgba(0,0,0,0.25)');
-  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
-  ctx.fillStyle=dark;ctx.fill();
-}
-
-function hsvToHex(h,s,v){
-  // h:0-360, s:0-1000, v:0-1000
-  const sn=s/1000,vn=v/1000;
-  const c=vn*sn,x=c*(1-Math.abs((h/60)%2-1)),m=vn-c;
-  let r=0,g=0,b=0;
-  if(h<60){r=c;g=x;}else if(h<120){r=x;g=c;}else if(h<180){g=c;b=x;}
-  else if(h<240){g=x;b=c;}else if(h<300){r=x;b=c;}else{r=c;b=x;}
-  const toHex=n=>Math.round((n+m)*255).toString(16).padStart(2,'0');
-  return '#'+toHex(r)+toHex(g)+toHex(b);
-}
-
-function posFromHueSat(h,s,canvas){
-  // h:0-360, s:0-1000 → pixel position
-  const cx=canvas.width/2,cy=canvas.height/2,r=cx-2;
-  const angle=(h-0)*Math.PI/180;
-  const dist=(s/1000)*r;
-  return {x:cx+Math.cos(angle)*dist, y:cy+Math.sin(angle)*dist};
-}
-
-function hueSatFromPos(x,y,canvas){
-  const cx=canvas.width/2,cy=canvas.height/2,r=cx-2;
-  const dx=x-cx,dy=y-cy;
-  const dist=Math.min(Math.sqrt(dx*dx+dy*dy),r);
-  let angle=Math.atan2(dy,dx)*180/Math.PI;
-  if(angle<0)angle+=360;
-  return {h:Math.round(angle), s:Math.round((dist/r)*1000)};
-}
-
-function initWheel(idx){
-  const canvas=document.getElementById('cw-'+idx);
-  if(!canvas||canvas.dataset.init)return;
-  canvas.dataset.init='1';
-  drawWheel(canvas);
-  updateCursor(idx);
-
-  function handlePick(e){
-    e.stopPropagation();
-    const rect=canvas.getBoundingClientRect();
-    const scaleX=canvas.width/rect.width,scaleY=canvas.height/rect.height;
-    const touch=e.touches?e.touches[0]:e;
-    const x=(touch.clientX-rect.left)*scaleX;
-    const y=(touch.clientY-rect.top)*scaleY;
-    const {h,s}=hueSatFromPos(x,y,canvas);
-    LIGHTS[idx].hue=h;
-    LIGHTS[idx].sat=s;
-    LIGHTS[idx].color=hsvToHex(h,s,LIGHTS[idx].bright*10);
-    refreshCard(idx);
-    updateCursor(idx);
-    clearTimeout(brightTimers['c'+idx]);
-    brightTimers['c'+idx]=setTimeout(async()=>{
-      try{
-        const v=Math.max(10,LIGHTS[idx].bright*10);
-        await tuyaCommand(CFG.devices[idx].id,[
-          {code:'work_mode',value:'colour'},
-          {code:'colour_data',value:JSON.stringify({h,s,v})}
-        ]);
-      }catch(e2){ showToast('Color update failed','error'); }
-    },300);
-  }
-
-  canvas.addEventListener('click',handlePick);
-  canvas.addEventListener('touchend',e=>{
-    e.preventDefault();
-    const rect=canvas.getBoundingClientRect();
-    const scaleX=canvas.width/rect.width,scaleY=canvas.height/rect.height;
-    const touch=e.changedTouches[0];
-    const x=(touch.clientX-rect.left)*scaleX;
-    const y=(touch.clientY-rect.top)*scaleY;
-    const {h,s}=hueSatFromPos(x,y,canvas);
-    LIGHTS[idx].hue=h;
-    LIGHTS[idx].sat=s;
-    LIGHTS[idx].color=hsvToHex(h,s,LIGHTS[idx].bright*10);
-    refreshCard(idx);
-    updateCursor(idx);
-    clearTimeout(brightTimers['c'+idx]);
-    brightTimers['c'+idx]=setTimeout(async()=>{
-      try{
-        const v=Math.max(10,LIGHTS[idx].bright*10);
-        await tuyaCommand(CFG.devices[idx].id,[
-          {code:'work_mode',value:'colour'},
-          {code:'colour_data',value:JSON.stringify({h,s,v})}
-        ]);
-      }catch(e2){ showToast('Color update failed','error'); }
-    },300);
-  },{passive:false});
-}
-
-function updateCursor(idx){
-  const canvas=document.getElementById('cw-'+idx);
-  const cursor=document.getElementById('cwc-'+idx);
-  if(!canvas||!cursor)return;
-  const {x,y}=posFromHueSat(LIGHTS[idx].hue||0,LIGHTS[idx].sat||0,canvas);
-  const rect=canvas.getBoundingClientRect();
-  const scaleX=rect.width/canvas.width,scaleY=rect.height/canvas.height;
-  cursor.style.left=(x*scaleX)+'px';
-  cursor.style.top=(y*scaleY)+'px';
-}
-
-// Init wheels after cards render
-function initAllWheels(){
-  LIGHTS.forEach((_,i)=>{ if(LIGHTS[i].on) setTimeout(()=>initWheel(i),50); });
-}
-
-/* ── Boot ── */
-renderGrid();
-
-updateMaster();
-loadWeather();
-syncAllLights();
-
+async function loadWeather(){try{let lat=59.3293,lon=18.0686,city='Stockholm';try{const p=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:4000}));lat=p.coords.latitude;lon=p.coords.longitude;try{const g=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`).then(r=>r.json());city=g.address?.city||g.address?.town||g.address?.village||city;}catch(e){}}catch(e){}const d=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode,windspeed_10m,precipitation_probability&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=celsius&wind_speed_unit=kmh&forecast_days=5&timezone=auto`).then(r=>r.json());const cur=d.current,daily=d.daily;document.getElementById('wc-city').textContent=city;document.getElementById('wc-temp').textContent=Math.round(cur.temperature_2m)+'°';document.getElementById('wc-desc').textContent=wxD(cur.weathercode);document.getElementById('wc-icon').innerHTML=wxI(cur.weathercode);document.getElementById('wc-hi').textContent=Math.round(daily.temperature_2m_max[0])+'°';document.getElementById('wc-lo').textContent=Math.round(daily.temperature_2m_min[0])+'°';document.getElementById('wc-rain').textContent=(cur.precipitation_probability||daily.precipitation_probability_max[0]||0)+'%';document.getElementById('wc-wind').textContent=Math.round(cur.windspeed_10m)+' km/h';document.getElementById('wc-forecast').innerHTML=daily.weathercode.slice(0,5).map((_,i)=>{const dt=new Date(daily.time[i]+'T12:00:00');return`<div class="fc-item"><div class="fc-day">${DAYS[dt.getDay()].toUpperCase()}</div><div class="fc-icon">${wxIs(daily.weathercode[i],24)}</div><div class="fc-hi">${Math.round(daily.temperature_2m_max[i])}°</div><div class="fc-lo">${Math.round(daily.temperature_2m_min[i])}°</div></div>`;}).join('');document.getElementById('wc-loading').style.display='none';document.getElementById('wc-content').style.display='block';}catch(e){document.getElementById('wc-loading').innerHTML='<span style="color:rgba(215,100,90,0.7);font-size:12px">Weather unavailable</span>';}}
+renderGrid();updateMaster();loadWeather();syncAllLights();
 </script>
 </body>
 </html>
