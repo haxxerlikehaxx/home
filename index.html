@@ -163,10 +163,16 @@ canvas#stars { position:absolute;inset:0;width:100%;height:100%; }
   width:15px;height:15px;border-radius:50%;background:white;border:none;
 }
 .lc-pct { font-size:11px;color:rgba(255,255,255,.4);min-width:26px;text-align:right; }
-.color-bar { display:none;gap:6px;margin-top:9px;flex-wrap:wrap; }
+.color-bar { display:none;flex-direction:column;gap:8px;margin-top:10px; }
 .light-card.on .color-bar { display:flex; }
-.cdot { width:15px;height:15px;border-radius:50%;cursor:pointer;border:2px solid transparent;transition:transform .15s,border-color .15s;flex-shrink:0; }
-.cdot.sel { border-color:white;transform:scale(1.2); }
+.color-wheel-wrap { position:relative;width:100%;display:flex;justify-content:center; }
+.color-wheel-wrap canvas { border-radius:50%;cursor:crosshair;touch-action:none; }
+.color-wheel-cursor {
+  position:absolute;width:14px;height:14px;border-radius:50%;
+  border:2.5px solid white;box-shadow:0 0 4px rgba(0,0,0,0.6);
+  pointer-events:none;transform:translate(-50%,-50%);
+  transition:left .15s,top .15s;
+}
 /* Status */
 .status-strip { margin:0 14px 14px;padding:14px 18px;display:flex;align-items:center;gap:12px;border-radius:var(--r-lg); }
 .pulse-dot { width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);flex-shrink:0;animation:pulse 2.5s ease-in-out infinite; }
@@ -564,7 +570,7 @@ async function syncAllLights(){
     setStatus('Not configured','Open Settings and enter your Worker URL','warn');
     syncing=false;btn.style.opacity='';btn.style.pointerEvents='';
     showToast('Open Settings to configure','error');
-    renderGrid();updateMaster();
+    renderGrid();initAllWheels();updateMaster();
     return;
   }
 
@@ -581,7 +587,7 @@ async function syncAllLights(){
   } catch(e){
     setStatus('Connection failed','Check your Worker URL in Settings','err');
     showToast('Could not reach Worker','error');
-    renderGrid();updateMaster();
+    renderGrid();initAllWheels();updateMaster();
   }
   syncing=false;btn.style.opacity='';btn.style.pointerEvents='';
 }
@@ -616,9 +622,11 @@ function setBright(idx,val){
   brightTimers[idx]=setTimeout(async()=>{
     try{
       const v=Math.max(10,Math.round(parseInt(val)*10));
+      const h=LIGHTS[idx].hue??0;
+      const s=LIGHTS[idx].sat??1000;
       await tuyaCommand(CFG.devices[idx].id,[
         {code:'work_mode',value:'colour'},
-        {code:'colour_data',value:JSON.stringify({h:LIGHTS[idx].hue||0,s:LIGHTS[idx].sat||1000,v})}
+        {code:'colour_data',value:JSON.stringify({h,s,v})}
       ]);
     }catch(e){ showToast('Brightness update failed','error'); }
   },400);
@@ -653,7 +661,7 @@ async function toggleAll(){
   const anyOn=LIGHTS.some(l=>l.on);
   const newState=!anyOn;
   LIGHTS.forEach(l=>l.on=newState);
-  renderGrid();updateMaster();
+  renderGrid();initAllWheels();updateMaster();
   try{
     await Promise.all(CFG.devices.map((dev,i)=>tuyaCommand(dev.id,[{code:'switch_led',value:newState}])));
     showToast(newState?'All lights on':'All lights off');
@@ -666,7 +674,7 @@ async function applyScene(el, key){
   el.classList.add('active');
   const cfg=SCENES[key];
   LIGHTS.forEach((l,i)=>{ Object.assign(l,cfg[i]); });
-  renderGrid();updateMaster();
+  renderGrid();initAllWheels();updateMaster();
   try{
     await Promise.all(CFG.devices.map(async(dev,i)=>{
       const sc=cfg[i];
@@ -708,10 +716,15 @@ function renderCard(i){
     <div class="lc-status">${l.on?'On · '+l.bright+'%':'Off'}</div>
     <div class="lc-brightness">
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-      <input type="range" min="1" max="100" step="1" value="${l.bright}" oninput="setBright(${i},this.value)" onclick="event.stopPropagation()">
+      <input type="range" min="1" max="100" step="1" value="${l.bright}" oninput="setBright(${i},this.value)" onclick="event.stopPropagation()" step="10">
       <span class="lc-pct" id="pct-${i}">${l.bright}%</span>
     </div>
-    <div class="color-bar">${COLORS.map(c=>`<div class="cdot${l.color===c?' sel':''}" style="background:${c}" onclick="event.stopPropagation();setColor(${i},'${c}')"></div>`).join('')}</div>
+    <div class="color-bar">
+      <div class="color-wheel-wrap">
+        <canvas id="cw-${i}" width="120" height="120" onclick="event.stopPropagation()" ontouchstart="event.stopPropagation()"></canvas>
+        <div class="color-wheel-cursor" id="cwc-${i}" style="left:50%;top:50%"></div>
+      </div>
+    </div>
   </div>`;
 }
 
@@ -727,7 +740,7 @@ function refreshCard(i){
   card.querySelector('.sw').className=`sw ${l.on?'on':''}`;
   card.querySelector('.lc-status').textContent=l.on?`On · ${l.bright}%`:'Off';
   const p=document.getElementById('pct-'+i);if(p)p.textContent=l.bright+'%';
-  card.querySelectorAll('.cdot').forEach((d,j)=>d.className='cdot'+(COLORS[j]===l.color?' sel':''));
+  if(l.on) setTimeout(()=>initWheel(i),50);
 }
 
 function updateMaster(){
@@ -805,8 +818,135 @@ async function loadWeather(){
   }catch(e){document.getElementById('wc-loading').innerHTML='<span style="color:rgba(255,100,100,0.7);font-size:13px">Weather unavailable</span>';}
 }
 
+
+/* ── Color Wheel ── */
+function drawWheel(canvas){
+  const ctx=canvas.getContext('2d');
+  const cx=canvas.width/2,cy=canvas.height/2,r=cx-2;
+  for(let angle=0;angle<360;angle++){
+    const grad=ctx.createRadialGradient(cx,cy,0,cx,cy,r);
+    grad.addColorStop(0,'white');
+    grad.addColorStop(1,`hsl(${angle},100%,50%)`);
+    ctx.beginPath();
+    ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,angle*Math.PI/180,(angle+2)*Math.PI/180);
+    ctx.fillStyle=grad;
+    ctx.fill();
+  }
+  // dark ring
+  const dark=ctx.createRadialGradient(cx,cy,r*0.7,cx,cy,r);
+  dark.addColorStop(0,'transparent');
+  dark.addColorStop(1,'rgba(0,0,0,0.25)');
+  ctx.beginPath();ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.fillStyle=dark;ctx.fill();
+}
+
+function hsvToHex(h,s,v){
+  // h:0-360, s:0-1000, v:0-1000
+  const sn=s/1000,vn=v/1000;
+  const c=vn*sn,x=c*(1-Math.abs((h/60)%2-1)),m=vn-c;
+  let r=0,g=0,b=0;
+  if(h<60){r=c;g=x;}else if(h<120){r=x;g=c;}else if(h<180){g=c;b=x;}
+  else if(h<240){g=x;b=c;}else if(h<300){r=x;b=c;}else{r=c;b=x;}
+  const toHex=n=>Math.round((n+m)*255).toString(16).padStart(2,'0');
+  return '#'+toHex(r)+toHex(g)+toHex(b);
+}
+
+function posFromHueSat(h,s,canvas){
+  // h:0-360, s:0-1000 → pixel position
+  const cx=canvas.width/2,cy=canvas.height/2,r=cx-2;
+  const angle=(h-0)*Math.PI/180;
+  const dist=(s/1000)*r;
+  return {x:cx+Math.cos(angle)*dist, y:cy+Math.sin(angle)*dist};
+}
+
+function hueSatFromPos(x,y,canvas){
+  const cx=canvas.width/2,cy=canvas.height/2,r=cx-2;
+  const dx=x-cx,dy=y-cy;
+  const dist=Math.min(Math.sqrt(dx*dx+dy*dy),r);
+  let angle=Math.atan2(dy,dx)*180/Math.PI;
+  if(angle<0)angle+=360;
+  return {h:Math.round(angle), s:Math.round((dist/r)*1000)};
+}
+
+function initWheel(idx){
+  const canvas=document.getElementById('cw-'+idx);
+  if(!canvas||canvas.dataset.init)return;
+  canvas.dataset.init='1';
+  drawWheel(canvas);
+  updateCursor(idx);
+
+  function handlePick(e){
+    e.stopPropagation();
+    const rect=canvas.getBoundingClientRect();
+    const scaleX=canvas.width/rect.width,scaleY=canvas.height/rect.height;
+    const touch=e.touches?e.touches[0]:e;
+    const x=(touch.clientX-rect.left)*scaleX;
+    const y=(touch.clientY-rect.top)*scaleY;
+    const {h,s}=hueSatFromPos(x,y,canvas);
+    LIGHTS[idx].hue=h;
+    LIGHTS[idx].sat=s;
+    LIGHTS[idx].color=hsvToHex(h,s,LIGHTS[idx].bright*10);
+    refreshCard(idx);
+    updateCursor(idx);
+    clearTimeout(brightTimers['c'+idx]);
+    brightTimers['c'+idx]=setTimeout(async()=>{
+      try{
+        const v=Math.max(10,LIGHTS[idx].bright*10);
+        await tuyaCommand(CFG.devices[idx].id,[
+          {code:'work_mode',value:'colour'},
+          {code:'colour_data',value:JSON.stringify({h,s,v})}
+        ]);
+      }catch(e2){ showToast('Color update failed','error'); }
+    },300);
+  }
+
+  canvas.addEventListener('click',handlePick);
+  canvas.addEventListener('touchend',e=>{
+    e.preventDefault();
+    const rect=canvas.getBoundingClientRect();
+    const scaleX=canvas.width/rect.width,scaleY=canvas.height/rect.height;
+    const touch=e.changedTouches[0];
+    const x=(touch.clientX-rect.left)*scaleX;
+    const y=(touch.clientY-rect.top)*scaleY;
+    const {h,s}=hueSatFromPos(x,y,canvas);
+    LIGHTS[idx].hue=h;
+    LIGHTS[idx].sat=s;
+    LIGHTS[idx].color=hsvToHex(h,s,LIGHTS[idx].bright*10);
+    refreshCard(idx);
+    updateCursor(idx);
+    clearTimeout(brightTimers['c'+idx]);
+    brightTimers['c'+idx]=setTimeout(async()=>{
+      try{
+        const v=Math.max(10,LIGHTS[idx].bright*10);
+        await tuyaCommand(CFG.devices[idx].id,[
+          {code:'work_mode',value:'colour'},
+          {code:'colour_data',value:JSON.stringify({h,s,v})}
+        ]);
+      }catch(e2){ showToast('Color update failed','error'); }
+    },300);
+  },{passive:false});
+}
+
+function updateCursor(idx){
+  const canvas=document.getElementById('cw-'+idx);
+  const cursor=document.getElementById('cwc-'+idx);
+  if(!canvas||!cursor)return;
+  const {x,y}=posFromHueSat(LIGHTS[idx].hue||0,LIGHTS[idx].sat||0,canvas);
+  const rect=canvas.getBoundingClientRect();
+  const scaleX=rect.width/canvas.width,scaleY=rect.height/canvas.height;
+  cursor.style.left=(x*scaleX)+'px';
+  cursor.style.top=(y*scaleY)+'px';
+}
+
+// Init wheels after cards render
+function initAllWheels(){
+  LIGHTS.forEach((_,i)=>{ if(LIGHTS[i].on) setTimeout(()=>initWheel(i),50); });
+}
+
 /* ── Boot ── */
 renderGrid();
+initAllWheels();
 updateMaster();
 loadWeather();
 syncAllLights();
