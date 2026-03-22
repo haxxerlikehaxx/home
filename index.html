@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Home</title>
@@ -18,9 +18,9 @@
   --blur:blur(40px) saturate(140%);--blur-sm:blur(20px) saturate(130%);
   --r-xl:26px;--r-lg:20px;--r-md:14px;
 }
-html,body{height:100%;font-family:-apple-system,'SF Pro Display','Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;}
+html,body{height:100%;min-height:100dvh;font-family:-apple-system,'SF Pro Display','Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;}
 body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:none;}
-.app{position:relative;z-index:1;max-width:430px;margin:0 auto;padding:0 0 calc(80px + env(safe-area-inset-bottom));}
+.app{position:relative;z-index:1;max-width:430px;margin:0 auto;padding:0 0 calc(90px + env(safe-area-inset-bottom));}
 
 /* Glass */
 .g{background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--glass-border);border-radius:var(--r-xl);position:relative;overflow:hidden;}
@@ -96,17 +96,33 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .toast.error{border-color:rgba(215,100,90,0.3);color:var(--red);}
 
-/* Bottom nav — flush to screen bottom, safe area padding inside */
+/* Bottom nav — floating pill, correct PWA safe area */
 .bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;z-index:100;
-  display:flex;justify-content:center;
-  background:rgba(28,30,34,0.92);
-  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
-  border-top:1px solid rgba(255,255,255,0.09);
-  padding:12px 20px env(safe-area-inset-bottom);
-  box-shadow:0 -2px 24px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.07);
+  position:fixed;
+  /* Sit just above the home indicator / safe area */
+  bottom:0;
+  left:0;right:0;
+  z-index:100;
+  display:flex;
+  justify-content:center;
+  /* transparent wrapper — actual pill below */
+  background:transparent;
+  padding:0 16px;
+  /* Push pill up: 10px gap + home indicator height */
+  padding-bottom:calc(10px + env(safe-area-inset-bottom));
+  padding-top:10px;
+  pointer-events:none;
 }
-.bottom-nav-inner{width:100%;max-width:398px;display:flex;}
+.bottom-nav-inner{
+  pointer-events:all;
+  width:100%;max-width:398px;display:flex;
+  background:rgba(28,30,34,0.88);
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border:1px solid rgba(255,255,255,0.1);
+  border-radius:26px;
+  padding:11px 8px;
+  box-shadow:0 10px 40px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.07);
+}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:2px 0;position:relative;}
 .nav-item svg{width:22px;height:22px;transition:transform .18s cubic-bezier(.34,1.56,.64,1);}
 .nav-item:active svg{transform:scale(.78);}
