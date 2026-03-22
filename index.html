@@ -54,54 +54,29 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .spin{width:14px;height:14px;border:1.5px solid rgba(255,255,255,0.12);border-top-color:rgba(255,255,255,0.55);border-radius:50%;animation:spin .85s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* Calendar */
-.cal-card{margin:0 14px 12px;padding:18px 20px;}
-.cal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.cal-title{font-size:13px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:1.2px;}
-.cal-date{font-size:12px;font-weight:600;color:var(--t3);}
-.cal-event{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
-.cal-event:last-child{border-bottom:none;padding-bottom:0;}
-.cal-event:first-of-type{padding-top:0;}
-.cal-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-.cal-time{font-size:11px;font-weight:700;color:var(--t2);min-width:40px;letter-spacing:.3px;}
-.cal-name{font-size:14px;font-weight:600;color:var(--t1);}
-.cal-sub{font-size:11px;color:var(--t2);margin-top:2px;}
-.cal-empty{font-size:14px;color:var(--t3);text-align:center;padding:8px 0;}
-
 /* Section */
 .section-head{display:flex;justify-content:space-between;align-items:center;padding:4px 22px 8px;}
 .section-title{font-size:20px;font-weight:700;color:var(--t1);letter-spacing:-.4px;}
 .section-link{font-size:13px;font-weight:600;color:var(--t2);cursor:pointer;}
 
-/* Lights grid — fixed height always */
+/* Lights grid */
 .lights-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px;margin-bottom:12px;}
-.light-card{
-  padding:16px 14px 14px;cursor:pointer;border-radius:var(--r-xl);
-  transition:transform .18s cubic-bezier(.34,1.56,.64,1), background .22s, border-color .22s;
-  user-select:none;
-  height:130px; /* strictly fixed — never changes size */
-  display:flex;flex-direction:column;justify-content:space-between;
-  overflow:hidden; /* belt-and-suspenders: prevent any child from stretching */
-}
+.light-card{padding:16px 14px 14px;cursor:pointer;border-radius:var(--r-xl);transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .22s,border-color .22s;user-select:none;height:130px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;}
 .light-card:active{transform:scale(.93);}
 .light-card.off{background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.07);}
 .light-card.on{background:rgba(255,255,255,0.065);border-color:rgba(255,255,255,0.13);}
 .light-card.loading-state{opacity:.5;pointer-events:none;}
-
-/* Top row: name + toggle */
 .lc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
 .lc-name{font-size:14px;font-weight:700;color:var(--t1);letter-spacing:-.2px;line-height:1.2;}
-
-/* Bottom row: status + brightness — always present */
 .lc-bottom{display:flex;flex-direction:column;gap:6px;}
 .lc-status{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);transition:color .22s;}
 .light-card.on .lc-status{color:var(--t2);}
 .lc-slider-row{display:flex;align-items:center;gap:6px;}
 .lc-slider{flex:1;height:3px;border-radius:2px;outline:none;border:none;-webkit-appearance:none;cursor:pointer;background:rgba(255,255,255,0.12);transition:opacity .22s;}
-.light-card.off .lc-slider{opacity:.35;pointer-events:none;}
+.light-card.off .lc-slider{opacity:.3;pointer-events:none;}
 .lc-slider::-webkit-slider-thumb{-webkit-appearance:none;width:16px;height:16px;border-radius:50%;background:white;box-shadow:0 1px 5px rgba(0,0,0,0.5);}
 .lc-pct{font-size:10px;color:var(--t3);min-width:28px;text-align:right;font-weight:700;transition:opacity .22s;}
-.light-card.off .lc-pct{opacity:.35;}
+.light-card.off .lc-pct{opacity:.3;}
 
 /* Toggle */
 .sw{position:relative;width:46px;height:26px;border-radius:13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12);cursor:pointer;transition:background .22s,border-color .22s;flex-shrink:0;}
@@ -134,7 +109,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 /* Panel */
 .panel-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:0;pointer-events:none;transition:opacity .28s;}
 .panel-overlay.open{opacity:1;pointer-events:all;}
-.panel{position:absolute;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:430px;background:rgba(22,24,28,0.98);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border-radius:28px 28px 0 0;border:1px solid rgba(255,255,255,0.09);border-bottom:none;padding:0 0 max(28px,env(safe-area-inset-bottom));transition:transform .38s cubic-bezier(.32,.72,0,1);max-height:82vh;overflow-y:auto;}
+.panel{position:absolute;bottom:0;left:50%;transform:translateX(-50%) translateY(100%);width:100%;max-width:430px;background:rgba(22,24,28,0.98);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border-radius:28px 28px 0 0;border:1px solid rgba(255,255,255,0.09);border-bottom:none;padding:0 0 max(28px,env(safe-area-inset-bottom));transition:transform .38s cubic-bezier(.32,.72,0,1);max-height:88vh;overflow-y:auto;}
 .panel-overlay.open .panel{transform:translateX(-50%) translateY(0);}
 .panel-handle{width:32px;height:4px;border-radius:2px;background:rgba(255,255,255,0.16);margin:11px auto 18px;}
 .panel-title{font-size:20px;font-weight:700;color:var(--t1);padding:0 20px 14px;letter-spacing:-.4px;}
@@ -151,6 +126,30 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .config-label{font-size:10px;color:var(--t2);font-weight:700;letter-spacing:.6px;text-transform:uppercase;}
 .config-section{padding:0 20px 14px;}
 
+/* Automations builder */
+.auto-list{padding:0 20px;}
+.auto-item{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+.auto-item:last-child{border:none;}
+.auto-item-icon{width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.auto-item-body{flex:1;min-width:0;}
+.auto-item-name{font-size:14px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.auto-item-sub{font-size:11px;color:var(--t2);margin-top:2px;}
+.auto-delete{width:28px;height:28px;border-radius:50%;background:rgba(215,100,90,0.1);border:1px solid rgba(215,100,90,0.2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .18s,transform .14s;}
+.auto-delete:active{transform:scale(.82);background:rgba(215,100,90,0.22);}
+.auto-empty{font-size:13px;color:var(--t3);text-align:center;padding:18px 0 6px;}
+
+/* Add automation form */
+.auto-form{padding:0 20px 4px;}
+.auto-form-title{font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;}
+.auto-row{display:flex;gap:8px;margin-bottom:8px;}
+.auto-select{flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:var(--r-md);padding:10px 12px;font-size:13px;color:white;font-family:inherit;outline:none;-webkit-appearance:none;cursor:pointer;}
+.auto-select:focus{border-color:rgba(255,255,255,0.25);}
+.auto-select option{background:#1e2024;color:white;}
+.auto-time-input{width:90px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:var(--r-md);padding:10px 12px;font-size:13px;color:white;font-family:inherit;outline:none;}
+.auto-time-input:focus{border-color:rgba(255,255,255,0.25);}
+.auto-add-btn{width:100%;padding:12px;border-radius:var(--r-md);background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:var(--t1);font-size:14px;font-weight:700;cursor:pointer;text-align:center;transition:background .18s,transform .14s;margin-top:2px;}
+.auto-add-btn:active{background:rgba(255,255,255,0.12);transform:scale(.97);}
+
 .ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.08);pointer-events:none;transform:scale(0);animation:rpl .5s ease-out forwards;}
 @keyframes rpl{to{transform:scale(4);opacity:0}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
@@ -159,7 +158,6 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 <body>
 <div class="app">
 
-  <!-- Header -->
   <div class="page-header" style="animation:fadeUp .4s ease both">
     <div class="page-title">Home</div>
     <div class="icon-btn" onclick="syncAllLights()" id="refresh-btn">
@@ -189,24 +187,15 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
     </div>
   </div>
 
-  <!-- Calendar -->
-  <div class="g cal-card" style="animation:fadeUp .4s ease both .08s">
-    <div class="cal-header">
-      <div class="cal-title">Upcoming</div>
-      <div class="cal-date" id="cal-date">—</div>
-    </div>
-    <div id="cal-events"></div>
-  </div>
-
   <!-- Lights -->
-  <div class="section-head" style="animation:fadeUp .4s ease both .11s">
+  <div class="section-head" style="animation:fadeUp .4s ease both .08s">
     <div class="section-title">Lights</div>
     <div class="section-link" onclick="syncAllLights()">Refresh</div>
   </div>
-  <div class="lights-grid" id="lightsGrid" style="animation:fadeUp .4s ease both .13s"></div>
+  <div class="lights-grid" id="lightsGrid" style="animation:fadeUp .4s ease both .1s"></div>
 
   <!-- Status -->
-  <div class="g status-strip" style="animation:fadeUp .4s ease both .16s">
+  <div class="g status-strip" style="animation:fadeUp .4s ease both .13s">
     <div class="pulse-dot" id="pulse-dot"></div>
     <div><div class="status-text" id="status-text">Connecting…</div><div class="status-sub" id="status-sub">Reaching Tuya cloud</div></div>
   </div>
@@ -220,7 +209,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
     <span class="nav-label">Home</span>
   </div>
   <div class="nav-item" onclick="navTo(this);openPanel('auto-panel')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 17.5h7M17.5 14v7"/></svg>
+    <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     <span class="nav-label">Auto</span>
   </div>
   <div class="nav-item" onclick="navTo(this);openPanel('config-panel')">
@@ -235,26 +224,57 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 
 <div class="toast" id="toast"></div>
 
-<!-- Config Panel -->
+<!-- Automations Panel -->
+<div class="panel-overlay" id="auto-panel" onclick="closePanel(this)">
+  <div class="panel" onclick="event.stopPropagation()">
+    <div class="panel-handle"></div>
+    <div class="panel-title">Automations</div>
+
+    <!-- Saved automations list -->
+    <div class="auto-list" id="auto-list"></div>
+
+    <!-- Divider -->
+    <div style="height:1px;background:rgba(255,255,255,0.06);margin:4px 20px 16px"></div>
+
+    <!-- Add new form -->
+    <div class="auto-form">
+      <div class="auto-form-title">New Automation</div>
+      <div class="auto-row">
+        <select class="auto-select" id="auto-action">
+          <option value="on">Turn ON</option>
+          <option value="off">Turn OFF</option>
+          <option value="dim">Dim to 20%</option>
+          <option value="bright">Set 100%</option>
+        </select>
+        <select class="auto-select" id="auto-light">
+          <option value="all">All lights</option>
+          <option value="0">Light 1</option>
+          <option value="1">Light 2</option>
+        </select>
+      </div>
+      <div class="auto-row">
+        <select class="auto-select" id="auto-days">
+          <option value="every">Every day</option>
+          <option value="weekdays">Weekdays</option>
+          <option value="weekends">Weekends</option>
+        </select>
+        <input class="auto-time-input" id="auto-time" type="time" value="07:00">
+      </div>
+      <div class="auto-add-btn" onclick="addAutomation()">+ Add</div>
+    </div>
+
+    <div class="panel-close-btn" onclick="closePanel(document.getElementById('auto-panel'))">Done</div>
+  </div>
+</div>
+
+<!-- Settings Panel -->
 <div class="panel-overlay" id="config-panel" onclick="closePanel(this)">
   <div class="panel" onclick="event.stopPropagation()">
     <div class="panel-handle"></div><div class="panel-title">Settings</div>
-    <div class="config-section"><div class="config-label">iCloud Calendar URL</div><input class="config-input" id="cfg-ics" type="url" placeholder="https://p62-caldav.icloud.com/published/2/…" autocomplete="off"><div style="font-size:11px;color:var(--t3);margin-top:6px;line-height:1.5">On Mac: Calendar → right-click calendar → Share → Public Calendar → copy link, change webcal:// to https://</div></div>
     <div class="config-section"><div class="config-label">Cloudflare Worker URL</div><input class="config-input" id="cfg-worker" type="url" placeholder="https://your-worker.workers.dev" autocomplete="off"></div>
     <div class="config-section"><div class="config-label">Light 1 — Name</div><input class="config-input" id="cfg-name0" type="text" placeholder="Led Lights Tak"><div class="config-label" style="margin-top:10px">Light 1 — Device ID</div><input class="config-input" id="cfg-dev0" type="text" placeholder="bf8b0e945d8c5f9861fjzy" autocomplete="off"></div>
     <div class="config-section"><div class="config-label">Light 2 — Name</div><input class="config-input" id="cfg-name1" type="text" placeholder="Led Lights Skrivbord"><div class="config-label" style="margin-top:10px">Light 2 — Device ID</div><input class="config-input" id="cfg-dev1" type="text" placeholder="bf1cf6aca13749cf898g3p" autocomplete="off"></div>
     <div style="padding:0 20px"><div class="panel-close-btn" style="margin:0 0 10px;background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.16)" onclick="saveConfig()">Save &amp; Connect</div><div class="panel-close-btn" onclick="closePanel(document.getElementById('config-panel'))">Cancel</div></div>
-  </div>
-</div>
-
-<!-- Automations Panel -->
-<div class="panel-overlay" id="auto-panel" onclick="closePanel(this)">
-  <div class="panel" onclick="event.stopPropagation()">
-    <div class="panel-handle"></div><div class="panel-title">Automations</div>
-    <div class="panel-row"><div class="panel-row-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></div><div class="panel-row-text"><div class="panel-row-name">Sunrise wake-up</div><div class="panel-row-sub">On at 07:00 weekdays</div></div><div class="sw on" onclick="event.stopPropagation();this.classList.toggle('on')"></div></div>
-    <div class="panel-row"><div class="panel-row-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></div><div class="panel-row-text"><div class="panel-row-name">Bedtime dim</div><div class="panel-row-sub">Dims to 15% at 22:30</div></div><div class="sw on" onclick="event.stopPropagation();this.classList.toggle('on')"></div></div>
-    <div class="panel-row"><div class="panel-row-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg></div><div class="panel-row-text"><div class="panel-row-name">Away mode</div><div class="panel-row-sub">All off when everyone leaves</div></div><div class="sw" onclick="event.stopPropagation();this.classList.toggle('on')"></div></div>
-    <div class="panel-close-btn" onclick="closePanel(document.getElementById('auto-panel'))">Done</div>
   </div>
 </div>
 
@@ -270,14 +290,254 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 </div>
 
 <script>
-/* ── Config ── */
-const CFG_KEY='tuya_home_config';
-let CFG={worker:'',devices:[{id:'bf8b0e945d8c5f9861fjzy',name:'Led Lights Tak',icon:'ceiling'},{id:'bf1cf6aca13749cf898g3p',name:'Led Lights Skrivbord',icon:'desk'}]};
-try{const s=localStorage.getItem(CFG_KEY);if(s)CFG=JSON.parse(s);}catch(e){}
-function saveConfig(){const w=document.getElementById('cfg-worker').value.trim();const n0=document.getElementById('cfg-name0').value.trim();const d0=document.getElementById('cfg-dev0').value.trim();const n1=document.getElementById('cfg-name1').value.trim();const d1=document.getElementById('cfg-dev1').value.trim();const ics=document.getElementById('cfg-ics').value.trim();if(!w){showToast('Enter your Worker URL','error');return;}if(!d0||!d1){showToast('Enter both Device IDs','error');return;}CFG.worker=w;if(n0)CFG.devices[0].name=n0;if(d0)CFG.devices[0].id=d0;if(n1)CFG.devices[1].name=n1;if(d1)CFG.devices[1].id=d1;if(ics)saveIcsUrl(ics);try{localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){}closePanel(document.getElementById('config-panel'));showToast('Saved — connecting…');setTimeout(()=>{syncAllLights();fetchAndRenderCalendar();},400);}
-function loadConfigIntoPanel(){document.getElementById('cfg-worker').value=CFG.worker||'';document.getElementById('cfg-name0').value=CFG.devices[0].name||'';document.getElementById('cfg-dev0').value=CFG.devices[0].id||'';document.getElementById('cfg-name1').value=CFG.devices[1].name||'';document.getElementById('cfg-dev1').value=CFG.devices[1].id||'';document.getElementById('cfg-ics').value=getIcsUrl();}
+/* ══════════════════════════════════════════
+   SOUNDS — Web Audio API, no external files
+   ══════════════════════════════════════════ */
+let audioCtx = null;
+function getAudio(){
+  if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+  return audioCtx;
+}
 
-/* ── Lights ── */
+function playTone(freq, type, duration, vol=0.18, fadeOut=true){
+  try{
+    const ctx = getAudio();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.connect(gain); gain.connect(ctx.destination);
+    osc.type = type;
+    osc.frequency.setValueAtTime(freq, ctx.currentTime);
+    gain.gain.setValueAtTime(vol, ctx.currentTime);
+    if(fadeOut) gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+    osc.start(ctx.currentTime);
+    osc.stop(ctx.currentTime + duration);
+  }catch(e){}
+}
+
+function soundOn(){
+  // Warm rising two-note chime — light turning on
+  try{
+    const ctx = getAudio();
+    const t = ctx.currentTime;
+    [[523,0],[659,0.1],[784,0.18]].forEach(([f,d])=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.type='sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0,t+d);
+      g.gain.linearRampToValueAtTime(0.14,t+d+0.03);
+      g.gain.exponentialRampToValueAtTime(0.001,t+d+0.35);
+      o.start(t+d); o.stop(t+d+0.4);
+    });
+  }catch(e){}
+}
+
+function soundOff(){
+  // Gentle descending — light turning off
+  try{
+    const ctx = getAudio();
+    const t = ctx.currentTime;
+    [[784,0],[659,0.08],[523,0.16]].forEach(([f,d])=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.type='sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0.12,t+d);
+      g.gain.exponentialRampToValueAtTime(0.001,t+d+0.28);
+      o.start(t+d); o.stop(t+d+0.32);
+    });
+  }catch(e){}
+}
+
+function soundClick(){
+  // Subtle soft click — toggle/UI interaction
+  try{
+    const ctx = getAudio();
+    const buf = ctx.createBuffer(1,ctx.sampleRate*0.05,ctx.sampleRate);
+    const data = buf.getChannelData(0);
+    for(let i=0;i<data.length;i++) data[i]=(Math.random()*2-1)*Math.pow(1-i/data.length,4)*0.3;
+    const src = ctx.createBufferSource();
+    const gain = ctx.createGain();
+    const filter = ctx.createBiquadFilter();
+    filter.type = 'bandpass'; filter.frequency.value = 1200; filter.Q.value = 0.8;
+    src.buffer = buf;
+    src.connect(filter); filter.connect(gain); gain.connect(ctx.destination);
+    gain.gain.value = 0.6;
+    src.start();
+  }catch(e){}
+}
+
+function soundSave(){
+  // Double chime — saved/confirmed
+  try{
+    const ctx = getAudio();
+    const t = ctx.currentTime;
+    [[880,0,0.2],[1100,0.2,0.25]].forEach(([f,d,dur])=>{
+      const o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.type='sine'; o.frequency.value=f;
+      g.gain.setValueAtTime(0.1,t+d);
+      g.gain.exponentialRampToValueAtTime(0.001,t+d+dur);
+      o.start(t+d); o.stop(t+d+dur+0.05);
+    });
+  }catch(e){}
+}
+
+function soundError(){
+  // Low buzz — something failed
+  playTone(180,'sawtooth',0.22,0.08);
+}
+
+function soundAdd(){
+  // Soft pop — item added
+  playTone(900,'sine',0.18,0.12);
+}
+
+function soundDelete(){
+  // Downward tick — item removed
+  try{
+    const ctx = getAudio();
+    const t = ctx.currentTime;
+    const o=ctx.createOscillator(),g=ctx.createGain();
+    o.connect(g);g.connect(ctx.destination);
+    o.type='sine';
+    o.frequency.setValueAtTime(600,t);
+    o.frequency.exponentialRampToValueAtTime(200,t+0.15);
+    g.gain.setValueAtTime(0.1,t);
+    g.gain.exponentialRampToValueAtTime(0.001,t+0.18);
+    o.start(t); o.stop(t+0.2);
+  }catch(e){}
+}
+
+/* ══════════════════════════════════════════
+   CONFIG
+   ══════════════════════════════════════════ */
+const CFG_KEY='tuya_home_config';
+let CFG={worker:'',devices:[{id:'bf8b0e945d8c5f9861fjzy',name:'Led Lights Tak'},{id:'bf1cf6aca13749cf898g3p',name:'Led Lights Skrivbord'}]};
+try{const s=localStorage.getItem(CFG_KEY);if(s)CFG=JSON.parse(s);}catch(e){}
+
+function saveConfig(){
+  const w=document.getElementById('cfg-worker').value.trim();
+  const n0=document.getElementById('cfg-name0').value.trim();
+  const d0=document.getElementById('cfg-dev0').value.trim();
+  const n1=document.getElementById('cfg-name1').value.trim();
+  const d1=document.getElementById('cfg-dev1').value.trim();
+  if(!w){showToast('Enter your Worker URL','error');soundError();return;}
+  if(!d0||!d1){showToast('Enter both Device IDs','error');soundError();return;}
+  CFG.worker=w;
+  if(n0)CFG.devices[0].name=n0; if(d0)CFG.devices[0].id=d0;
+  if(n1)CFG.devices[1].name=n1; if(d1)CFG.devices[1].id=d1;
+  try{localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){}
+  closePanel(document.getElementById('config-panel'));
+  showToast('Saved — connecting…'); soundSave();
+  setTimeout(()=>syncAllLights(),400);
+}
+
+function loadConfigIntoPanel(){
+  document.getElementById('cfg-worker').value=CFG.worker||'';
+  document.getElementById('cfg-name0').value=CFG.devices[0].name||'';
+  document.getElementById('cfg-dev0').value=CFG.devices[0].id||'';
+  document.getElementById('cfg-name1').value=CFG.devices[1].name||'';
+  document.getElementById('cfg-dev1').value=CFG.devices[1].id||'';
+  // Update light name options in auto form
+  document.getElementById('auto-light').options[1].text = CFG.devices[0].name||'Light 1';
+  document.getElementById('auto-light').options[2].text = CFG.devices[1].name||'Light 2';
+}
+
+/* ══════════════════════════════════════════
+   AUTOMATIONS
+   ══════════════════════════════════════════ */
+const AUTO_KEY='tuya_automations';
+let automations=[];
+try{const s=localStorage.getItem(AUTO_KEY);if(s)automations=JSON.parse(s);}catch(e){}
+
+const ACTION_LABELS={on:'Turn ON',off:'Turn OFF',dim:'Dim to 20%',bright:'Set 100%'};
+const DAY_LABELS={every:'Every day',weekdays:'Weekdays',weekends:'Weekends'};
+
+function saveAutomations(){try{localStorage.setItem(AUTO_KEY,JSON.stringify(automations));}catch(e){}}
+
+function renderAutomations(){
+  const el=document.getElementById('auto-list');
+  if(!automations.length){
+    el.innerHTML='<div class="auto-empty">No automations yet — add one below</div>';
+    return;
+  }
+  el.innerHTML=automations.map((a,i)=>`
+    <div class="auto-item">
+      <div class="auto-item-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div class="auto-item-body">
+        <div class="auto-item-name">${ACTION_LABELS[a.action]} · ${a.light==='all'?'All lights':CFG.devices[+a.light]?.name||'Light '+(+a.light+1)}</div>
+        <div class="auto-item-sub">${DAY_LABELS[a.days]} at ${a.time}</div>
+      </div>
+      <div class="sw ${a.enabled?'on':''}" onclick="toggleAutomation(${i})" style="width:40px;height:22px"></div>
+      <div class="auto-delete" onclick="deleteAutomation(${i})">
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(215,100,90,0.8)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+    </div>`).join('');
+}
+
+function addAutomation(){
+  const action=document.getElementById('auto-action').value;
+  const light=document.getElementById('auto-light').value;
+  const days=document.getElementById('auto-days').value;
+  const time=document.getElementById('auto-time').value;
+  if(!time){showToast('Pick a time','error');soundError();return;}
+  automations.push({action,light,days,time,enabled:true});
+  saveAutomations();
+  renderAutomations();
+  soundAdd();
+  showToast('Automation added');
+}
+
+function deleteAutomation(i){
+  automations.splice(i,1);
+  saveAutomations();
+  renderAutomations();
+  soundDelete();
+}
+
+function toggleAutomation(i){
+  automations[i].enabled=!automations[i].enabled;
+  saveAutomations();
+  renderAutomations();
+  soundClick();
+}
+
+// Scheduler — checks every minute
+function runAutomationScheduler(){
+  const now=new Date();
+  const hhmm=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
+  const dow=now.getDay(); // 0=Sun,6=Sat
+  const isWeekday=dow>=1&&dow<=5;
+  const isWeekend=dow===0||dow===6;
+
+  automations.forEach(a=>{
+    if(!a.enabled||a.time!==hhmm)return;
+    const matchDay=(a.days==='every')||(a.days==='weekdays'&&isWeekday)||(a.days==='weekends'&&isWeekend);
+    if(!matchDay)return;
+    // Run action
+    const targets=a.light==='all'?[0,1]:[+a.light];
+    targets.forEach(idx=>{
+      if(a.action==='on'){LIGHTS[idx].on=true;refreshCard(idx);tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:true}]).catch(()=>{});}
+      else if(a.action==='off'){LIGHTS[idx].on=false;refreshCard(idx);tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:false}]).catch(()=>{});}
+      else if(a.action==='dim'){LIGHTS[idx].on=true;LIGHTS[idx].bright=20;refreshCard(idx);tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:true},{code:'work_mode',value:'colour'},{code:'colour_data',value:JSON.stringify({h:0,s:0,v:200})}]).catch(()=>{});}
+      else if(a.action==='bright'){LIGHTS[idx].on=true;LIGHTS[idx].bright=100;refreshCard(idx);tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:true},{code:'work_mode',value:'colour'},{code:'colour_data',value:JSON.stringify({h:0,s:0,v:1000})}]).catch(()=>{});}
+    });
+    showToast(`Auto: ${ACTION_LABELS[a.action]}`);
+    soundOn();
+  });
+}
+
+// Run at next minute boundary, then every minute
+(function scheduleFirst(){
+  const now=new Date();
+  const msToNext=60000-now.getSeconds()*1000-now.getMilliseconds();
+  setTimeout(()=>{runAutomationScheduler();setInterval(runAutomationScheduler,60000);},msToNext);
+})();
+
+/* ══════════════════════════════════════════
+   TUYA / LIGHTS
+   ══════════════════════════════════════════ */
 const LIGHTS=[{idx:0,on:false,bright:100},{idx:1,on:false,bright:100}];
 function workerUrl(p){return(CFG.worker||'').replace(/\/$/,'')+p;}
 async function tuyaStatus(id){if(!CFG.worker)throw new Error('no-worker');const r=await fetch(workerUrl(`/status?device=${id}`));if(!r.ok)throw new Error('HTTP '+r.status);return r.json();}
@@ -285,14 +545,43 @@ async function tuyaCommand(id,commands){if(!CFG.worker)throw new Error('no-worke
 function parseTuyaStatus(arr,i){if(!Array.isArray(arr))return;const find=c=>arr.find(s=>s.code===c)?.value;const sw=find('switch_led');let cd=find('colour_data_v2')??find('colour_data');if(typeof cd==='string'){try{cd=JSON.parse(cd);}catch(e){cd=null;}}if(sw!==undefined)LIGHTS[i].on=sw;if(cd?.v!==undefined)LIGHTS[i].bright=Math.round(cd.v/10);}
 
 let syncing=false;
-async function syncAllLights(){if(syncing)return;syncing=true;setStatus('Syncing…','Reaching Tuya cloud');const btn=document.getElementById('refresh-btn');btn.style.opacity='.4';btn.style.pointerEvents='none';if(!CFG.worker){setStatus('Not configured','Open Settings and enter your Worker URL','warn');syncing=false;btn.style.opacity='';btn.style.pointerEvents='';showToast('Open Settings to configure','error');renderGrid();return;}try{const res=await Promise.all(CFG.devices.map(async(dev,i)=>{const d=await tuyaStatus(dev.id);if(d.success&&d.result)parseTuyaStatus(d.result,i);return d.success;}));renderGrid();const ok=res.every(Boolean);setStatus(ok?'Connected':'Partial sync',ok?'Tuya EU cloud · Live':'Some devices unreachable',ok?'ok':'warn');}catch(e){setStatus('Connection failed','Check your Worker URL in Settings','err');showToast('Could not reach Worker','error');renderGrid();}syncing=false;btn.style.opacity='';btn.style.pointerEvents='';}
+async function syncAllLights(){
+  if(syncing)return;syncing=true;setStatus('Syncing…','Reaching Tuya cloud');
+  const btn=document.getElementById('refresh-btn');btn.style.opacity='.4';btn.style.pointerEvents='none';
+  if(!CFG.worker){setStatus('Not configured','Open Settings and enter your Worker URL','warn');syncing=false;btn.style.opacity='';btn.style.pointerEvents='';showToast('Open Settings to configure','error');soundError();renderGrid();return;}
+  try{
+    const res=await Promise.all(CFG.devices.map(async(dev,i)=>{const d=await tuyaStatus(dev.id);if(d.success&&d.result)parseTuyaStatus(d.result,i);return d.success;}));
+    renderGrid();
+    const ok=res.every(Boolean);
+    setStatus(ok?'Connected':'Partial sync',ok?'Tuya EU cloud · Live':'Some devices unreachable',ok?'ok':'warn');
+  }catch(e){setStatus('Connection failed','Check your Worker URL in Settings','err');showToast('Could not reach Worker','error');soundError();renderGrid();}
+  syncing=false;btn.style.opacity='';btn.style.pointerEvents='';
+}
 
-async function toggleLight(idx){const L=LIGHTS[idx];const ns=!L.on;L.on=ns;refreshCard(idx);const card=document.getElementById('lc-'+idx);card.classList.add('loading-state');try{await tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:ns}]);showToast(CFG.devices[idx].name+' '+(ns?'on':'off'));}catch(e){L.on=!ns;refreshCard(idx);showToast('Failed to reach device','error');}card.classList.remove('loading-state');}
+async function toggleLight(idx){
+  const L=LIGHTS[idx];const ns=!L.on;L.on=ns;refreshCard(idx);
+  ns?soundOn():soundOff();
+  const card=document.getElementById('lc-'+idx);card.classList.add('loading-state');
+  try{await tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:ns}]);showToast(CFG.devices[idx].name+' '+(ns?'on':'off'));}
+  catch(e){L.on=!ns;refreshCard(idx);showToast('Failed to reach device','error');soundError();}
+  card.classList.remove('loading-state');
+}
 
 let brightTimers={};
-function setBright(idx,val){const v=Math.round(parseInt(val)/10)*10||10;LIGHTS[idx].bright=v;const p=document.getElementById('pct-'+idx);if(p)p.textContent=v+'%';const sl=document.querySelector(`#lc-${idx} .lc-slider`);if(sl)sl.value=v;clearTimeout(brightTimers[idx]);brightTimers[idx]=setTimeout(async()=>{try{await tuyaCommand(CFG.devices[idx].id,[{code:'work_mode',value:'colour'},{code:'colour_data',value:JSON.stringify({h:0,s:0,v:Math.max(10,v*10)})}]);}catch(e){showToast('Brightness update failed','error');}},400);}
+function setBright(idx,val){
+  const v=Math.round(parseInt(val)/10)*10||10;LIGHTS[idx].bright=v;
+  const p=document.getElementById('pct-'+idx);if(p)p.textContent=v+'%';
+  const sl=document.querySelector(`#lc-${idx} .lc-slider`);if(sl)sl.value=v;
+  clearTimeout(brightTimers[idx]);
+  brightTimers[idx]=setTimeout(async()=>{
+    try{await tuyaCommand(CFG.devices[idx].id,[{code:'work_mode',value:'colour'},{code:'colour_data',value:JSON.stringify({h:0,s:0,v:Math.max(10,v*10)})}]);}
+    catch(e){showToast('Brightness update failed','error');soundError();}
+  },400);
+}
 
-/* ── Render cards (no lamp icon, fixed height) ── */
+/* ══════════════════════════════════════════
+   RENDER
+   ══════════════════════════════════════════ */
 function renderCard(i){
   const l=LIGHTS[i],dev=CFG.devices[i];
   return`<div class="g light-card ${l.on?'on':'off'}" id="lc-${i}">
@@ -320,148 +609,31 @@ function refreshCard(i){
   const sl=card.querySelector('.lc-slider');if(sl)sl.value=l.bright;
 }
 
-/* ── Status / UI ── */
-function setStatus(text,sub,type='ok'){document.getElementById('status-text').textContent=text;document.getElementById('status-sub').textContent=sub;const dot=document.getElementById('pulse-dot');dot.style.background=type==='err'?'var(--red)':type==='warn'?'var(--orange)':'var(--green)';}
+function setStatus(text,sub,type='ok'){
+  document.getElementById('status-text').textContent=text;
+  document.getElementById('status-sub').textContent=sub;
+  const dot=document.getElementById('pulse-dot');
+  dot.style.background=type==='err'?'var(--red)':type==='warn'?'var(--orange)':'var(--green)';
+}
+
 let toastTimer;
-function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(type==='error'?' error':'');clearTimeout(toastTimer);requestAnimationFrame(()=>{t.classList.add('show');toastTimer=setTimeout(()=>t.classList.remove('show'),2400);});}
-function openPanel(id){if(id==='config-panel')loadConfigIntoPanel();document.getElementById(id).classList.add('open');}
-function closePanel(el){el.classList.remove('open');}
+function showToast(msg,type=''){
+  const t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(type==='error'?' error':'');
+  clearTimeout(toastTimer);requestAnimationFrame(()=>{t.classList.add('show');toastTimer=setTimeout(()=>t.classList.remove('show'),2400);});
+}
+
+function openPanel(id){
+  if(id==='config-panel')loadConfigIntoPanel();
+  if(id==='auto-panel')renderAutomations();
+  document.getElementById(id).classList.add('open');
+  soundClick();
+}
+function closePanel(el){el.classList.remove('open');soundClick();}
 function navTo(el){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active');}
-function addRipple(el,e){if(!el)return;const r=el.getBoundingClientRect(),d=document.createElement('div'),sz=60;d.className='ripple-el';d.style.cssText=`width:${sz}px;height:${sz}px;left:${(e?e.clientX:r.left+r.width/2)-r.left-sz/2}px;top:${(e?e.clientY:r.top+r.height/2)-r.top-sz/2}px`;el.appendChild(d);setTimeout(()=>d.remove(),550);}
 
-/* ── Calendar ── */
-const CAL_COLORS=['rgba(100,170,220,0.9)','rgba(130,200,150,0.9)','rgba(210,155,80,0.9)','rgba(180,130,210,0.9)','rgba(215,100,90,0.9)'];
-const CAL_KEY='home_ics_url';
-let calPollTimer=null;
-
-const PRESET_ICS='https://im2-api.infomentor.se/V1/CalendarV2/IcalSubscription/Subscription/b6c2f3af-6a60-47d4-8575-fabfb5c2b9d9';
-function getIcsUrl(){return(localStorage.getItem(CAL_KEY)||PRESET_ICS).replace(/^webcal:\/\//,'https://');}
-function saveIcsUrl(url){localStorage.setItem(CAL_KEY,(url||PRESET_ICS).replace(/^webcal:\/\//,'https://'));}
-
-/* Parse an .ics text string → array of today's events sorted by start time */
-function parseICS(text, windowDays=14){
-  const events=[];
-  const blocks=text.split('BEGIN:VEVENT');
-  const now=new Date();
-  const cutoff=new Date(now.getFullYear(),now.getMonth(),now.getDate()+windowDays);
-
-  for(let i=1;i<blocks.length;i++){
-    const b=blocks[i];
-    const get=(key)=>{
-      const re=new RegExp(key+'(?:;[^:]*)?:([^\\r\\n]+)','i');
-      const m=b.match(re);return m?m[1].trim():'';
-    };
-    const summary=get('SUMMARY')||'(No title)';
-    const location=get('LOCATION')||'';
-    const dtstart=get('DTSTART');
-    const dtend=get('DTEND');
-    if(!dtstart)continue;
-
-    function parseICSDate(s){
-      s=s.replace(/Z$/,'');
-      if(s.length===8) return new Date(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8));
-      return new Date(+s.slice(0,4),+s.slice(4,6)-1,+s.slice(6,8),+s.slice(9,11),+s.slice(11,13),+s.slice(13,15));
-    }
-
-    let start,end,allDay=false;
-    try{
-      allDay=dtstart.length===8||dtstart.includes('VALUE=DATE');
-      start=parseICSDate(dtstart.replace('VALUE=DATE:',''));
-      end=dtend?parseICSDate(dtend.replace('VALUE=DATE:','').replace(/Z$/,'')):new Date(start.getTime()+3600000);
-    }catch(e){continue;}
-
-    // Include if in the future (or started within last hour) and within window
-    const relevantStart=allDay?start:new Date(start.getTime()-3600000);
-    if(relevantStart>now && start<cutoff){
-      const fmt=(d)=>allDay?'All day':`${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-      const duration=allDay?'':(()=>{const m=Math.round((end-start)/60000);if(m<60)return`${m}m`;const h=Math.floor(m/60),rm=m%60;return rm?`${h}h ${rm}m`:`${h}h`;})();
-      events.push({start,timeStr:fmt(start),name:summary,sub:[location,duration].filter(Boolean).join(' · '),allDay});
-    }
-  }
-  events.sort((a,b)=>a.start-b.start);
-  return events;
-}
-
-async function fetchAndRenderCalendar(){
-  const url=getIcsUrl();
-  const el=document.getElementById('cal-events');
-
-  if(!url){
-    el.innerHTML=`<div class="cal-empty" style="display:flex;align-items:center;gap:8px;justify-content:center;cursor:pointer" onclick="openPanel('config-panel')"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><span>Add iCloud URL in Settings</span></div>`;
-    return;
-  }
-
-  el.innerHTML=`<div class="cal-empty" style="opacity:.5">Loading…</div>`;
-
-  try{
-    const icsUrl=url.replace(/^webcal:\/\//i,'https://');
-    let text=null;
-
-    // Try allorigins /get (returns JSON wrapper — more reliable than /raw)
-    try{
-      const r=await fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(icsUrl)}`,{cache:'no-store'});
-      if(r.ok){const j=await r.json();if(j.contents&&j.contents.includes('VCALENDAR'))text=j.contents;}
-    }catch(e){}
-
-    // Fallback: corsproxy.io
-    if(!text){
-      try{
-        const r=await fetch(`https://corsproxy.io/?${encodeURIComponent(icsUrl)}`,{cache:'no-store'});
-        if(r.ok){const t=await r.text();if(t.includes('VCALENDAR'))text=t;}
-      }catch(e){}
-    }
-
-    if(!text)throw new Error('all proxies failed');
-    const events=parseICS(text);
-
-    const now=new Date();
-    const events=parseICS(text);
-
-    if(events.length===0){
-      el.innerHTML=`<div class="cal-empty">Nothing coming up 🎉</div>`;
-    }else{
-      const dayNames=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-      const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-      const todayMidnight=new Date(now.getFullYear(),now.getMonth(),now.getDate());
-      const tomorrowMidnight=new Date(todayMidnight.getTime()+86400000);
-
-      function dayLabel(d){
-        const dm=new Date(d.getFullYear(),d.getMonth(),d.getDate());
-        if(dm.getTime()===todayMidnight.getTime()) return'Today';
-        if(dm.getTime()===tomorrowMidnight.getTime()) return'Tomorrow';
-        return`${dayNames[d.getDay()]} ${d.getDate()} ${months[d.getMonth()]}`;
-      }
-
-      el.innerHTML=events.slice(0,6).map((e,i)=>`
-        <div class="cal-event">
-          <div class="cal-dot" style="background:${CAL_COLORS[i%CAL_COLORS.length]}"></div>
-          <div class="cal-time">${e.timeStr}</div>
-          <div style="flex:1;min-width:0">
-            <div style="display:flex;align-items:baseline;gap:6px">
-              <div class="cal-name" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${e.name}</div>
-              <div style="font-size:10px;font-weight:700;color:var(--t3);white-space:nowrap;flex-shrink:0">${dayLabel(e.start)}</div>
-            </div>
-            ${e.sub?`<div class="cal-sub">${e.sub}</div>`:''}
-          </div>
-        </div>`).join('');
-    }
-  }catch(err){
-    el.innerHTML=`<div class="cal-empty" style="color:var(--red);cursor:pointer" onclick="fetchAndRenderCalendar()">Couldn't load calendar — tap to retry</div>`;
-  }
-}
-
-function buildCalendar(){
-  const now=new Date();
-  const days=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
-  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  document.getElementById('cal-date').textContent=`${days[now.getDay()]}, ${now.getDate()} ${months[now.getMonth()]}`;
-  fetchAndRenderCalendar();
-  // Re-fetch every 5 minutes so new events appear automatically
-  clearInterval(calPollTimer);
-  calPollTimer=setInterval(fetchAndRenderCalendar, 5*60*1000);
-}
-
-/* ── Weather ── */
+/* ══════════════════════════════════════════
+   WEATHER
+   ══════════════════════════════════════════ */
 const WX={
   sun:`<svg width="58" height="58" viewBox="0 0 64 64" fill="none" stroke="#F5C842" stroke-width="2.2" stroke-linecap="round"><circle cx="32" cy="32" r="12" fill="rgba(245,200,66,0.14)"/><line x1="32" y1="7" x2="32" y2="13"/><line x1="32" y1="51" x2="32" y2="57"/><line x1="7" y1="32" x2="13" y2="32"/><line x1="51" y1="32" x2="57" y2="32"/><line x1="15" y1="15" x2="19.5" y2="19.5"/><line x1="44.5" y1="44.5" x2="49" y2="49"/><line x1="49" y1="15" x2="44.5" y2="19.5"/><line x1="19.5" y1="44.5" x2="15" y2="49"/></svg>`,
   partly:`<svg width="58" height="58" viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-width="2.2"><circle cx="26" cy="26" r="10" stroke="#F5C842" fill="rgba(245,200,66,0.12)"/><line x1="26" y1="9" x2="26" y2="14" stroke="#F5C842"/><line x1="9" y1="26" x2="14" y2="26" stroke="#F5C842"/><line x1="14.5" y1="14.5" x2="18" y2="18" stroke="#F5C842"/><path d="M43 49H29a10 10 0 1 1 2.1-19.8A11 11 0 1 1 43 49z" stroke="rgba(200,210,220,0.7)" fill="rgba(200,210,220,0.1)"/></svg>`,
@@ -476,13 +648,10 @@ function wxD(w){if(w===0)return'Clear sky';if(w<=1)return'Mainly clear';if(w<=2)
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 async function loadWeather(){try{let lat=59.3293,lon=18.0686,city='Stockholm';try{const p=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:4000}));lat=p.coords.latitude;lon=p.coords.longitude;try{const g=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`).then(r=>r.json());city=g.address?.city||g.address?.town||g.address?.village||city;}catch(e){}}catch(e){}const d=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode,windspeed_10m,precipitation_probability&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=celsius&wind_speed_unit=kmh&forecast_days=5&timezone=auto`).then(r=>r.json());const cur=d.current,daily=d.daily;document.getElementById('wc-city').textContent=city;document.getElementById('wc-temp').textContent=Math.round(cur.temperature_2m)+'°';document.getElementById('wc-desc').textContent=wxD(cur.weathercode);document.getElementById('wc-icon').innerHTML=wxI(cur.weathercode);document.getElementById('wc-hi').textContent=Math.round(daily.temperature_2m_max[0])+'°';document.getElementById('wc-lo').textContent=Math.round(daily.temperature_2m_min[0])+'°';document.getElementById('wc-rain').textContent=(cur.precipitation_probability||daily.precipitation_probability_max[0]||0)+'%';document.getElementById('wc-wind').textContent=Math.round(cur.windspeed_10m)+' km/h';document.getElementById('wc-forecast').innerHTML=daily.weathercode.slice(0,5).map((_,i)=>{const dt=new Date(daily.time[i]+'T12:00:00');return`<div class="fc-item"><div class="fc-day">${DAYS[dt.getDay()].toUpperCase()}</div><div class="fc-icon">${wxIs(daily.weathercode[i],24)}</div><div class="fc-hi">${Math.round(daily.temperature_2m_max[i])}°</div><div class="fc-lo">${Math.round(daily.temperature_2m_min[i])}°</div></div>`;}).join('');document.getElementById('wc-loading').style.display='none';document.getElementById('wc-content').style.display='block';}catch(e){document.getElementById('wc-loading').innerHTML='<span style="color:rgba(215,100,90,0.7);font-size:12px">Weather unavailable</span>';}}
 
-/* ── Boot ── */
+/* Boot */
 renderGrid();
-fetchAndRenderCalendar();
 loadWeather();
 syncAllLights();
-// Refresh calendar every 5 minutes so new events appear automatically
-setInterval(fetchAndRenderCalendar, 5*60*1000);
 </script>
 </body>
 </html>
