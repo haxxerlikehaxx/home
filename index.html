@@ -135,44 +135,46 @@ canvas#stars { position:absolute;inset:0;width:100%;height:100%; }
 .sw.on::after { transform:translateX(19px); }
 .sw.loading { opacity:.6;pointer-events:none; }
 /* Lights grid */
-.lights-grid { display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:0 14px;margin-bottom:14px; }
+.lights-grid { display:grid;grid-template-columns:1fr 1fr;gap:12px;padding:0 14px;margin-bottom:14px; }
 .light-card {
-  padding:17px 15px 15px;cursor:pointer;border-radius:var(--r-xl);
+  padding:16px 16px 14px;cursor:pointer;border-radius:var(--r-xl);
   transition:transform .18s cubic-bezier(.34,1.56,.64,1);
   -webkit-tap-highlight-color:transparent;user-select:none;
+  min-height:160px;display:flex;flex-direction:column;
 }
 .light-card:active { transform:scale(.93); }
 .light-card.off { background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.12); }
 .light-card.loading-state { opacity:.7;pointer-events:none; }
-.lc-top { display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:11px; }
-.lc-icon { width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;transition:opacity .3s; }
+/* Card top row: icon + toggle */
+.lc-top { display:flex;justify-content:space-between;align-items:center;margin-bottom:8px; }
+.lc-icon { width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;transition:opacity .3s;flex-shrink:0; }
 .light-card.off .lc-icon { opacity:.3; }
-.lc-name { font-size:14px;font-weight:600;color:var(--t1);letter-spacing:-.2px; }
-.lc-status { font-size:12px;color:var(--t2);margin-top:2px; }
+/* Lamp illustration */
+.lc-lamp {
+  flex:1;display:flex;justify-content:flex-end;align-items:flex-end;
+  margin:-8px -8px 8px 0;opacity:0;transition:opacity .4s;
+  pointer-events:none;
+}
+.light-card.on .lc-lamp { opacity:1; }
+.lc-name { font-size:15px;font-weight:700;color:var(--t1);letter-spacing:-.3px;margin-top:auto; }
+.lc-status { font-size:12px;color:var(--t2);margin-top:2px;margin-bottom:8px; }
 .light-card.off .lc-status { color:var(--t3); }
-.lc-brightness { margin-top:10px;display:none;align-items:center;gap:7px; }
-.light-card.on .lc-brightness { display:flex; }
-.lc-brightness input[type=range] {
-  flex:1;height:3px;border-radius:2px;outline:none;border:none;
-  background:rgba(255,255,255,.2);-webkit-appearance:none;cursor:pointer;
+/* Slider */
+.lc-slider-wrap { display:none;align-items:center;gap:0;margin-top:2px; }
+.light-card.on .lc-slider-wrap { display:flex; }
+.lc-slider {
+  flex:1;height:5px;border-radius:3px;outline:none;border:none;
+  -webkit-appearance:none;cursor:pointer;
 }
-.lc-brightness input[type=range]::-webkit-slider-thumb {
-  -webkit-appearance:none;width:15px;height:15px;border-radius:50%;background:white;box-shadow:0 1px 4px rgba(0,0,0,.4);
+.lc-slider::-webkit-slider-thumb {
+  -webkit-appearance:none;width:18px;height:18px;border-radius:50%;
+  background:white;box-shadow:0 1px 6px rgba(0,0,0,0.45);
+  border:2px solid rgba(255,255,255,0.9);
 }
-.lc-brightness input[type=range]::-moz-range-thumb {
-  width:15px;height:15px;border-radius:50%;background:white;border:none;
+.lc-slider::-moz-range-thumb {
+  width:18px;height:18px;border-radius:50%;background:white;border:2px solid rgba(255,255,255,0.9);
 }
-.lc-pct { font-size:11px;color:rgba(255,255,255,.4);min-width:26px;text-align:right; }
-.color-bar { display:none;flex-direction:column;gap:8px;margin-top:10px; }
-.light-card.on .color-bar { display:flex; }
-.color-wheel-wrap { position:relative;width:100%;display:flex;justify-content:center; }
-.color-wheel-wrap canvas { border-radius:50%;cursor:crosshair;touch-action:none; }
-.color-wheel-cursor {
-  position:absolute;width:14px;height:14px;border-radius:50%;
-  border:2.5px solid white;box-shadow:0 0 4px rgba(0,0,0,0.6);
-  pointer-events:none;transform:translate(-50%,-50%);
-  transition:left .15s,top .15s;
-}
+.lc-pct { font-size:11px;color:rgba(255,255,255,.5);min-width:30px;text-align:right;padding-left:6px; }
 /* Status */
 .status-strip { margin:0 14px 14px;padding:14px 18px;display:flex;align-items:center;gap:12px;border-radius:var(--r-lg); }
 .pulse-dot { width:10px;height:10px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);flex-shrink:0;animation:pulse 2.5s ease-in-out infinite; }
@@ -570,7 +572,7 @@ async function syncAllLights(){
     setStatus('Not configured','Open Settings and enter your Worker URL','warn');
     syncing=false;btn.style.opacity='';btn.style.pointerEvents='';
     showToast('Open Settings to configure','error');
-    renderGrid();initAllWheels();updateMaster();
+    renderGrid();updateMaster();
     return;
   }
 
@@ -587,7 +589,7 @@ async function syncAllLights(){
   } catch(e){
     setStatus('Connection failed','Check your Worker URL in Settings','err');
     showToast('Could not reach Worker','error');
-    renderGrid();initAllWheels();updateMaster();
+    renderGrid();updateMaster();
   }
   syncing=false;btn.style.opacity='';btn.style.pointerEvents='';
 }
@@ -615,13 +617,20 @@ async function toggleLight(idx){
 /* ── Set brightness ── */
 let brightTimers={};
 function setBright(idx,val){
-  LIGHTS[idx].bright=parseInt(val);
-  const p=document.getElementById('pct-'+idx);if(p)p.textContent=val+'%';
-  const c=document.getElementById('lc-'+idx);if(c)c.querySelector('.lc-status').textContent=`On · ${val}%`;
+  const rounded=Math.round(parseInt(val)/10)*10||10;
+  LIGHTS[idx].bright=rounded;
+  const p=document.getElementById('pct-'+idx);if(p)p.textContent=rounded+'%';
+  const card=document.getElementById('lc-'+idx);
+  if(card){
+    const sl=card.querySelector('.lc-slider');
+    if(sl){ sl.value=rounded; sl.style.background=sliderGradient(LIGHTS[idx].color||'#4A9EFF'); }
+    const lamp=card.querySelector('.lc-lamp');
+    if(lamp) lamp.innerHTML=lampSVG(LIGHTS[idx].color||'#FFD60A',rounded);
+  }
   clearTimeout(brightTimers[idx]);
   brightTimers[idx]=setTimeout(async()=>{
     try{
-      const v=Math.max(10,Math.round(parseInt(val)*10));
+      const v=Math.max(10,LIGHTS[idx].bright*10);
       const h=LIGHTS[idx].hue??0;
       const s=LIGHTS[idx].sat??1000;
       await tuyaCommand(CFG.devices[idx].id,[
@@ -661,7 +670,7 @@ async function toggleAll(){
   const anyOn=LIGHTS.some(l=>l.on);
   const newState=!anyOn;
   LIGHTS.forEach(l=>l.on=newState);
-  renderGrid();initAllWheels();updateMaster();
+  renderGrid();updateMaster();
   try{
     await Promise.all(CFG.devices.map((dev,i)=>tuyaCommand(dev.id,[{code:'switch_led',value:newState}])));
     showToast(newState?'All lights on':'All lights off');
@@ -674,7 +683,7 @@ async function applyScene(el, key){
   el.classList.add('active');
   const cfg=SCENES[key];
   LIGHTS.forEach((l,i)=>{ Object.assign(l,cfg[i]); });
-  renderGrid();initAllWheels();updateMaster();
+  renderGrid();updateMaster();
   try{
     await Promise.all(CFG.devices.map(async(dev,i)=>{
       const sc=cfg[i];
@@ -703,27 +712,56 @@ const ICONS={
   desk:   (c)=>`<svg viewBox="0 0 24 24" fill="none" stroke="${c}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 1 6 6c0 3-2 5-4 6v2H10v-2c-2-1-4-3-4-6a6 6 0 0 1 6-6z"/><line x1="10" y1="17" x2="14" y2="17"/><line x1="11" y1="20" x2="13" y2="20"/></svg>`,
 };
 
+function lampSVG(color, bright){
+  const a=bright/100;
+  const glow=color;
+  return `<svg width="72" height="80" viewBox="0 0 72 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="lg${color.replace('#','')}" cx="50%" cy="100%" r="80%">
+        <stop offset="0%" stop-color="${glow}" stop-opacity="${0.55*a}"/>
+        <stop offset="100%" stop-color="${glow}" stop-opacity="0"/>
+      </radialGradient>
+    </defs>
+    <!-- glow pool -->
+    <ellipse cx="36" cy="74" rx="30" ry="8" fill="url(#lg${color.replace('#','')})"/>
+    <!-- shade -->
+    <path d="M20 38 L28 18 H44 L52 38 Z" fill="${glow}" opacity="${0.25+0.45*a}"/>
+    <path d="M20 38 L28 18 H44 L52 38 Z" fill="url(#lg${color.replace('#','')})" opacity="0.4"/>
+    <!-- shade rim -->
+    <line x1="20" y1="38" x2="52" y2="38" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- bulb -->
+    <circle cx="36" cy="40" r="4" fill="${glow}" opacity="${0.6+0.4*a}"/>
+    <!-- pole -->
+    <rect x="34.5" y="44" width="3" height="22" rx="1.5" fill="rgba(255,255,255,0.2)"/>
+    <!-- base -->
+    <path d="M26 66 Q36 62 46 66 L48 70 H24 Z" fill="rgba(255,255,255,0.15)"/>
+  </svg>`;
+}
+
+function sliderGradient(color){
+  return `linear-gradient(to right, rgba(255,255,255,0.15), ${color})`;
+}
+
 function renderCard(i){
   const l=LIGHTS[i],dev=CFG.devices[i];
   const ic=l.on?l.color:'rgba(255,255,255,0.3)';
   const icon=ICONS[dev.icon]||ICONS.desk;
+  const col=l.on?l.color:'#4A9EFF';
   return `<div class="g light-card ${l.on?'on':'off'}" id="lc-${i}" onclick="tapCard(${i},event)">
     <div class="lc-top">
       <div class="lc-icon" style="background:${ibg(l.color,l.on)}">${icon(ic)}</div>
-      <div class="sw ${l.on?'on':''}" onclick="event.stopPropagation();toggleLight(${i})"></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div class="lc-lamp">${l.on?lampSVG(col,l.bright):''}</div>
+        <div class="sw ${l.on?'on':''}" onclick="event.stopPropagation();toggleLight(${i})"></div>
+      </div>
     </div>
     <div class="lc-name">${dev.name}</div>
-    <div class="lc-status">${l.on?'On · '+l.bright+'%':'Off'}</div>
-    <div class="lc-brightness">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="3"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-      <input type="range" min="1" max="100" step="1" value="${l.bright}" oninput="setBright(${i},this.value)" onclick="event.stopPropagation()" step="10">
+    <div class="lc-status">${l.on?'On':'Off'}</div>
+    <div class="lc-slider-wrap">
+      <input class="lc-slider" type="range" min="10" max="100" step="10" value="${l.bright}"
+        style="background:${sliderGradient(col)}"
+        oninput="setBright(${i},this.value)" onclick="event.stopPropagation()">
       <span class="lc-pct" id="pct-${i}">${l.bright}%</span>
-    </div>
-    <div class="color-bar">
-      <div class="color-wheel-wrap">
-        <canvas id="cw-${i}" width="120" height="120" onclick="event.stopPropagation()" ontouchstart="event.stopPropagation()"></canvas>
-        <div class="color-wheel-cursor" id="cwc-${i}" style="left:50%;top:50%"></div>
-      </div>
     </div>
   </div>`;
 }
@@ -740,7 +778,15 @@ function refreshCard(i){
   card.querySelector('.sw').className=`sw ${l.on?'on':''}`;
   card.querySelector('.lc-status').textContent=l.on?`On · ${l.bright}%`:'Off';
   const p=document.getElementById('pct-'+i);if(p)p.textContent=l.bright+'%';
-  if(l.on) setTimeout(()=>initWheel(i),50);
+  // update slider gradient and lamp
+  const sliderEl=card.querySelector('.lc-slider');
+  if(sliderEl){
+    sliderEl.style.background=sliderGradient(l.on?l.color:'#4A9EFF');
+    sliderEl.value=l.bright;
+  }
+  // update lamp illustration
+  const lampEl=card.querySelector('.lc-lamp');
+  if(lampEl) lampEl.innerHTML=l.on?lampSVG(l.color,l.bright):'';
 }
 
 function updateMaster(){
@@ -946,7 +992,7 @@ function initAllWheels(){
 
 /* ── Boot ── */
 renderGrid();
-initAllWheels();
+
 updateMaster();
 loadWeather();
 syncAllLights();
