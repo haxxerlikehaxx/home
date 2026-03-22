@@ -541,13 +541,14 @@ function parseTuyaStatus(statusArr, lightIdx){
   if(!Array.isArray(statusArr)) return;
   const find=(code)=>statusArr.find(s=>s.code===code)?.value;
   const sw=find('switch_led');
-  const bri=find('bright_value_v2')??find('bright_value');
-  const hue=find('colour_data_v2')?.h??find('colour_data')?.h;
-  const sat=find('colour_data_v2')?.s??find('colour_data')?.s;
+  // Parse colour_data — stored as JSON string or object
+  let colourData = find('colour_data_v2') ?? find('colour_data');
+  if(typeof colourData === 'string') { try { colourData = JSON.parse(colourData); } catch(e) { colourData = null; } }
   if(sw!==undefined) LIGHTS[lightIdx].on=sw;
-  if(bri!==undefined) LIGHTS[lightIdx].bright=Math.round(bri/10);
-  if(hue!==undefined) LIGHTS[lightIdx].hue=hue;
-  if(sat!==undefined) LIGHTS[lightIdx].sat=sat;
+  // Brightness comes from v inside colour_data (0-1000 scale)
+  if(colourData?.v !== undefined) LIGHTS[lightIdx].bright = Math.round(colourData.v / 10);
+  if(colourData?.h !== undefined) LIGHTS[lightIdx].hue = colourData.h;
+  if(colourData?.s !== undefined) LIGHTS[lightIdx].sat = colourData.s;
 }
 
 /* ── Sync all lights from cloud ── */
@@ -614,8 +615,11 @@ function setBright(idx,val){
   clearTimeout(brightTimers[idx]);
   brightTimers[idx]=setTimeout(async()=>{
     try{
-      const tuya=Math.round(parseInt(val)*10);
-      await tuyaCommand(CFG.devices[idx].id,[{code:'bright_value_v2',value:tuya}]);
+      const v=Math.max(10,Math.round(parseInt(val)*10));
+      await tuyaCommand(CFG.devices[idx].id,[
+        {code:'work_mode',value:'colour'},
+        {code:'colour_data',value:JSON.stringify({h:LIGHTS[idx].hue||0,s:LIGHTS[idx].sat||1000,v})}
+      ]);
     }catch(e){ showToast('Brightness update failed','error'); }
   },400);
 }
@@ -626,15 +630,19 @@ async function setColor(idx, hexColor){
   const rgb=hexToRgb(hexColor);
   const hsv=rgbToHsv(rgb.r,rgb.g,rgb.b);
   LIGHTS[idx].hue=Math.round(hsv.h*360);
-  LIGHTS[idx].sat=Math.round(hsv.s*255);
+  LIGHTS[idx].sat=Math.round(hsv.s*1000);
   refreshCard(idx);
   try{
+    const v=Math.max(10,LIGHTS[idx].bright*10);
     if(hexColor==='#ffffff'){
-      await tuyaCommand(CFG.devices[idx].id,[{code:'work_mode',value:'white'},{code:'bright_value_v2',value:LIGHTS[idx].bright*10}]);
+      await tuyaCommand(CFG.devices[idx].id,[
+        {code:'work_mode',value:'colour'},
+        {code:'colour_data',value:JSON.stringify({h:0,s:0,v})}
+      ]);
     } else {
       await tuyaCommand(CFG.devices[idx].id,[
         {code:'work_mode',value:'colour'},
-        {code:'colour_data_v2',value:{h:LIGHTS[idx].hue,s:LIGHTS[idx].sat,v:Math.round(LIGHTS[idx].bright*10)}}
+        {code:'colour_data',value:JSON.stringify({h:LIGHTS[idx].hue,s:LIGHTS[idx].sat,v})}
       ]);
     }
   }catch(e){ showToast('Color update failed','error'); }
@@ -665,9 +673,9 @@ async function applyScene(el, key){
       const cmds=[{code:'switch_led',value:sc.on}];
       if(sc.on){
         if(sc.sat===0){
-          cmds.push({code:'work_mode',value:'white'},{code:'bright_value_v2',value:sc.bright*10});
+          cmds.push({code:'work_mode',value:'colour'},{code:'colour_data',value:JSON.stringify({h:0,s:0,v:Math.max(10,sc.bright*10)})});
         } else {
-          cmds.push({code:'work_mode',value:'colour'},{code:'colour_data_v2',value:{h:sc.hue,s:sc.sat,v:sc.bright*10}});
+          cmds.push({code:'work_mode',value:'colour'},{code:'colour_data',value:JSON.stringify({h:sc.hue,s:sc.sat,v:Math.max(10,sc.bright*10)})});
         }
       }
       return tuyaCommand(dev.id,cmds);
