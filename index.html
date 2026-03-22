@@ -134,7 +134,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   background:rgba(255,255,255,0.065);border-color:rgba(255,255,255,0.13);
   box-shadow:0 0 30px -8px rgba(255,255,255,0.08),inset 0 1px 0 rgba(255,255,255,0.07);
 }
-.light-card.loading-state{opacity:.5;pointer-events:none;}
+.light-card.loading-state{opacity:.5;}
 /* Entrance animations for light cards — scoped to .card-entrance only so refreshCard never re-triggers it */
 .light-card.card-entrance{animation:cardPop .45s cubic-bezier(.34,1.56,.64,1) both;}
 .lights-grid .light-card.card-entrance:nth-child(1){animation-delay:.1s;}
@@ -166,7 +166,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .light-card.on .lc-pct{color:var(--t2);}
 
 /* Toggle */
-.sw{position:relative;width:46px;height:26px;border-radius:13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12);cursor:pointer;transition:background .28s cubic-bezier(.4,0,.2,1),border-color .28s,box-shadow .28s;flex-shrink:0;}
+.sw{position:relative;width:46px;height:26px;border-radius:13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12);cursor:pointer;transition:background .28s cubic-bezier(.4,0,.2,1),border-color .28s,box-shadow .28s;flex-shrink:0;pointer-events:all !important;z-index:10;}
 .sw.on{background:rgba(255,255,255,0.88);border-color:rgba(255,255,255,0.4);box-shadow:0 0 14px rgba(255,255,255,0.18);}
 .sw::after{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:white;top:2px;left:2px;transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .28s;box-shadow:0 2px 5px rgba(0,0,0,0.5);}
 .sw.on::after{transform:translateX(20px);background:#1a1c1f;box-shadow:0 2px 8px rgba(0,0,0,0.35);}
@@ -721,16 +721,26 @@ function triggerRefresh(btn){
 }
 
 async function toggleLight(idx){
-  const L=LIGHTS[idx];const ns=!L.on;L.on=ns;refreshCard(idx);
+  const L=LIGHTS[idx];
+  const ns=!L.on;
+  L.on=ns;
+  refreshCard(idx);
   ns?soundOn():soundOff();
-  // Bounce card on toggle
+  // Bounce animation — purely visual, never blocks interaction
   const card=document.getElementById('lc-'+idx);
-  card.classList.add('just-toggled');
-  setTimeout(()=>card.classList.remove('just-toggled'),360);
-  card.classList.add('loading-state');
-  try{await tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:ns}]);showToast(CFG.devices[idx].name+' '+(ns?'on':'off'));}
-  catch(e){L.on=!ns;refreshCard(idx);showToast('Failed to reach device','error');soundError();}
-  card.classList.remove('loading-state');
+  if(card){
+    card.classList.add('just-toggled');
+    setTimeout(()=>{ if(card) card.classList.remove('just-toggled'); },360);
+  }
+  try{
+    await tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:ns}]);
+    showToast(CFG.devices[idx].name+' '+(ns?'on':'off'));
+  } catch(e){
+    L.on=!ns;
+    refreshCard(idx);
+    showToast('Failed to reach device','error');
+    soundError();
+  }
 }
 
 let brightTimers={};
