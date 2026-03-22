@@ -175,6 +175,25 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .auto-add-btn{width:100%;padding:12px;border-radius:var(--r-md);background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:var(--t1);font-size:14px;font-weight:700;cursor:pointer;text-align:center;transition:background .18s,transform .14s;margin-top:2px;}
 .auto-add-btn:active{background:rgba(255,255,255,0.12);transform:scale(.97);}
 
+/* Computer card */
+.computer-card{margin:0 14px 12px;padding:14px 18px;display:flex;align-items:center;gap:14px;border-radius:var(--r-lg);cursor:default;}
+.computer-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 7px rgba(120,210,140,0.7);flex-shrink:0;transition:background .3s,box-shadow .3s;}
+.computer-dot.offline{background:rgba(255,255,255,0.2);box-shadow:none;}
+.computer-name{font-size:15px;font-weight:700;color:var(--t1);flex:1;}
+.computer-sub{font-size:11px;color:var(--t2);margin-top:2px;}
+
+/* Confirm dialog */
+.confirm-overlay{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.6);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;}
+.confirm-overlay.open{opacity:1;pointer-events:all;}
+.confirm-box{background:rgba(22,24,28,0.98);border:1px solid rgba(255,255,255,0.1);border-radius:22px;padding:28px 24px 20px;width:calc(100% - 64px);max-width:320px;text-align:center;}
+.confirm-title{font-size:18px;font-weight:700;color:var(--t1);margin-bottom:8px;letter-spacing:-.3px;}
+.confirm-sub{font-size:13px;color:var(--t2);line-height:1.5;margin-bottom:22px;}
+.confirm-btns{display:flex;gap:10px;}
+.confirm-btn{flex:1;padding:13px;border-radius:var(--r-md);font-size:15px;font-weight:700;cursor:pointer;transition:background .18s,transform .14s;border:1px solid rgba(255,255,255,0.09);}
+.confirm-btn:active{transform:scale(.96);}
+.confirm-btn.cancel{background:rgba(255,255,255,0.05);color:var(--t1);}
+.confirm-btn.danger{background:rgba(215,100,90,0.18);border-color:rgba(215,100,90,0.3);color:var(--red);}
+
 .ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.08);pointer-events:none;transform:scale(0);animation:rpl .5s ease-out forwards;}
 @keyframes rpl{to{transform:scale(4);opacity:0}}
 @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
@@ -218,6 +237,19 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
     <div class="section-link" onclick="syncAllLights()">Refresh</div>
   </div>
   <div class="lights-grid" id="lightsGrid" style="animation:fadeUp .4s ease both .1s"></div>
+
+  <!-- Computer -->
+  <div class="section-head" style="animation:fadeUp .4s ease both .11s">
+    <div class="section-title">Computer</div>
+  </div>
+  <div class="g computer-card" style="animation:fadeUp .4s ease both .12s" id="computer-card">
+    <div class="computer-dot" id="computer-dot"></div>
+    <div style="flex:1">
+      <div class="computer-name" id="computer-name">My Computer</div>
+      <div class="computer-sub" id="computer-sub">Checking…</div>
+    </div>
+    <div class="sw" id="computer-sw" onclick="handleComputerToggle()"></div>
+  </div>
 
   <!-- Status -->
   <div class="g status-strip" style="animation:fadeUp .4s ease both .13s">
@@ -300,6 +332,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
     <div class="config-section"><div class="config-label">Cloudflare Worker URL</div><input class="config-input" id="cfg-worker" type="url" placeholder="https://your-worker.workers.dev" autocomplete="off"></div>
     <div class="config-section"><div class="config-label">Light 1 — Name</div><input class="config-input" id="cfg-name0" type="text" placeholder="Led Lights Tak"><div class="config-label" style="margin-top:10px">Light 1 — Device ID</div><input class="config-input" id="cfg-dev0" type="text" placeholder="bf8b0e945d8c5f9861fjzy" autocomplete="off"></div>
     <div class="config-section"><div class="config-label">Light 2 — Name</div><input class="config-input" id="cfg-name1" type="text" placeholder="Led Lights Skrivbord"><div class="config-label" style="margin-top:10px">Light 2 — Device ID</div><input class="config-input" id="cfg-dev1" type="text" placeholder="bf1cf6aca13749cf898g3p" autocomplete="off"></div>
+    <div class="config-section"><div class="config-label">Computer — Name</div><input class="config-input" id="cfg-comp-name" type="text" placeholder="My MacBook"><div class="config-label" style="margin-top:10px">Computer — Local IP &amp; Port</div><input class="config-input" id="cfg-comp-url" type="url" placeholder="http://192.168.1.50:4242" autocomplete="off"><div style="font-size:11px;color:var(--t3);margin-top:6px;line-height:1.5">Run shutdown-server.js on your PC first. Find your IP: open Command Prompt and run <code style="background:rgba(255,255,255,0.06);padding:1px 5px;border-radius:4px;font-size:10px">ipconfig</code> — look for IPv4 Address.</div></div>
     <div style="padding:0 20px"><div class="panel-close-btn" style="margin:0 0 10px;background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.16)" onclick="saveConfig()">Save &amp; Connect</div><div class="panel-close-btn" onclick="closePanel(document.getElementById('config-panel'))">Cancel</div></div>
   </div>
 </div>
@@ -458,9 +491,14 @@ function saveConfig(){
   if(n0)CFG.devices[0].name=n0; if(d0)CFG.devices[0].id=d0;
   if(n1)CFG.devices[1].name=n1; if(d1)CFG.devices[1].id=d1;
   try{localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){}
+  const compName = document.getElementById('cfg-comp-name').value.trim();
+  const compUrl  = document.getElementById('cfg-comp-url').value.trim();
+  if(compName) localStorage.setItem('home_computer_name', compName);
+  if(compUrl)  saveComputerUrl(compUrl);
+  loadComputerName();
   closePanel(document.getElementById('config-panel'));
   showToast('Saved — connecting…'); soundSave();
-  setTimeout(()=>syncAllLights(),400);
+  setTimeout(()=>{ syncAllLights(); startComputerPing(); },400);
 }
 
 function loadConfigIntoPanel(){
@@ -472,6 +510,9 @@ function loadConfigIntoPanel(){
   // Update light name options in auto form
   document.getElementById('auto-light').options[1].text = CFG.devices[0].name||'Light 1';
   document.getElementById('auto-light').options[2].text = CFG.devices[1].name||'Light 2';
+
+  document.getElementById('cfg-comp-name').value = localStorage.getItem('home_computer_name') || '';
+  document.getElementById('cfg-comp-url').value  = getComputerUrl();
 }
 
 /* ══════════════════════════════════════════
@@ -680,10 +721,146 @@ function wxD(w){if(w===0)return'Clear sky';if(w<=1)return'Mainly clear';if(w<=2)
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 async function loadWeather(){try{let lat=59.3293,lon=18.0686,city='Stockholm';try{const p=await new Promise((res,rej)=>navigator.geolocation.getCurrentPosition(res,rej,{timeout:4000}));lat=p.coords.latitude;lon=p.coords.longitude;try{const g=await fetch(`https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lon}&format=json`).then(r=>r.json());city=g.address?.city||g.address?.town||g.address?.village||city;}catch(e){}}catch(e){}const d=await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&current=temperature_2m,weathercode,windspeed_10m,precipitation_probability&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=celsius&wind_speed_unit=kmh&forecast_days=5&timezone=auto`).then(r=>r.json());const cur=d.current,daily=d.daily;document.getElementById('wc-city').textContent=city;document.getElementById('wc-temp').textContent=Math.round(cur.temperature_2m)+'°';document.getElementById('wc-desc').textContent=wxD(cur.weathercode);document.getElementById('wc-icon').innerHTML=wxI(cur.weathercode);document.getElementById('wc-hi').textContent=Math.round(daily.temperature_2m_max[0])+'°';document.getElementById('wc-lo').textContent=Math.round(daily.temperature_2m_min[0])+'°';document.getElementById('wc-rain').textContent=(cur.precipitation_probability||daily.precipitation_probability_max[0]||0)+'%';document.getElementById('wc-wind').textContent=Math.round(cur.windspeed_10m)+' km/h';document.getElementById('wc-forecast').innerHTML=daily.weathercode.slice(0,5).map((_,i)=>{const dt=new Date(daily.time[i]+'T12:00:00');return`<div class="fc-item"><div class="fc-day">${DAYS[dt.getDay()].toUpperCase()}</div><div class="fc-icon">${wxIs(daily.weathercode[i],24)}</div><div class="fc-hi">${Math.round(daily.temperature_2m_max[i])}°</div><div class="fc-lo">${Math.round(daily.temperature_2m_min[i])}°</div></div>`;}).join('');document.getElementById('wc-loading').style.display='none';document.getElementById('wc-content').style.display='block';}catch(e){document.getElementById('wc-loading').innerHTML='<span style="color:rgba(215,100,90,0.7);font-size:12px">Weather unavailable</span>';}}
 
+/* ══════════════════════════════════════════
+   COMPUTER CONTROL
+   ══════════════════════════════════════════
+   Requires a tiny local server running on your
+   computer. Easiest setup:
+
+   1. Install Node.js (nodejs.org)
+   2. Save this as shutdown-server.js on your computer:
+
+   ┌─────────────────────────────────────────┐
+   │ const http = require('http');           │
+   │ const { exec } = require('child_process');│
+   │ http.createServer((req, res) => {       │
+   │   res.setHeader('Access-Control-Allow-Origin','*');│
+   │   res.setHeader('Access-Control-Allow-Methods','GET,POST');│
+   │   if(req.url === '/ping') {             │
+   │     res.end('online');                  │
+   │   } else if(req.url === '/shutdown') {  │
+   │     res.end('shutting down');           │
+   │     setTimeout(() => {                  │
+   │       exec('shutdown /s /t 5');         │
+   │     }, 1000);                           │
+   │   }                                     │
+   │ }).listen(4242, '0.0.0.0');             │
+   │ console.log('Running on port 4242');    │
+   └─────────────────────────────────────────┘
+
+   3. Run: node shutdown-server.js
+   4. In Settings below, enter your computer's
+      local IP, e.g. http://192.168.1.50:4242
+      (find it: open CMD and run ipconfig,
+       look for IPv4 Address)
+*/
+
+const COMP_KEY = 'home_computer_url';
+let computerOnline = false;
+let compPingTimer = null;
+
+function getComputerUrl(){
+  return localStorage.getItem(COMP_KEY) || '';
+}
+function saveComputerUrl(url){
+  if(url) localStorage.setItem(COMP_KEY, url.replace(/\/$/,''));
+}
+
+function setComputerState(online){
+  computerOnline = online;
+  const dot  = document.getElementById('computer-dot');
+  const sw   = document.getElementById('computer-sw');
+  const sub  = document.getElementById('computer-sub');
+  if(!dot) return;
+  if(online){
+    dot.className = 'computer-dot';
+    sw.className  = 'sw on';
+    sub.textContent = 'Online · tap toggle to shut down';
+  } else {
+    dot.className = 'computer-dot offline';
+    sw.className  = 'sw';
+    sub.textContent = getComputerUrl() ? 'Offline or unreachable' : 'Add IP in Settings';
+  }
+}
+
+async function pingComputer(){
+  const url = getComputerUrl();
+  if(!url){ setComputerState(false); return; }
+  try{
+    const r = await fetch(url + '/ping', { signal: AbortSignal.timeout(2500) });
+    const t = await r.text();
+    setComputerState(t.includes('online'));
+  } catch(e){
+    setComputerState(false);
+  }
+}
+
+function startComputerPing(){
+  pingComputer();
+  clearInterval(compPingTimer);
+  compPingTimer = setInterval(pingComputer, 8000);
+}
+
+function handleComputerToggle(){
+  if(!computerOnline){
+    showToast('Computer is offline', 'error');
+    soundError();
+    return;
+  }
+  // Show confirm dialog
+  document.getElementById('confirm-overlay').classList.add('open');
+  soundClick();
+}
+
+function cancelShutdown(){
+  document.getElementById('confirm-overlay').classList.remove('open');
+  soundClick();
+}
+
+async function confirmShutdown(){
+  document.getElementById('confirm-overlay').classList.remove('open');
+  soundOff();
+  const url = getComputerUrl();
+  if(!url) return;
+  try{
+    await fetch(url + '/shutdown', { signal: AbortSignal.timeout(3000) });
+    showToast('Shutting down…');
+    setComputerState(false);
+    // Stop pinging — it's going offline
+    clearInterval(compPingTimer);
+    compPingTimer = setInterval(pingComputer, 15000);
+  } catch(e){
+    // Fetch may error as machine shuts down — that's fine
+    showToast('Shutdown sent');
+    setComputerState(false);
+  }
+}
+
+// Read computer name from config
+function loadComputerName(){
+  const name = localStorage.getItem('home_computer_name') || 'My Computer';
+  const el = document.getElementById('computer-name');
+  if(el) el.textContent = name;
+}
+
 /* Boot */
 renderGrid();
 loadWeather();
 syncAllLights();
+loadComputerName();
+startComputerPing();
 </script>
+<!-- Confirm shutdown dialog -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <div class="confirm-title">Shut down?</div>
+    <div class="confirm-sub" id="confirm-sub">This will shut down your computer. Make sure everything is saved.</div>
+    <div class="confirm-btns">
+      <div class="confirm-btn cancel" onclick="cancelShutdown()">Cancel</div>
+      <div class="confirm-btn danger" onclick="confirmShutdown()">Shut down</div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
