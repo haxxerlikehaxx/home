@@ -28,12 +28,43 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 
 /* Header */
 .page-header{padding:58px 22px 10px;display:flex;align-items:center;justify-content:space-between;}
-.page-title{font-size:34px;font-weight:700;letter-spacing:-1px;color:var(--t1);}
-.icon-btn{width:36px;height:36px;border-radius:50%;background:var(--glass);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s,transform .14s;}
-.icon-btn:active{transform:scale(.84);background:var(--glass-hi);}
+.page-title{font-size:34px;font-weight:700;letter-spacing:-1px;color:var(--t1);animation:titleSlide .5s cubic-bezier(.22,1,.36,1) both;}
+
+@keyframes titleSlide{
+  from{opacity:0;transform:translateX(-18px);}
+  to{opacity:1;transform:translateX(0);}
+}
+
+.icon-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--glass);border:1px solid var(--glass-border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  transition:background .18s,transform .14s,box-shadow .22s,border-color .22s;
+  position:relative;overflow:hidden;
+}
+.icon-btn:active{transform:scale(.82);}
+.icon-btn:hover{background:var(--glass-hi);border-color:var(--glass-border-hi);}
+/* Spinning state */
+.icon-btn.spinning svg{animation:spinIcon .7s cubic-bezier(.4,0,.2,1) infinite;}
+.icon-btn.spinning{box-shadow:0 0 0 2px rgba(255,255,255,0.1),0 0 18px rgba(255,255,255,0.06);}
+@keyframes spinIcon{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+}
+/* Ripple on press */
+.icon-btn-ripple{
+  position:absolute;border-radius:50%;
+  background:rgba(255,255,255,0.18);
+  pointer-events:none;transform:scale(0);
+  animation:iconRipple .45s ease-out forwards;
+  width:100%;height:100%;top:0;left:0;
+}
+@keyframes iconRipple{to{transform:scale(2.2);opacity:0;}}
 
 /* Weather */
-.weather-card{margin:0 14px 12px;padding:22px 20px 18px;background:rgba(28,30,34,0.85);border-color:rgba(255,255,255,0.07);}
+.weather-card{margin:0 14px 12px;padding:22px 20px 18px;background:rgba(28,30,34,0.85);border-color:rgba(255,255,255,0.07);transition:transform .22s cubic-bezier(.34,1.56,.64,1),box-shadow .22s;}
+.weather-card:active{transform:scale(.988);}
 .wc-top{display:flex;justify-content:space-between;align-items:flex-start;}
 .wc-loc{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--t2);margin-bottom:5px;text-transform:uppercase;letter-spacing:1.4px;}
 .wc-temp{font-size:70px;font-weight:200;color:var(--t1);letter-spacing:-4px;line-height:1;margin-bottom:2px;}
@@ -45,7 +76,8 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .wc-dl{font-size:9px;text-transform:uppercase;letter-spacing:1.3px;color:var(--t3);font-weight:700;margin-bottom:3px;}
 .wc-dv{font-size:15px;font-weight:600;color:rgba(255,255,255,0.8);}
 .forecast{display:flex;margin-top:14px;}
-.fc-item{flex:1;text-align:center;}
+.fc-item{flex:1;text-align:center;transition:transform .2s cubic-bezier(.34,1.56,.64,1),opacity .2s;}
+.fc-item:active{transform:scale(.88);}
 .fc-day{font-size:9px;color:var(--t3);font-weight:700;letter-spacing:.9px;}
 .fc-icon{margin:5px 0;display:flex;justify-content:center;}
 .fc-hi{font-size:13px;font-weight:600;color:rgba(255,255,255,0.75);}
@@ -54,35 +86,93 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .spin{width:14px;height:14px;border:1.5px solid rgba(255,255,255,0.12);border-top-color:rgba(255,255,255,0.55);border-radius:50%;animation:spin .85s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
 
+/* Weather number count-up animation */
+@keyframes countUp{
+  from{opacity:0;transform:translateY(8px) scale(.96);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
+.wc-temp-anim{animation:countUp .45s cubic-bezier(.22,1,.36,1) both .1s;}
+.wc-detail .wc-dv{animation:countUp .45s cubic-bezier(.22,1,.36,1) both;}
+.wc-detail:nth-child(1) .wc-dv{animation-delay:.12s;}
+.wc-detail:nth-child(2) .wc-dv{animation-delay:.18s;}
+.wc-detail:nth-child(3) .wc-dv{animation-delay:.24s;}
+.wc-detail:nth-child(4) .wc-dv{animation-delay:.30s;}
+/* Forecast slide-in */
+.fc-item{animation:fcSlide .4s cubic-bezier(.22,1,.36,1) both;}
+.fc-item:nth-child(1){animation-delay:.18s;}
+.fc-item:nth-child(2){animation-delay:.23s;}
+.fc-item:nth-child(3){animation-delay:.28s;}
+.fc-item:nth-child(4){animation-delay:.33s;}
+.fc-item:nth-child(5){animation-delay:.38s;}
+@keyframes fcSlide{
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
+}
+
 /* Section */
 .section-head{display:flex;justify-content:space-between;align-items:center;padding:4px 22px 8px;}
 .section-title{font-size:20px;font-weight:700;color:var(--t1);letter-spacing:-.4px;}
-.section-link{font-size:13px;font-weight:600;color:var(--t2);cursor:pointer;}
+/* Removed .section-link — no more "Refresh" text */
 
 /* Lights grid */
 .lights-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px;margin-bottom:12px;}
-.light-card{padding:16px 14px 14px;cursor:pointer;border-radius:var(--r-xl);transition:transform .18s cubic-bezier(.34,1.56,.64,1),background .22s,border-color .22s;user-select:none;height:130px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;}
-/* light-card active scale removed — was triggering on slider drag */
+.light-card{
+  padding:16px 14px 14px;cursor:pointer;border-radius:var(--r-xl);
+  transition:transform .22s cubic-bezier(.34,1.56,.64,1),background .3s,border-color .3s,box-shadow .3s;
+  user-select:none;height:130px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;
+  position:relative;
+}
+/* Glow shimmer on ON cards */
+.light-card.on::after{
+  content:'';position:absolute;inset:0;border-radius:inherit;
+  background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,0.07) 0%,transparent 65%);
+  pointer-events:none;opacity:1;transition:opacity .4s;
+}
+.light-card.off::after{content:'';position:absolute;inset:0;opacity:0;}
 .light-card.off{background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.07);}
-.light-card.on{background:rgba(255,255,255,0.065);border-color:rgba(255,255,255,0.13);}
+.light-card.on{
+  background:rgba(255,255,255,0.065);border-color:rgba(255,255,255,0.13);
+  box-shadow:0 0 30px -8px rgba(255,255,255,0.08),inset 0 1px 0 rgba(255,255,255,0.07);
+}
 .light-card.loading-state{opacity:.5;pointer-events:none;}
+/* Entrance animations for light cards */
+.light-card{animation:cardPop .45s cubic-bezier(.34,1.56,.64,1) both;}
+.lights-grid .light-card:nth-child(1){animation-delay:.1s;}
+.lights-grid .light-card:nth-child(2){animation-delay:.16s;}
+@keyframes cardPop{
+  from{opacity:0;transform:scale(.88) translateY(8px);}
+  to{opacity:1;transform:scale(1) translateY(0);}
+}
+/* Toggle flip on state change */
+.light-card.just-toggled{animation:cardBounce .35s cubic-bezier(.34,1.56,.64,1);}
+@keyframes cardBounce{
+  0%{transform:scale(1);}
+  40%{transform:scale(.96);}
+  100%{transform:scale(1);}
+}
 .lc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
 .lc-name{font-size:14px;font-weight:700;color:var(--t1);letter-spacing:-.2px;line-height:1.2;}
 .lc-bottom{display:flex;flex-direction:column;gap:6px;}
-.lc-status{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);transition:color .22s;}
+.lc-status{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);transition:color .35s,opacity .35s;}
 .light-card.on .lc-status{color:var(--t2);}
 .lc-slider-row{display:flex;align-items:center;gap:6px;touch-action:pan-x;}
-.lc-slider{flex:1;height:5px;border-radius:3px;outline:none;border:none;-webkit-appearance:none;cursor:pointer;background:rgba(255,255,255,0.12);transition:opacity .22s;touch-action:pan-x;}
+.lc-slider{flex:1;height:5px;border-radius:3px;outline:none;border:none;-webkit-appearance:none;cursor:pointer;background:rgba(255,255,255,0.12);transition:opacity .3s,background .3s;}
 .light-card.off .lc-slider{opacity:.3;pointer-events:none;}
-.lc-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:white;box-shadow:0 1px 5px rgba(0,0,0,0.5);}
-.lc-pct{font-size:10px;color:var(--t3);min-width:28px;text-align:right;font-weight:700;transition:opacity .22s;}
+.light-card.on .lc-slider{background:rgba(255,255,255,0.22);}
+.lc-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:white;box-shadow:0 1px 5px rgba(0,0,0,0.5);transition:transform .15s cubic-bezier(.34,1.56,.64,1);}
+.lc-slider:active::-webkit-slider-thumb{transform:scale(1.3);}
+.lc-pct{font-size:10px;color:var(--t3);min-width:28px;text-align:right;font-weight:700;transition:opacity .3s,color .3s;}
 .light-card.off .lc-pct{opacity:.3;}
+.light-card.on .lc-pct{color:var(--t2);}
 
 /* Toggle */
-.sw{position:relative;width:46px;height:26px;border-radius:13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12);cursor:pointer;transition:background .22s,border-color .22s;flex-shrink:0;}
-.sw.on{background:rgba(255,255,255,0.88);border-color:rgba(255,255,255,0.4);}
-.sw::after{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:white;top:2px;left:2px;transition:transform .26s cubic-bezier(.34,1.56,.64,1);box-shadow:0 2px 5px rgba(0,0,0,0.5);}
-.sw.on::after{transform:translateX(20px);background:#1a1c1f;}
+.sw{position:relative;width:46px;height:26px;border-radius:13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12);cursor:pointer;transition:background .28s cubic-bezier(.4,0,.2,1),border-color .28s,box-shadow .28s;flex-shrink:0;}
+.sw.on{background:rgba(255,255,255,0.88);border-color:rgba(255,255,255,0.4);box-shadow:0 0 14px rgba(255,255,255,0.18);}
+.sw::after{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:white;top:2px;left:2px;transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .28s;box-shadow:0 2px 5px rgba(0,0,0,0.5);}
+.sw.on::after{transform:translateX(20px);background:#1a1c1f;box-shadow:0 2px 8px rgba(0,0,0,0.35);}
+/* Tiny knob press effect */
+.sw:active::after{transform:scaleX(1.22) translateX(2px);}
+.sw.on:active::after{transform:scaleX(1.22) translateX(18px);}
 
 /* Status strip */
 .status-strip{margin:0 14px 12px;padding:13px 18px;display:flex;align-items:center;gap:11px;border-radius:var(--r-lg);}
@@ -92,44 +182,45 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .status-sub{font-size:11px;color:var(--t2);margin-top:1px;}
 
 /* Toast */
-.toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(30,32,36,0.97);backdrop-filter:var(--blur-sm);-webkit-backdrop-filter:var(--blur-sm);border:1px solid rgba(255,255,255,0.1);border-radius:50px;padding:9px 18px;font-size:13px;font-weight:600;color:var(--t1);opacity:0;transition:opacity .28s,transform .28s;pointer-events:none;z-index:300;white-space:nowrap;}
+.toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(30,32,36,0.97);backdrop-filter:var(--blur-sm);-webkit-backdrop-filter:var(--blur-sm);border:1px solid rgba(255,255,255,0.1);border-radius:50px;padding:9px 18px;font-size:13px;font-weight:600;color:var(--t1);opacity:0;transition:opacity .28s cubic-bezier(.22,1,.36,1),transform .28s cubic-bezier(.34,1.56,.64,1);pointer-events:none;z-index:300;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .toast.error{border-color:rgba(215,100,90,0.3);color:var(--red);}
 
-/* Bottom nav — floating pill, correct PWA safe area */
+/* Bottom nav — floating pill */
 .bottom-nav{
-  position:fixed;
-  /* Sit just above the home indicator / safe area */
-  bottom:0;
-  left:0;right:0;
-  z-index:100;
-  display:flex;
-  justify-content:center;
-  /* transparent wrapper — actual pill below */
-  background:transparent;
-  padding:0 16px;
-  /* Push pill up: 10px gap + home indicator height */
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:center;
+  background:transparent;padding:0 16px;
   padding-bottom:calc(10px + env(safe-area-inset-bottom));
-  padding-top:10px;
-  pointer-events:none;
+  padding-top:10px;pointer-events:none;
 }
 .bottom-nav-inner{
-  pointer-events:all;
-  width:100%;max-width:398px;display:flex;
+  pointer-events:all;width:100%;max-width:398px;display:flex;
   background:rgba(28,30,34,0.88);
   backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
-  border:1px solid rgba(255,255,255,0.1);
-  border-radius:26px;
+  border:1px solid rgba(255,255,255,0.1);border-radius:26px;
   padding:11px 8px;
   box-shadow:0 10px 40px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.07);
+  animation:navSlide .5s cubic-bezier(.22,1,.36,1) both .25s;
+}
+@keyframes navSlide{
+  from{opacity:0;transform:translateY(22px);}
+  to{opacity:1;transform:translateY(0);}
 }
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:2px 0;position:relative;}
-.nav-item svg{width:22px;height:22px;transition:transform .18s cubic-bezier(.34,1.56,.64,1);}
-.nav-item:active svg{transform:scale(.78);}
-.nav-label{font-size:9px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;}
-.nav-item.active svg{stroke:var(--t1);}
+.nav-item svg{width:22px;height:22px;transition:transform .22s cubic-bezier(.34,1.56,.64,1),stroke .25s,opacity .25s;}
+.nav-item:active svg{transform:scale(.72);}
+.nav-label{font-size:9px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;transition:color .25s,opacity .25s;}
+.nav-item.active svg{stroke:var(--t1);transform:scale(1.08);}
 .nav-item.active .nav-label{color:var(--t1);}
 .nav-item:not(.active){opacity:.3;}
+/* Active indicator dot */
+.nav-item.active::before{
+  content:'';position:absolute;top:-6px;width:4px;height:4px;border-radius:50%;
+  background:rgba(255,255,255,0.7);
+  animation:navDotIn .3s cubic-bezier(.34,1.56,.64,1) both;
+}
+@keyframes navDotIn{from{opacity:0;transform:scaleX(0);}to{opacity:1;transform:scaleX(1);}}
 
 /* Panel */
 .panel-overlay{position:fixed;inset:0;z-index:200;background:rgba(0,0,0,0.5);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);opacity:0;pointer-events:none;transition:opacity .28s;}
@@ -138,7 +229,8 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .panel-overlay.open .panel{transform:translateX(-50%) translateY(0);}
 .panel-handle{width:32px;height:4px;border-radius:2px;background:rgba(255,255,255,0.16);margin:11px auto 18px;}
 .panel-title{font-size:20px;font-weight:700;color:var(--t1);padding:0 20px 14px;letter-spacing:-.4px;}
-.panel-row{display:flex;align-items:center;padding:13px 20px;border-bottom:1px solid rgba(255,255,255,0.05);gap:13px;}
+.panel-row{display:flex;align-items:center;padding:13px 20px;border-bottom:1px solid rgba(255,255,255,0.05);gap:13px;transition:background .18s;}
+.panel-row:active{background:rgba(255,255,255,0.03);}
 .panel-row:last-child{border:none;}
 .panel-row-icon{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;background:rgba(255,255,255,0.06);}
 .panel-row-name{font-size:14px;font-weight:600;color:var(--t1);}
@@ -146,14 +238,15 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .panel-row-text{flex:1;}
 .panel-close-btn{margin:14px 20px 0;width:calc(100% - 40px);padding:14px;border-radius:var(--r-md);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);color:var(--t1);font-size:15px;font-weight:700;cursor:pointer;text-align:center;transition:background .18s,transform .14s;}
 .panel-close-btn:active{background:rgba(255,255,255,0.09);transform:scale(.97);}
-.config-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:var(--r-md);padding:11px 13px;font-size:14px;color:white;font-family:inherit;outline:none;margin-top:5px;transition:border-color .18s;user-select:text;-webkit-user-select:text;}
-.config-input:focus{border-color:rgba(255,255,255,0.28);}
+.config-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:var(--r-md);padding:11px 13px;font-size:14px;color:white;font-family:inherit;outline:none;margin-top:5px;transition:border-color .22s,box-shadow .22s,background .22s;user-select:text;-webkit-user-select:text;}
+.config-input:focus{border-color:rgba(255,255,255,0.28);box-shadow:0 0 0 3px rgba(255,255,255,0.04);background:rgba(255,255,255,0.06);}
 .config-label{font-size:10px;color:var(--t2);font-weight:700;letter-spacing:.6px;text-transform:uppercase;}
 .config-section{padding:0 20px 14px;}
 
 /* Automations builder */
 .auto-list{padding:0 20px;}
-.auto-item{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,0.05);}
+.auto-item{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,0.05);animation:autoIn .3s cubic-bezier(.22,1,.36,1) both;}
+@keyframes autoIn{from{opacity:0;transform:translateX(-10px);}to{opacity:1;transform:translateX(0);}}
 .auto-item:last-child{border:none;}
 .auto-item-icon{width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
 .auto-item-body{flex:1;min-width:0;}
@@ -167,25 +260,32 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .auto-form{padding:0 20px 4px;}
 .auto-form-title{font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;}
 .auto-row{display:flex;gap:8px;margin-bottom:8px;}
-.auto-select{flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:var(--r-md);padding:10px 12px;font-size:13px;color:white;font-family:inherit;outline:none;-webkit-appearance:none;cursor:pointer;}
+.auto-select{flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:var(--r-md);padding:10px 12px;font-size:13px;color:white;font-family:inherit;outline:none;-webkit-appearance:none;cursor:pointer;transition:border-color .18s;}
 .auto-select:focus{border-color:rgba(255,255,255,0.25);}
 .auto-select option{background:#1e2024;color:white;}
-.auto-time-input{width:90px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:var(--r-md);padding:10px 12px;font-size:13px;color:white;font-family:inherit;outline:none;}
+.auto-time-input{width:90px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:var(--r-md);padding:10px 12px;font-size:13px;color:white;font-family:inherit;outline:none;transition:border-color .18s;}
 .auto-time-input:focus{border-color:rgba(255,255,255,0.25);}
-.auto-add-btn{width:100%;padding:12px;border-radius:var(--r-md);background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:var(--t1);font-size:14px;font-weight:700;cursor:pointer;text-align:center;transition:background .18s,transform .14s;margin-top:2px;}
+.auto-add-btn{width:100%;padding:12px;border-radius:var(--r-md);background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:var(--t1);font-size:14px;font-weight:700;cursor:pointer;text-align:center;transition:background .18s,transform .14s,box-shadow .18s;margin-top:2px;}
 .auto-add-btn:active{background:rgba(255,255,255,0.12);transform:scale(.97);}
 
 /* Computer card */
-.computer-card{margin:0 14px 12px;padding:14px 18px;display:flex;align-items:center;gap:14px;border-radius:var(--r-lg);cursor:default;}
-.computer-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 7px rgba(120,210,140,0.7);flex-shrink:0;transition:background .3s,box-shadow .3s;}
+.computer-card{margin:0 14px 12px;padding:14px 18px;display:flex;align-items:center;gap:14px;border-radius:var(--r-lg);cursor:default;transition:box-shadow .4s;}
+/* Online glow pulse on the card */
+.computer-card.online-glow{box-shadow:0 0 28px -10px rgba(120,210,140,0.25);}
+.computer-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 7px rgba(120,210,140,0.7);flex-shrink:0;transition:background .5s,box-shadow .5s;}
 .computer-dot.offline{background:rgba(255,255,255,0.2);box-shadow:none;}
 .computer-name{font-size:15px;font-weight:700;color:var(--t1);flex:1;}
-.computer-sub{font-size:11px;color:var(--t2);margin-top:2px;}
+.computer-sub{font-size:11px;color:var(--t2);margin-top:2px;transition:color .3s;}
 
 /* Confirm dialog */
-.confirm-overlay{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.6);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;}
+.confirm-overlay{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.6);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .28s;}
 .confirm-overlay.open{opacity:1;pointer-events:all;}
-.confirm-box{background:rgba(22,24,28,0.98);border:1px solid rgba(255,255,255,0.1);border-radius:22px;padding:28px 24px 24px;width:calc(100% - 64px);max-width:320px;text-align:center;}
+.confirm-box{
+  background:rgba(22,24,28,0.98);border:1px solid rgba(255,255,255,0.1);border-radius:22px;
+  padding:28px 24px 24px;width:calc(100% - 64px);max-width:320px;text-align:center;
+  transform:scale(.88) translateY(12px);transition:transform .32s cubic-bezier(.34,1.56,.64,1);
+}
+.confirm-overlay.open .confirm-box{transform:scale(1) translateY(0);}
 .confirm-title{font-size:18px;font-weight:700;color:var(--t1);margin-bottom:8px;letter-spacing:-.3px;}
 .confirm-sub{font-size:13px;color:var(--t2);line-height:1.5;margin-bottom:24px;}
 .confirm-btns{display:flex;gap:10px;align-items:stretch;}
@@ -196,40 +296,46 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 /* Hold-to-shutdown button */
 .hold-btn-wrap{flex:1;position:relative;display:flex;align-items:center;justify-content:center;}
 .hold-btn{
-  position:relative;
-  width:100%;padding:13px;border-radius:var(--r-md);
-  background:rgba(215,100,90,0.18);
-  border:1px solid rgba(215,100,90,0.3);
+  position:relative;width:100%;padding:13px;border-radius:var(--r-md);
+  background:rgba(215,100,90,0.18);border:1px solid rgba(215,100,90,0.3);
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
-  transition:background .2s,box-shadow .2s,transform .2s;
-  -webkit-user-select:none;user-select:none;
-  touch-action:none;
-  overflow:hidden;
+  cursor:pointer;transition:background .2s,box-shadow .2s,transform .2s;
+  -webkit-user-select:none;user-select:none;touch-action:none;overflow:hidden;
 }
-.hold-btn.holding{
-  animation:breathe 0.9s ease-in-out infinite;
-}
+.hold-btn.holding{animation:breathe 0.9s ease-in-out infinite;}
 .hold-btn-label{font-size:15px;font-weight:700;color:var(--red);text-align:center;}
-
-/* SVG ring — sits inside button as an overlay */
 .hold-ring{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;}
 .hold-ring-fill{
-  fill:none;stroke:rgba(215,100,90,0.7);stroke-width:2.5;
-  stroke-linecap:round;
-  stroke-dasharray:1000;
-  stroke-dashoffset:1000;
-  transition:stroke-dashoffset .05s linear;
+  fill:none;stroke:rgba(215,100,90,0.7);stroke-width:2.5;stroke-linecap:round;
+  stroke-dasharray:1000;stroke-dashoffset:1000;transition:stroke-dashoffset .05s linear;
 }
-
 @keyframes breathe{
   0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(215,100,90,0);}
   50%{transform:scale(1.03);box-shadow:0 0 22px 6px rgba(215,100,90,0.22);}
 }
 
+/* Page entrance */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Skeleton shimmer while loading ── */
+.skeleton{
+  background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.04) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.5s infinite;
+  border-radius:6px;
+}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
 .ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.08);pointer-events:none;transform:scale(0);animation:rpl .5s ease-out forwards;}
 @keyframes rpl{to{transform:scale(4);opacity:0}}
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* Section title slide */
+.section-head{animation:fadeUp .4s ease both;}
+.section-head:nth-of-type(1){animation-delay:.08s;}
+.section-head:nth-of-type(2){animation-delay:.12s;}
+
+/* Computer card entrance */
+.computer-card{animation:fadeUp .4s ease both .15s;}
 </style>
 </head>
 <body>
@@ -237,7 +343,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 
   <div class="page-header" style="animation:fadeUp .4s ease both">
     <div class="page-title">Home</div>
-    <div class="icon-btn" onclick="syncAllLights()" id="refresh-btn">
+    <div class="icon-btn" onclick="triggerRefresh(this)" id="refresh-btn">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/></svg>
     </div>
   </div>
@@ -249,7 +355,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
       <div class="wc-top">
         <div>
           <div class="wc-loc"><svg width="9" height="9" viewBox="0 0 24 24" fill="rgba(255,255,255,0.35)"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/></svg><span id="wc-city">—</span></div>
-          <div class="wc-temp" id="wc-temp">—</div>
+          <div class="wc-temp wc-temp-anim" id="wc-temp">—</div>
           <div class="wc-desc" id="wc-desc">—</div>
         </div>
         <div class="wc-icon" id="wc-icon"></div>
@@ -267,7 +373,6 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   <!-- Lights -->
   <div class="section-head" style="animation:fadeUp .4s ease both .08s">
     <div class="section-title">Lights</div>
-    <div class="section-link" onclick="syncAllLights()">Refresh</div>
   </div>
   <div class="lights-grid" id="lightsGrid" style="animation:fadeUp .4s ease both .1s"></div>
 
@@ -283,8 +388,6 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
     </div>
     <div class="sw" id="computer-sw" onclick="handleComputerToggle()"></div>
   </div>
-
-
 
 </div>
 
@@ -316,14 +419,8 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   <div class="panel" onclick="event.stopPropagation()">
     <div class="panel-handle"></div>
     <div class="panel-title">Automations</div>
-
-    <!-- Saved automations list -->
     <div class="auto-list" id="auto-list"></div>
-
-    <!-- Divider -->
     <div style="height:1px;background:rgba(255,255,255,0.06);margin:4px 20px 16px"></div>
-
-    <!-- Add new form -->
     <div class="auto-form">
       <div class="auto-form-title">New Automation</div>
       <div class="auto-row">
@@ -349,7 +446,6 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
       </div>
       <div class="auto-add-btn" onclick="addAutomation()">+ Add</div>
     </div>
-
     <div class="panel-close-btn" onclick="closePanel(document.getElementById('auto-panel'))">Done</div>
   </div>
 </div>
@@ -373,16 +469,13 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
     <div style="padding:0 20px 15px;display:flex;align-items:center;gap:13px;border-bottom:1px solid rgba(255,255,255,.06)"><div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:rgba(255,255,255,0.65)">H</div><div><div style="font-size:16px;font-weight:700">Home</div><div style="font-size:12px;color:var(--t2);margin-top:2px">2 Tuya devices · EU Cloud</div></div></div>
     <div class="panel-row"><div class="panel-row-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M16.24 7.76a6 6 0 0 1 0 8.49M4.93 19.07a10 10 0 0 1 0-14.14M7.76 16.24a6 6 0 0 1 0-8.49"/></svg></div><div class="panel-row-text"><div class="panel-row-name" id="about-status-text">Tuya EU Cloud</div><div class="panel-row-sub" id="about-status-sub">openapi.tuyaeu.com</div></div><div class="pulse-dot" id="pulse-dot" style="flex-shrink:0;animation:pulse 2.8s ease-in-out infinite"></div></div>
     <div class="panel-row"><div class="panel-row-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="panel-row-text"><div class="panel-row-name">Privacy</div><div class="panel-row-sub">Credentials stored locally on device</div></div></div>
-
     <div class="panel-close-btn" onclick="closePanel(document.getElementById('about-panel'))">Done</div>
   </div>
 </div>
 
 <script>
 /* ══════════════════════════════════════════
-   SOUNDS — smooth, bubbly, mindful
-   All sine waves, slow attack, long gentle
-   tail. Nothing sharp or harsh.
+   SOUNDS
    ══════════════════════════════════════════ */
 let audioCtx = null;
 function getAudio(){
@@ -390,7 +483,6 @@ function getAudio(){
   if(audioCtx.state==='suspended'||audioCtx.state==='interrupted') audioCtx.resume();
   return audioCtx;
 }
-// Re-create context if it gets killed after inactivity (iOS/PWA behaviour)
 document.addEventListener('visibilitychange',()=>{
   if(document.visibilityState==='visible'&&audioCtx&&audioCtx.state!=='running'){
     audioCtx.resume().catch(()=>{audioCtx=null;});
@@ -400,19 +492,16 @@ document.addEventListener('touchstart',()=>{
   if(audioCtx&&audioCtx.state!=='running') audioCtx.resume().catch(()=>{audioCtx=null;});
 },{passive:true});
 
-// Core helper — one sine note with soft bubble envelope
 function bubble(freq, startTime, vol=0.09, attack=0.06, hold=0.08, decay=0.55){
   try{
     const ctx = getAudio();
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
-    // Gentle low-pass to round off any edge
     const lpf = ctx.createBiquadFilter();
     lpf.type = 'lowpass'; lpf.frequency.value = 1800; lpf.Q.value = 0.5;
     osc.connect(lpf); lpf.connect(gain); gain.connect(ctx.destination);
     osc.type = 'sine';
     osc.frequency.setValueAtTime(freq, startTime);
-    // Soft attack → hold peak → long smooth decay to silence
     gain.gain.setValueAtTime(0.0001, startTime);
     gain.gain.linearRampToValueAtTime(vol, startTime + attack);
     gain.gain.setValueAtTime(vol, startTime + attack + hold);
@@ -421,93 +510,46 @@ function bubble(freq, startTime, vol=0.09, attack=0.06, hold=0.08, decay=0.55){
     osc.stop(startTime + attack + hold + decay + 0.05);
   }catch(e){}
 }
-
-// Light ON — three gentle rising bubbles, soft and warm
 function soundOn(){
-  try{
-    const ctx = getAudio(); const t = ctx.currentTime;
-    bubble(392, t,       0.07, 0.07, 0.05, 0.6);  // G4
-    bubble(523, t+0.13,  0.08, 0.07, 0.05, 0.65); // C5
-    bubble(659, t+0.26,  0.07, 0.08, 0.06, 0.75); // E5
-    // Soft shimmer overtone on last note
-    bubble(1318, t+0.26, 0.025, 0.1, 0.04, 0.55); // E6 whisper
-  }catch(e){}
+  try{const ctx = getAudio(); const t = ctx.currentTime;
+    bubble(392,t,0.07,0.07,0.05,0.6);bubble(523,t+0.13,0.08,0.07,0.05,0.65);
+    bubble(659,t+0.26,0.07,0.08,0.06,0.75);bubble(1318,t+0.26,0.025,0.1,0.04,0.55);}catch(e){}
 }
-
-// Light OFF — three gentle falling bubbles, fading away
 function soundOff(){
-  try{
-    const ctx = getAudio(); const t = ctx.currentTime;
-    bubble(523, t,       0.07, 0.06, 0.04, 0.55); // C5
-    bubble(440, t+0.14,  0.06, 0.07, 0.04, 0.65); // A4
-    bubble(330, t+0.28,  0.055,0.08, 0.05, 0.8);  // E4 — long fade out
-  }catch(e){}
+  try{const ctx = getAudio(); const t = ctx.currentTime;
+    bubble(523,t,0.07,0.06,0.04,0.55);bubble(440,t+0.14,0.06,0.07,0.04,0.65);
+    bubble(330,t+0.28,0.055,0.08,0.05,0.8);}catch(e){}
 }
-
-// UI tap — single tiny airy bubble, barely-there
 function soundClick(){
-  try{
-    const ctx = getAudio(); const t = ctx.currentTime;
-    bubble(880, t, 0.045, 0.04, 0.02, 0.28);
-    bubble(1100, t+0.03, 0.02, 0.04, 0.01, 0.2); // soft harmonic
-  }catch(e){}
+  try{const ctx = getAudio(); const t = ctx.currentTime;
+    bubble(880,t,0.045,0.04,0.02,0.28);bubble(1100,t+0.03,0.02,0.04,0.01,0.2);}catch(e){}
 }
-
-// Save / confirm — two warm rising tones, resolved and calm
 function soundSave(){
-  try{
-    const ctx = getAudio(); const t = ctx.currentTime;
-    bubble(523, t,      0.07, 0.07, 0.06, 0.7);  // C5
-    bubble(784, t+0.18, 0.08, 0.08, 0.07, 0.9);  // G5 — long warm resolution
-    bubble(1046,t+0.18, 0.03, 0.09, 0.05, 0.8);  // C6 whisper overtone
-  }catch(e){}
+  try{const ctx = getAudio(); const t = ctx.currentTime;
+    bubble(523,t,0.07,0.07,0.06,0.7);bubble(784,t+0.18,0.08,0.08,0.07,0.9);
+    bubble(1046,t+0.18,0.03,0.09,0.05,0.8);}catch(e){}
 }
-
-// Error — low gentle wobble, soft not alarming
 function soundError(){
-  try{
-    const ctx = getAudio(); const t = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    const lpf = ctx.createBiquadFilter();
-    lpf.type='lowpass'; lpf.frequency.value=400; lpf.Q.value=0.6;
-    osc.connect(lpf); lpf.connect(gain); gain.connect(ctx.destination);
-    osc.type='sine';
-    osc.frequency.setValueAtTime(220, t);
-    osc.frequency.linearRampToValueAtTime(190, t+0.3);
-    gain.gain.setValueAtTime(0.0001,t);
-    gain.gain.linearRampToValueAtTime(0.07,t+0.08);
-    gain.gain.exponentialRampToValueAtTime(0.0001,t+0.55);
-    osc.start(t); osc.stop(t+0.6);
-  }catch(e){}
+  try{const ctx = getAudio(); const t = ctx.currentTime;
+    const osc=ctx.createOscillator(),gain=ctx.createGain(),lpf=ctx.createBiquadFilter();
+    lpf.type='lowpass';lpf.frequency.value=400;lpf.Q.value=0.6;
+    osc.connect(lpf);lpf.connect(gain);gain.connect(ctx.destination);osc.type='sine';
+    osc.frequency.setValueAtTime(220,t);osc.frequency.linearRampToValueAtTime(190,t+0.3);
+    gain.gain.setValueAtTime(0.0001,t);gain.gain.linearRampToValueAtTime(0.07,t+0.08);
+    gain.gain.exponentialRampToValueAtTime(0.0001,t+0.55);osc.start(t);osc.stop(t+0.6);}catch(e){}
 }
-
-// Add — light airy rising pop
 function soundAdd(){
-  try{
-    const ctx = getAudio(); const t = ctx.currentTime;
-    bubble(660, t,      0.065, 0.05, 0.04, 0.45);
-    bubble(880, t+0.1,  0.055, 0.06, 0.03, 0.5);
-  }catch(e){}
+  try{const ctx = getAudio(); const t = ctx.currentTime;
+    bubble(660,t,0.065,0.05,0.04,0.45);bubble(880,t+0.1,0.055,0.06,0.03,0.5);}catch(e){}
 }
-
-// Delete — soft downward dissolve, gentle let-go
 function soundDelete(){
-  try{
-    const ctx = getAudio(); const t = ctx.currentTime;
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    const lpf = ctx.createBiquadFilter();
-    lpf.type='lowpass'; lpf.frequency.value=700; lpf.Q.value=0.4;
-    osc.connect(lpf); lpf.connect(gain); gain.connect(ctx.destination);
-    osc.type='sine';
-    osc.frequency.setValueAtTime(440, t);
-    osc.frequency.exponentialRampToValueAtTime(260, t+0.45);
-    gain.gain.setValueAtTime(0.0001,t);
-    gain.gain.linearRampToValueAtTime(0.065,t+0.06);
-    gain.gain.exponentialRampToValueAtTime(0.0001,t+0.55);
-    osc.start(t); osc.stop(t+0.6);
-  }catch(e){}
+  try{const ctx = getAudio(); const t = ctx.currentTime;
+    const osc=ctx.createOscillator(),gain=ctx.createGain(),lpf=ctx.createBiquadFilter();
+    lpf.type='lowpass';lpf.frequency.value=700;lpf.Q.value=0.4;
+    osc.connect(lpf);lpf.connect(gain);gain.connect(ctx.destination);osc.type='sine';
+    osc.frequency.setValueAtTime(440,t);osc.frequency.exponentialRampToValueAtTime(260,t+0.45);
+    gain.gain.setValueAtTime(0.0001,t);gain.gain.linearRampToValueAtTime(0.065,t+0.06);
+    gain.gain.exponentialRampToValueAtTime(0.0001,t+0.55);osc.start(t);osc.stop(t+0.6);}catch(e){}
 }
 
 /* ══════════════════════════════════════════
@@ -529,14 +571,14 @@ function saveConfig(){
   if(n0)CFG.devices[0].name=n0; if(d0)CFG.devices[0].id=d0;
   if(n1)CFG.devices[1].name=n1; if(d1)CFG.devices[1].id=d1;
   try{localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){}
-  const compName = document.getElementById('cfg-comp-name').value.trim();
-  const compUrl  = document.getElementById('cfg-comp-url').value.trim();
-  if(compName) localStorage.setItem('home_computer_name', compName);
+  const compName=document.getElementById('cfg-comp-name').value.trim();
+  const compUrl=document.getElementById('cfg-comp-url').value.trim();
+  if(compName) localStorage.setItem('home_computer_name',compName);
   if(compUrl)  saveComputerUrl(compUrl);
   loadComputerName();
   closePanel(document.getElementById('config-panel'));
   showToast('Saved — connecting…'); soundSave();
-  setTimeout(()=>{ syncAllLights(); startComputerPing(); },400);
+  setTimeout(()=>{syncAllLights();startComputerPing();},400);
 }
 
 function loadConfigIntoPanel(){
@@ -545,12 +587,10 @@ function loadConfigIntoPanel(){
   document.getElementById('cfg-dev0').value=CFG.devices[0].id||'';
   document.getElementById('cfg-name1').value=CFG.devices[1].name||'';
   document.getElementById('cfg-dev1').value=CFG.devices[1].id||'';
-  // Update light name options in auto form
-  document.getElementById('auto-light').options[1].text = CFG.devices[0].name||'Light 1';
-  document.getElementById('auto-light').options[2].text = CFG.devices[1].name||'Light 2';
-
-  document.getElementById('cfg-comp-name').value = localStorage.getItem('home_computer_name') || '';
-  document.getElementById('cfg-comp-url').value  = getComputerUrl();
+  document.getElementById('auto-light').options[1].text=CFG.devices[0].name||'Light 1';
+  document.getElementById('auto-light').options[2].text=CFG.devices[1].name||'Light 2';
+  document.getElementById('cfg-comp-name').value=localStorage.getItem('home_computer_name')||'';
+  document.getElementById('cfg-comp-url').value=getComputerUrl();
 }
 
 /* ══════════════════════════════════════════
@@ -559,10 +599,8 @@ function loadConfigIntoPanel(){
 const AUTO_KEY='tuya_automations';
 let automations=[];
 try{const s=localStorage.getItem(AUTO_KEY);if(s)automations=JSON.parse(s);}catch(e){}
-
 const ACTION_LABELS={on:'Turn ON',off:'Turn OFF',dim:'Dim to 20%',bright:'Set 100%'};
 const DAY_LABELS={every:'Every day',weekdays:'Weekdays',weekends:'Weekends'};
-
 function saveAutomations(){try{localStorage.setItem(AUTO_KEY,JSON.stringify(automations));}catch(e){}}
 
 function renderAutomations(){
@@ -572,7 +610,7 @@ function renderAutomations(){
     return;
   }
   el.innerHTML=automations.map((a,i)=>`
-    <div class="auto-item">
+    <div class="auto-item" style="animation-delay:${i*0.04}s">
       <div class="auto-item-icon">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       </div>
@@ -599,34 +637,36 @@ function addAutomation(){
   soundAdd();
   showToast('Automation added');
 }
-
 function deleteAutomation(i){
-  automations.splice(i,1);
-  saveAutomations();
-  renderAutomations();
+  // Animate out
+  const items=document.querySelectorAll('.auto-item');
+  if(items[i]){
+    items[i].style.transition='opacity .22s,transform .22s';
+    items[i].style.opacity='0';
+    items[i].style.transform='translateX(24px)';
+    setTimeout(()=>{automations.splice(i,1);saveAutomations();renderAutomations();},220);
+  } else {
+    automations.splice(i,1);saveAutomations();renderAutomations();
+  }
   soundDelete();
 }
-
 function toggleAutomation(i){
   automations[i].enabled=!automations[i].enabled;
-  saveAutomations();
-  renderAutomations();
-  soundClick();
+  saveAutomations();renderAutomations();soundClick();
 }
-
-// Scheduler — checks every minute
+(function scheduleFirst(){
+  const now=new Date();
+  const msToNext=60000-now.getSeconds()*1000-now.getMilliseconds();
+  setTimeout(()=>{runAutomationScheduler();setInterval(runAutomationScheduler,60000);},msToNext);
+})();
 function runAutomationScheduler(){
   const now=new Date();
   const hhmm=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-  const dow=now.getDay(); // 0=Sun,6=Sat
-  const isWeekday=dow>=1&&dow<=5;
-  const isWeekend=dow===0||dow===6;
-
+  const dow=now.getDay();const isWeekday=dow>=1&&dow<=5;const isWeekend=dow===0||dow===6;
   automations.forEach(a=>{
     if(!a.enabled||a.time!==hhmm)return;
     const matchDay=(a.days==='every')||(a.days==='weekdays'&&isWeekday)||(a.days==='weekends'&&isWeekend);
     if(!matchDay)return;
-    // Run action
     const targets=a.light==='all'?[0,1]:[+a.light];
     targets.forEach(idx=>{
       if(a.action==='on'){LIGHTS[idx].on=true;refreshCard(idx);tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:true}]).catch(()=>{});}
@@ -634,17 +674,9 @@ function runAutomationScheduler(){
       else if(a.action==='dim'){LIGHTS[idx].on=true;LIGHTS[idx].bright=20;refreshCard(idx);tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:true},{code:'work_mode',value:'colour'},{code:'colour_data',value:JSON.stringify({h:0,s:0,v:200})}]).catch(()=>{});}
       else if(a.action==='bright'){LIGHTS[idx].on=true;LIGHTS[idx].bright=100;refreshCard(idx);tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:true},{code:'work_mode',value:'colour'},{code:'colour_data',value:JSON.stringify({h:0,s:0,v:1000})}]).catch(()=>{});}
     });
-    showToast(`Auto: ${ACTION_LABELS[a.action]}`);
-    soundOn();
+    showToast(`Auto: ${ACTION_LABELS[a.action]}`);soundOn();
   });
 }
-
-// Run at next minute boundary, then every minute
-(function scheduleFirst(){
-  const now=new Date();
-  const msToNext=60000-now.getSeconds()*1000-now.getMilliseconds();
-  setTimeout(()=>{runAutomationScheduler();setInterval(runAutomationScheduler,60000);},msToNext);
-})();
 
 /* ══════════════════════════════════════════
    TUYA / LIGHTS
@@ -658,21 +690,44 @@ function parseTuyaStatus(arr,i){if(!Array.isArray(arr))return;const find=c=>arr.
 let syncing=false;
 async function syncAllLights(){
   if(syncing)return;syncing=true;setStatus('Syncing…','Reaching Tuya cloud');
-  const btn=document.getElementById('refresh-btn');btn.style.opacity='.4';btn.style.pointerEvents='none';
-  if(!CFG.worker){setStatus('Not configured','Open Settings and enter your Worker URL','warn');syncing=false;btn.style.opacity='';btn.style.pointerEvents='';showToast('Open Settings to configure','error');soundError();renderGrid();return;}
+  if(!CFG.worker){
+    setStatus('Not configured','Open Settings and enter your Worker URL','warn');
+    syncing=false;showToast('Open Settings to configure','error');soundError();renderGrid();return;
+  }
   try{
     const res=await Promise.all(CFG.devices.map(async(dev,i)=>{const d=await tuyaStatus(dev.id);if(d.success&&d.result)parseTuyaStatus(d.result,i);return d.success;}));
     renderGrid();
     const ok=res.every(Boolean);
     setStatus(ok?'Connected':'Partial sync',ok?'Tuya EU cloud · Live':'Some devices unreachable',ok?'ok':'warn');
-  }catch(e){setStatus('Connection failed','Check your Worker URL in Settings','err');showToast('Could not reach Worker','error');soundError();renderGrid();}
-  syncing=false;btn.style.opacity='';btn.style.pointerEvents='';
+  }catch(e){
+    setStatus('Connection failed','Check your Worker URL in Settings','err');
+    showToast('Could not reach Worker','error');soundError();renderGrid();
+  }
+  syncing=false;
+}
+
+/* Refresh button: spin while syncing, stop on done */
+function triggerRefresh(btn){
+  if(syncing)return;
+  // Add ripple
+  const rip=document.createElement('div');rip.className='icon-btn-ripple';
+  btn.appendChild(rip);setTimeout(()=>rip.remove(),500);
+  btn.classList.add('spinning');
+  soundClick();
+  syncAllLights().then(()=>{
+    // Keep spinning at least 600ms for feel
+    setTimeout(()=>btn.classList.remove('spinning'),600);
+  }).catch(()=>btn.classList.remove('spinning'));
 }
 
 async function toggleLight(idx){
   const L=LIGHTS[idx];const ns=!L.on;L.on=ns;refreshCard(idx);
   ns?soundOn():soundOff();
-  const card=document.getElementById('lc-'+idx);card.classList.add('loading-state');
+  // Bounce card on toggle
+  const card=document.getElementById('lc-'+idx);
+  card.classList.add('just-toggled');
+  setTimeout(()=>card.classList.remove('just-toggled'),360);
+  card.classList.add('loading-state');
   try{await tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:ns}]);showToast(CFG.devices[idx].name+' '+(ns?'on':'off'));}
   catch(e){L.on=!ns;refreshCard(idx);showToast('Failed to reach device','error');soundError();}
   card.classList.remove('loading-state');
@@ -709,7 +764,9 @@ function renderCard(i){
     </div>
   </div>`;}
 
-function renderGrid(){document.getElementById('lightsGrid').innerHTML=LIGHTS.map((_,i)=>renderCard(i)).join('');}
+function renderGrid(){
+  document.getElementById('lightsGrid').innerHTML=LIGHTS.map((_,i)=>renderCard(i)).join('');
+}
 
 function refreshCard(i){
   const l=LIGHTS[i],card=document.getElementById('lc-'+i);if(!card)return;
@@ -745,7 +802,6 @@ function navTo(el){
   el.classList.add('active');
 }
 function navHome(){
-  // Return active state to Home tab
   document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
   document.querySelector('.nav-item:first-child').classList.add('active');
 }
@@ -765,10 +821,10 @@ function wxI(w){if(w===0)return WX.sun;if(w<=2)return WX.partly;if(w<=49)return 
 function wxIs(w,sz){return wxI(w).replace('width="58" height="58"',`width="${sz}" height="${sz}"`);}
 function wxD(w){if(w===0)return'Clear sky';if(w<=1)return'Mainly clear';if(w<=2)return'Partly cloudy';if(w<=3)return'Overcast';if(w<=49)return'Foggy';if(w<=55)return'Drizzle';if(w<=67)return'Rain';if(w<=77)return'Snow';if(w<=82)return'Showers';if(w<=86)return'Snow showers';return'Thunderstorm';}
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
 async function loadWeather(){
   try{
-    // Fixed to Spånga/Solhem for best local data — always displays as Stockholm
-    const lat=59.3793, lon=17.9200, city='Stockholm';
+    const lat=59.3793,lon=17.9200,city='Stockholm';
     const d=await fetch('https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&current=temperature_2m,weathercode,windspeed_10m,precipitation_probability&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&temperature_unit=celsius&wind_speed_unit=ms&forecast_days=5&timezone=Europe%2FStockholm').then(r=>r.json());
     const cur=d.current,daily=d.daily;
     document.getElementById('wc-city').textContent=city;
@@ -792,92 +848,52 @@ async function loadWeather(){
 
 /* ══════════════════════════════════════════
    COMPUTER CONTROL
-   ══════════════════════════════════════════
-   Requires a tiny local server running on your
-   computer. Easiest setup:
+   ══════════════════════════════════════════ */
+const COMP_KEY='home_computer_url';
+let computerOnline=false;
+let compPingTimer=null;
 
-   1. Install Node.js (nodejs.org)
-   2. Save this as shutdown-server.js on your computer:
-
-   ┌─────────────────────────────────────────┐
-   │ const http = require('http');           │
-   │ const { exec } = require('child_process');│
-   │ http.createServer((req, res) => {       │
-   │   res.setHeader('Access-Control-Allow-Origin','*');│
-   │   res.setHeader('Access-Control-Allow-Methods','GET,POST');│
-   │   if(req.url === '/ping') {             │
-   │     res.end('online');                  │
-   │   } else if(req.url === '/shutdown') {  │
-   │     res.end('shutting down');           │
-   │     setTimeout(() => {                  │
-   │       exec('shutdown /s /t 5');         │
-   │     }, 1000);                           │
-   │   }                                     │
-   │ }).listen(4242, '0.0.0.0');             │
-   │ console.log('Running on port 4242');    │
-   └─────────────────────────────────────────┘
-
-   3. Run: node shutdown-server.js
-   4. In Settings below, enter your computer's
-      local IP, e.g. http://192.168.1.50:4242
-      (find it: open CMD and run ipconfig,
-       look for IPv4 Address)
-*/
-
-const COMP_KEY = 'home_computer_url';
-let computerOnline = false;
-let compPingTimer = null;
-
-function getComputerUrl(){
-  // Use dedicated computer URL if set, otherwise fall back to worker URL
-  return localStorage.getItem(COMP_KEY) || CFG.worker || '';
-}
-function saveComputerUrl(url){
-  if(url) localStorage.setItem(COMP_KEY, url.replace(/\/$/,''));
-}
+function getComputerUrl(){return localStorage.getItem(COMP_KEY)||CFG.worker||'';}
+function saveComputerUrl(url){if(url)localStorage.setItem(COMP_KEY,url.replace(/\/$/,''));}
 
 function setComputerState(online){
-  computerOnline = online;
-  const dot  = document.getElementById('computer-dot');
-  const sw   = document.getElementById('computer-sw');
-  const sub  = document.getElementById('computer-sub');
-  if(!dot) return;
+  computerOnline=online;
+  const dot=document.getElementById('computer-dot');
+  const sw=document.getElementById('computer-sw');
+  const sub=document.getElementById('computer-sub');
+  const card=document.getElementById('computer-card');
+  if(!dot)return;
   if(online){
-    dot.className = 'computer-dot';
-    sw.className  = 'sw on';
-    sub.textContent = 'Online · tap toggle to shut down';
+    dot.className='computer-dot';
+    sw.className='sw on';
+    sub.textContent='Online · tap toggle to shut down';
+    card.classList.add('online-glow');
   } else {
-    dot.className = 'computer-dot offline';
-    sw.className  = 'sw';
-    sub.textContent = getComputerUrl() ? 'Offline or unreachable' : 'Add IP in Settings';
+    dot.className='computer-dot offline';
+    sw.className='sw';
+    sub.textContent=getComputerUrl()?'Offline or unreachable':'Add IP in Settings';
+    card.classList.remove('online-glow');
   }
 }
 
 async function pingComputer(){
-  const url = getComputerUrl();
-  if(!url){ setComputerState(false); return; }
+  const url=getComputerUrl();
+  if(!url){setComputerState(false);return;}
   try{
-    const r = await fetch(url + '/ping', { signal: AbortSignal.timeout(2500) });
-    const t = await r.text();
+    const r=await fetch(url+'/ping',{signal:AbortSignal.timeout(2500)});
+    const t=await r.text();
     setComputerState(t.includes('online'));
-  } catch(e){
-    setComputerState(false);
-  }
+  }catch(e){setComputerState(false);}
 }
 
 function startComputerPing(){
   pingComputer();
   clearInterval(compPingTimer);
-  compPingTimer = setInterval(pingComputer, 8000);
+  compPingTimer=setInterval(pingComputer,8000);
 }
 
 function handleComputerToggle(){
-  if(!computerOnline){
-    showToast('Computer is offline', 'error');
-    soundError();
-    return;
-  }
-  // Show confirm dialog
+  if(!computerOnline){showToast('Computer is offline','error');soundError();return;}
   document.getElementById('confirm-overlay').classList.add('open');
   soundClick();
 }
@@ -889,95 +905,72 @@ function cancelShutdown(){
 }
 
 /* Hold-to-confirm logic */
-let holdTimer = null;
-let holdInterval = null;
-const HOLD_DURATION = 2000; // 2 seconds
-let holdStart = null;
+let holdTimer=null;
+let holdInterval=null;
+const HOLD_DURATION=2000;
+let holdStart=null;
 
 function startHold(e){
-  if(e) e.preventDefault();
-  holdStart = Date.now();
-  const btn = document.getElementById('hold-btn');
-  if(btn) btn.classList.add('holding');
-
-  // Measure actual button perimeter for dasharray
-  const ring = document.getElementById('hold-ring-fill');
-  const svg  = document.getElementById('hold-ring-svg');
-  if(ring && svg){
-    const w = svg.parentElement.offsetWidth;
-    const h = svg.parentElement.offsetHeight;
-    const r = 13;
-    const perimeter = 2*(w-2)+2*(h-2)-8*r+2*Math.PI*r;
-    ring.setAttribute('width', w-2);
-    ring.setAttribute('height', h-2);
-    ring.style.strokeDasharray = perimeter;
-    ring.style.strokeDashoffset = perimeter;
+  if(e)e.preventDefault();
+  holdStart=Date.now();
+  const btn=document.getElementById('hold-btn');
+  if(btn)btn.classList.add('holding');
+  const ring=document.getElementById('hold-ring-fill');
+  const svg=document.getElementById('hold-ring-svg');
+  if(ring&&svg){
+    const w=svg.parentElement.offsetWidth;
+    const h=svg.parentElement.offsetHeight;
+    const r=13;
+    const perimeter=2*(w-2)+2*(h-2)-8*r+2*Math.PI*r;
+    ring.setAttribute('width',w-2);ring.setAttribute('height',h-2);
+    ring.style.strokeDasharray=perimeter;ring.style.strokeDashoffset=perimeter;
   }
-
-  holdInterval = setInterval(()=>{
-    const elapsed = Date.now() - holdStart;
-    const progress = Math.min(elapsed / HOLD_DURATION, 1);
-    const ring2 = document.getElementById('hold-ring-fill');
-    const svg2  = document.getElementById('hold-ring-svg');
-    if(ring2 && svg2){
-      const w = svg2.parentElement.offsetWidth;
-      const h = svg2.parentElement.offsetHeight;
-      const r = 13;
-      const perimeter = 2*(w-2)+2*(h-2)-8*r+2*Math.PI*r;
-      ring2.style.strokeDashoffset = perimeter - (progress * perimeter);
+  holdInterval=setInterval(()=>{
+    const elapsed=Date.now()-holdStart;
+    const progress=Math.min(elapsed/HOLD_DURATION,1);
+    const ring2=document.getElementById('hold-ring-fill');
+    const svg2=document.getElementById('hold-ring-svg');
+    if(ring2&&svg2){
+      const w=svg2.parentElement.offsetWidth;const h=svg2.parentElement.offsetHeight;
+      const r=13;const perimeter=2*(w-2)+2*(h-2)-8*r+2*Math.PI*r;
+      ring2.style.strokeDashoffset=perimeter-(progress*perimeter);
     }
-    if(progress >= 1){
-      clearInterval(holdInterval);
-      confirmShutdown();
-    }
-  }, 30);
+    if(progress>=1){clearInterval(holdInterval);confirmShutdown();}
+  },30);
 }
 
 function cancelHold(){
-  clearInterval(holdInterval);
-  holdInterval = null;
-  holdStart = null;
-  const btn = document.getElementById('hold-btn');
-  if(btn) btn.classList.remove('holding');
-  const ring = document.getElementById('hold-ring-fill');
+  clearInterval(holdInterval);holdInterval=null;holdStart=null;
+  const btn=document.getElementById('hold-btn');
+  if(btn)btn.classList.remove('holding');
+  const ring=document.getElementById('hold-ring-fill');
   if(ring){
-    ring.style.transition = 'stroke-dashoffset .35s ease';
-    const svg = document.getElementById('hold-ring-svg');
+    ring.style.transition='stroke-dashoffset .35s ease';
+    const svg=document.getElementById('hold-ring-svg');
     if(svg){
-      const w = svg.parentElement.offsetWidth;
-      const h = svg.parentElement.offsetHeight;
-      const r2 = 13;
-      const perimeter = 2*(w-2)+2*(h-2)-8*r2+2*Math.PI*r2;
-      ring.style.strokeDashoffset = perimeter;
+      const w=svg.parentElement.offsetWidth;const h=svg.parentElement.offsetHeight;
+      const r2=13;const perimeter=2*(w-2)+2*(h-2)-8*r2+2*Math.PI*r2;
+      ring.style.strokeDashoffset=perimeter;
     }
-    setTimeout(()=>{ ring.style.transition = 'stroke-dashoffset .05s linear'; }, 400);
+    setTimeout(()=>{ring.style.transition='stroke-dashoffset .05s linear';},400);
   }
 }
 
 async function confirmShutdown(){
   document.getElementById('confirm-overlay').classList.remove('open');
   soundOff();
-  const url = getComputerUrl();
-  if(!url) return;
+  const url=getComputerUrl();if(!url)return;
   try{
-    await fetch(url + '/shutdown', { signal: AbortSignal.timeout(3000) });
-    showToast('Shutting down…');
-    setComputerState(false);
-    // Stop pinging — it's going offline
-    clearInterval(compPingTimer);
-    compPingTimer = setInterval(pingComputer, 15000);
-  } catch(e){
-    // Fetch may error as machine shuts down — that's fine
-    showToast('Shutdown sent');
-    setComputerState(false);
-  }
+    await fetch(url+'/shutdown',{signal:AbortSignal.timeout(3000)});
+    showToast('Shutting down…');setComputerState(false);
+    clearInterval(compPingTimer);compPingTimer=setInterval(pingComputer,15000);
+  }catch(e){showToast('Shutdown sent');setComputerState(false);}
 }
 
-// Read computer name from config
 function loadComputerName(){
-  const name = localStorage.getItem('home_computer_name') || 'My Computer';
-  const el = document.getElementById('computer-name');
-  if(el) el.textContent = name;
+  const name=localStorage.getItem('home_computer_name')||'My Computer';
+  const el=document.getElementById('computer-name');
+  if(el)el.textContent=name;
 }
 
 /* Boot */
@@ -987,6 +980,7 @@ syncAllLights();
 loadComputerName();
 startComputerPing();
 </script>
+
 <!-- Confirm shutdown dialog -->
 <div class="confirm-overlay" id="confirm-overlay">
   <div class="confirm-box">
