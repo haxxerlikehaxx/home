@@ -20,7 +20,7 @@
 }
 html,body{height:100%;font-family:-apple-system,'SF Pro Display','Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;}
 body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:none;}
-.app{position:relative;z-index:1;max-width:430px;margin:0 auto;padding:0 0 108px;}
+.app{position:relative;z-index:1;max-width:430px;margin:0 auto;padding:0 0 calc(80px + env(safe-area-inset-bottom));}
 
 /* Glass */
 .g{background:var(--glass);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid var(--glass-border);border-radius:var(--r-xl);position:relative;overflow:hidden;}
@@ -96,8 +96,17 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .toast.error{border-color:rgba(215,100,90,0.3);color:var(--red);}
 
-/* Bottom nav */
-.bottom-nav{position:fixed;bottom:max(14px,env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);width:calc(100% - 32px);max-width:398px;display:flex;background:rgba(28,30,34,0.82);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid rgba(255,255,255,0.1);border-radius:26px;padding:11px 8px;z-index:100;box-shadow:0 10px 40px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.07);}
+/* Bottom nav — flush to screen bottom, safe area padding inside */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:center;
+  background:rgba(28,30,34,0.92);
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border-top:1px solid rgba(255,255,255,0.09);
+  padding:12px 20px env(safe-area-inset-bottom);
+  box-shadow:0 -2px 24px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.07);
+}
+.bottom-nav-inner{width:100%;max-width:398px;display:flex;}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:2px 0;position:relative;}
 .nav-item svg{width:22px;height:22px;transition:transform .18s cubic-bezier(.34,1.56,.64,1);}
 .nav-item:active svg{transform:scale(.78);}
@@ -204,6 +213,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 
 <!-- Nav -->
 <nav class="bottom-nav">
+  <div class="bottom-nav-inner">
   <div class="nav-item active" onclick="navTo(this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
     <span class="nav-label">Home</span>
