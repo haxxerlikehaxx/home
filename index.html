@@ -185,14 +185,47 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 /* Confirm dialog */
 .confirm-overlay{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.6);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;}
 .confirm-overlay.open{opacity:1;pointer-events:all;}
-.confirm-box{background:rgba(22,24,28,0.98);border:1px solid rgba(255,255,255,0.1);border-radius:22px;padding:28px 24px 20px;width:calc(100% - 64px);max-width:320px;text-align:center;}
+.confirm-box{background:rgba(22,24,28,0.98);border:1px solid rgba(255,255,255,0.1);border-radius:22px;padding:28px 24px 24px;width:calc(100% - 64px);max-width:320px;text-align:center;}
 .confirm-title{font-size:18px;font-weight:700;color:var(--t1);margin-bottom:8px;letter-spacing:-.3px;}
-.confirm-sub{font-size:13px;color:var(--t2);line-height:1.5;margin-bottom:22px;}
-.confirm-btns{display:flex;gap:10px;}
+.confirm-sub{font-size:13px;color:var(--t2);line-height:1.5;margin-bottom:24px;}
+.confirm-btns{display:flex;gap:10px;align-items:center;}
 .confirm-btn{flex:1;padding:13px;border-radius:var(--r-md);font-size:15px;font-weight:700;cursor:pointer;transition:background .18s,transform .14s;border:1px solid rgba(255,255,255,0.09);}
 .confirm-btn:active{transform:scale(.96);}
 .confirm-btn.cancel{background:rgba(255,255,255,0.05);color:var(--t1);}
-.confirm-btn.danger{background:rgba(215,100,90,0.18);border-color:rgba(215,100,90,0.3);color:var(--red);}
+
+/* Hold-to-shutdown button */
+.hold-btn-wrap{flex:1;position:relative;display:flex;align-items:center;justify-content:center;}
+.hold-btn{
+  position:relative;
+  width:72px;height:72px;border-radius:50%;
+  background:rgba(215,100,90,0.12);
+  border:1px solid rgba(215,100,90,0.25);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  animation:breathe 3s ease-in-out infinite;
+  transition:background .2s;
+  -webkit-user-select:none;user-select:none;
+  touch-action:none;
+}
+.hold-btn:active{animation:none;background:rgba(215,100,90,0.28);}
+.hold-btn-label{font-size:10px;font-weight:700;color:var(--red);text-transform:uppercase;letter-spacing:.6px;line-height:1.2;text-align:center;}
+.hold-btn-hint{font-size:10px;color:var(--t3);margin-top:6px;letter-spacing:.3px;}
+
+/* SVG ring progress */
+.hold-ring{position:absolute;top:-4px;left:-4px;width:80px;height:80px;transform:rotate(-90deg);pointer-events:none;}
+.hold-ring-track{fill:none;stroke:rgba(215,100,90,0.12);stroke-width:3;}
+.hold-ring-fill{
+  fill:none;stroke:rgba(215,100,90,0.85);stroke-width:3;
+  stroke-linecap:round;
+  stroke-dasharray:220;
+  stroke-dashoffset:220;
+  transition:stroke-dashoffset .05s linear;
+}
+
+@keyframes breathe{
+  0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(215,100,90,0);}
+  50%{transform:scale(1.06);box-shadow:0 0 18px 4px rgba(215,100,90,0.18);}
+}
 
 .ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.08);pointer-events:none;transform:scale(0);animation:rpl .5s ease-out forwards;}
 @keyframes rpl{to{transform:scale(4);opacity:0}}
@@ -850,8 +883,43 @@ function handleComputerToggle(){
 }
 
 function cancelShutdown(){
+  cancelHold();
   document.getElementById('confirm-overlay').classList.remove('open');
   soundClick();
+}
+
+/* Hold-to-confirm logic */
+let holdTimer = null;
+let holdInterval = null;
+const HOLD_DURATION = 2000; // 2 seconds
+let holdStart = null;
+
+function startHold(e){
+  if(e) e.preventDefault();
+  holdStart = Date.now();
+  // Animate ring filling over 2 seconds
+  holdInterval = setInterval(()=>{
+    const elapsed = Date.now() - holdStart;
+    const progress = Math.min(elapsed / HOLD_DURATION, 1);
+    const circumference = 220;
+    const offset = circumference - (progress * circumference);
+    const ring = document.getElementById('hold-ring-fill');
+    if(ring) ring.style.strokeDashoffset = offset;
+    if(progress >= 1){
+      clearInterval(holdInterval);
+      confirmShutdown();
+    }
+  }, 30);
+}
+
+function cancelHold(){
+  clearInterval(holdInterval);
+  holdInterval = null;
+  holdStart = null;
+  const ring = document.getElementById('hold-ring-fill');
+  if(ring) ring.style.transition = 'stroke-dashoffset .3s ease';
+  if(ring) ring.style.strokeDashoffset = 220;
+  setTimeout(()=>{ if(ring) ring.style.transition = 'stroke-dashoffset .05s linear'; }, 350);
 }
 
 async function confirmShutdown(){
@@ -891,10 +959,21 @@ startComputerPing();
 <div class="confirm-overlay" id="confirm-overlay">
   <div class="confirm-box">
     <div class="confirm-title">Shut down?</div>
-    <div class="confirm-sub" id="confirm-sub">This will shut down your computer. Make sure everything is saved.</div>
+    <div class="confirm-sub">Make sure everything is saved. Hold the button to confirm.</div>
     <div class="confirm-btns">
       <div class="confirm-btn cancel" onclick="cancelShutdown()">Cancel</div>
-      <div class="confirm-btn danger" onclick="confirmShutdown()">Shut down</div>
+      <div class="hold-btn-wrap">
+        <div class="hold-btn" id="hold-btn"
+          onmousedown="startHold()" onmouseup="cancelHold()" onmouseleave="cancelHold()"
+          ontouchstart="startHold(event)" ontouchend="cancelHold()" ontouchcancel="cancelHold()">
+          <svg class="hold-ring" viewBox="0 0 80 80">
+            <circle class="hold-ring-track" cx="40" cy="40" r="35"/>
+            <circle class="hold-ring-fill" id="hold-ring-fill" cx="40" cy="40" r="35"/>
+          </svg>
+          <div class="hold-btn-label">Hold<br>to off</div>
+        </div>
+        <div class="hold-btn-hint">Hold 2s</div>
+      </div>
     </div>
   </div>
 </div>
