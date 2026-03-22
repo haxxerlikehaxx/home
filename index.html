@@ -362,7 +362,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
     <div class="config-section"><div class="config-label">Light 1 — Name</div><input class="config-input" id="cfg-name0" type="text" placeholder="Led Lights Tak"><div class="config-label" style="margin-top:10px">Light 1 — Device ID</div><input class="config-input" id="cfg-dev0" type="text" placeholder="bf8b0e945d8c5f9861fjzy" autocomplete="off"></div>
     <div class="config-section"><div class="config-label">Light 2 — Name</div><input class="config-input" id="cfg-name1" type="text" placeholder="Led Lights Skrivbord"><div class="config-label" style="margin-top:10px">Light 2 — Device ID</div><input class="config-input" id="cfg-dev1" type="text" placeholder="bf1cf6aca13749cf898g3p" autocomplete="off"></div>
     <div class="config-section"><div class="config-label">Computer — Name</div><input class="config-input" id="cfg-comp-name" type="text" placeholder="My MacBook"><div class="config-label" style="margin-top:10px">Computer — Local IP &amp; Port</div><input class="config-input" id="cfg-comp-url" type="url" placeholder="http://192.168.1.50:4242" autocomplete="off"><div style="font-size:11px;color:var(--t3);margin-top:6px;line-height:1.5">Enter your Cloudflare Tunnel URL (e.g. https://abc.trycloudflare.com). The same Worker handles both lights and shutdown.</div></div>
-    <div class="config-section" style="padding-top:0"><div class="panel-close-btn" style="margin:0 0 10px;background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.16);display:block;width:100%" onclick="saveConfig()">Save &amp; Connect</div><div class="panel-close-btn" style="display:block;width:100%" onclick="closePanel(document.getElementById('config-panel'))">Cancel</div></div>
+    <div style="padding:0 20px 4px;display:flex;flex-direction:column;gap:10px"><div class="panel-close-btn" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.16);margin:0" onclick="saveConfig()">Save &amp; Connect</div><div class="panel-close-btn" style="margin:0" onclick="closePanel(document.getElementById('config-panel'))">Cancel</div></div>
   </div>
 </div>
 
@@ -371,9 +371,9 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   <div class="panel" onclick="event.stopPropagation()">
     <div class="panel-handle"></div><div class="panel-title">Profile</div>
     <div style="padding:0 20px 15px;display:flex;align-items:center;gap:13px;border-bottom:1px solid rgba(255,255,255,.06)"><div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:rgba(255,255,255,0.65)">H</div><div><div style="font-size:16px;font-weight:700">Home</div><div style="font-size:12px;color:var(--t2);margin-top:2px">2 Tuya devices · EU Cloud</div></div></div>
-    <div class="panel-row"><div class="panel-row-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M16.24 7.76a6 6 0 0 1 0 8.49M4.93 19.07a10 10 0 0 1 0-14.14M7.76 16.24a6 6 0 0 1 0-8.49"/></svg></div><div class="panel-row-text"><div class="panel-row-name">Tuya EU Cloud</div><div class="panel-row-sub">openapi.tuyaeu.com</div></div><div style="width:7px;height:7px;border-radius:50%;background:var(--green)"></div></div>
+    <div class="panel-row"><div class="panel-row-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M16.24 7.76a6 6 0 0 1 0 8.49M4.93 19.07a10 10 0 0 1 0-14.14M7.76 16.24a6 6 0 0 1 0-8.49"/></svg></div><div class="panel-row-text"><div class="panel-row-name" id="about-status-text">Tuya EU Cloud</div><div class="panel-row-sub" id="about-status-sub">openapi.tuyaeu.com</div></div><div class="pulse-dot" id="pulse-dot" style="flex-shrink:0;animation:pulse 2.8s ease-in-out infinite"></div></div>
     <div class="panel-row"><div class="panel-row-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="panel-row-text"><div class="panel-row-name">Privacy</div><div class="panel-row-sub">Credentials stored locally on device</div></div></div>
-    <div class="panel-row" id="about-status-row"><div class="panel-row-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg></div><div class="panel-row-text"><div class="panel-row-name" id="about-status-text">Connecting…</div><div class="panel-row-sub" id="about-status-sub">Tuya EU cloud</div></div><div class="pulse-dot" id="pulse-dot" style="flex-shrink:0"></div></div>
+
     <div class="panel-close-btn" onclick="closePanel(document.getElementById('about-panel'))">Done</div>
   </div>
 </div>
@@ -721,8 +721,8 @@ function refreshCard(i){
 }
 
 function setStatus(text,sub,type='ok'){
-  ['status-text','about-status-text'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=text;});
-  ['status-sub','about-status-sub'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=sub;});
+  ['about-status-text'].forEach(id=>{const el=document.getElementById(id);if(el&&type!=='ok')el.textContent=text;});
+  ['about-status-sub'].forEach(id=>{const el=document.getElementById(id);if(el&&type!=='ok')el.textContent=sub;});
   const col=type==='err'?'var(--red)':type==='warn'?'var(--orange)':'var(--green)';
   document.querySelectorAll('.pulse-dot').forEach(d=>{d.style.background=col;});
 }
