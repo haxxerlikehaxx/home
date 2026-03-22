@@ -135,10 +135,10 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   box-shadow:0 0 30px -8px rgba(255,255,255,0.08),inset 0 1px 0 rgba(255,255,255,0.07);
 }
 .light-card.loading-state{opacity:.5;pointer-events:none;}
-/* Entrance animations for light cards */
-.light-card{animation:cardPop .45s cubic-bezier(.34,1.56,.64,1) both;}
-.lights-grid .light-card:nth-child(1){animation-delay:.1s;}
-.lights-grid .light-card:nth-child(2){animation-delay:.16s;}
+/* Entrance animations for light cards — scoped to .card-entrance only so refreshCard never re-triggers it */
+.light-card.card-entrance{animation:cardPop .45s cubic-bezier(.34,1.56,.64,1) both;}
+.lights-grid .light-card.card-entrance:nth-child(1){animation-delay:.1s;}
+.lights-grid .light-card.card-entrance:nth-child(2){animation-delay:.16s;}
 @keyframes cardPop{
   from{opacity:0;transform:scale(.88) translateY(8px);}
   to{opacity:1;transform:scale(1) translateY(0);}
@@ -750,7 +750,7 @@ function setBright(idx,val){
    ══════════════════════════════════════════ */
 function renderCard(i){
   const l=LIGHTS[i],dev=CFG.devices[i];
-  return`<div class="g light-card ${l.on?'on':'off'}" id="lc-${i}">
+  return`<div class="g light-card card-entrance ${l.on?'on':'off'}" id="lc-${i}">
     <div class="lc-top">
       <div class="lc-name">${dev.name}</div>
       <div class="sw ${l.on?'on':''}" onclick="toggleLight(${i})"></div>
