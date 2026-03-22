@@ -116,63 +116,32 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 
 /* Lights grid */
 .lights-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px;margin-bottom:12px;}
-.light-card{
-  padding:16px 14px 14px;cursor:pointer;border-radius:var(--r-xl);
-  transition:transform .22s cubic-bezier(.34,1.56,.64,1),background .3s,border-color .3s,box-shadow .3s;
-  user-select:none;height:130px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;
-  position:relative;
-}
-/* Glow shimmer on ON cards */
-.light-card.on::after{
-  content:'';position:absolute;inset:0;border-radius:inherit;
-  background:radial-gradient(ellipse at 50% 0%,rgba(255,255,255,0.07) 0%,transparent 65%);
-  pointer-events:none;opacity:1;transition:opacity .4s;
-}
-.light-card.off::after{content:'';position:absolute;inset:0;opacity:0;pointer-events:none;}
+.light-card{padding:16px 14px 14px;cursor:pointer;border-radius:var(--r-xl);transition:background .22s,border-color .22s;user-select:none;height:130px;display:flex;flex-direction:column;justify-content:space-between;overflow:hidden;}
 .light-card.off{background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.07);}
-.light-card.on{
-  background:rgba(255,255,255,0.065);border-color:rgba(255,255,255,0.13);
-  box-shadow:0 0 30px -8px rgba(255,255,255,0.08),inset 0 1px 0 rgba(255,255,255,0.07);
-}
+.light-card.on{background:rgba(255,255,255,0.065);border-color:rgba(255,255,255,0.13);}
 .light-card.loading-state{opacity:.5;}
-/* Entrance animations for light cards — scoped to .card-entrance only so refreshCard never re-triggers it */
+/* Entrance animation — only fires on initial render via .card-entrance */
 .light-card.card-entrance{animation:cardPop .45s cubic-bezier(.34,1.56,.64,1) both;}
 .lights-grid .light-card.card-entrance:nth-child(1){animation-delay:.1s;}
 .lights-grid .light-card.card-entrance:nth-child(2){animation-delay:.16s;}
-@keyframes cardPop{
-  from{opacity:0;transform:scale(.88) translateY(8px);}
-  to{opacity:1;transform:scale(1) translateY(0);}
-}
-/* Toggle flip on state change */
-.light-card.just-toggled{animation:cardBounce .35s cubic-bezier(.34,1.56,.64,1);}
-@keyframes cardBounce{
-  0%{transform:scale(1);}
-  40%{transform:scale(.96);}
-  100%{transform:scale(1);}
-}
+@keyframes cardPop{from{opacity:0;transform:scale(.88) translateY(8px);}to{opacity:1;transform:scale(1) translateY(0);}}
 .lc-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;}
 .lc-name{font-size:14px;font-weight:700;color:var(--t1);letter-spacing:-.2px;line-height:1.2;}
 .lc-bottom{display:flex;flex-direction:column;gap:6px;}
-.lc-status{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);transition:color .35s,opacity .35s;}
+.lc-status{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);transition:color .22s;}
 .light-card.on .lc-status{color:var(--t2);}
 .lc-slider-row{display:flex;align-items:center;gap:6px;touch-action:pan-x;}
-.lc-slider{flex:1;height:5px;border-radius:3px;outline:none;border:none;-webkit-appearance:none;cursor:pointer;background:rgba(255,255,255,0.12);transition:opacity .3s,background .3s;}
+.lc-slider{flex:1;height:5px;border-radius:3px;outline:none;border:none;-webkit-appearance:none;cursor:pointer;background:rgba(255,255,255,0.12);transition:opacity .22s;touch-action:pan-x;}
 .light-card.off .lc-slider{opacity:.3;pointer-events:none;}
-.light-card.on .lc-slider{background:rgba(255,255,255,0.22);}
-.lc-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:white;box-shadow:0 1px 5px rgba(0,0,0,0.5);transition:transform .15s cubic-bezier(.34,1.56,.64,1);}
-.lc-slider:active::-webkit-slider-thumb{transform:scale(1.3);}
-.lc-pct{font-size:10px;color:var(--t3);min-width:28px;text-align:right;font-weight:700;transition:opacity .3s,color .3s;}
+.lc-slider::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:white;box-shadow:0 1px 5px rgba(0,0,0,0.5);}
+.lc-pct{font-size:10px;color:var(--t3);min-width:28px;text-align:right;font-weight:700;transition:opacity .22s;}
 .light-card.off .lc-pct{opacity:.3;}
-.light-card.on .lc-pct{color:var(--t2);}
 
-/* Toggle */
-.sw{position:relative;width:46px;height:26px;border-radius:13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12);cursor:pointer;transition:background .28s cubic-bezier(.4,0,.2,1),border-color .28s,box-shadow .28s;flex-shrink:0;pointer-events:all !important;z-index:10;}
-.sw.on{background:rgba(255,255,255,0.88);border-color:rgba(255,255,255,0.4);box-shadow:0 0 14px rgba(255,255,255,0.18);}
-.sw::after{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:white;top:2px;left:2px;transition:transform .3s cubic-bezier(.34,1.56,.64,1),box-shadow .28s;box-shadow:0 2px 5px rgba(0,0,0,0.5);}
-.sw.on::after{transform:translateX(20px);background:#1a1c1f;box-shadow:0 2px 8px rgba(0,0,0,0.35);}
-/* Tiny knob press effect */
-.sw:active::after{transform:scaleX(1.22) translateX(2px);}
-.sw.on:active::after{transform:scaleX(1.22) translateX(18px);}
+/* Toggle — exactly as original, no stacking context tricks */
+.sw{position:relative;width:46px;height:26px;border-radius:13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12);cursor:pointer;transition:background .22s,border-color .22s;flex-shrink:0;}
+.sw.on{background:rgba(255,255,255,0.88);border-color:rgba(255,255,255,0.4);}
+.sw::after{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:white;top:2px;left:2px;transition:transform .26s cubic-bezier(.34,1.56,.64,1);box-shadow:0 2px 5px rgba(0,0,0,0.5);}
+.sw.on::after{transform:translateX(20px);background:#1a1c1f;}
 
 /* Status strip */
 .status-strip{margin:0 14px 12px;padding:13px 18px;display:flex;align-items:center;gap:11px;border-radius:var(--r-lg);}
@@ -721,26 +690,12 @@ function triggerRefresh(btn){
 }
 
 async function toggleLight(idx){
-  const L=LIGHTS[idx];
-  const ns=!L.on;
-  L.on=ns;
-  refreshCard(idx);
+  const L=LIGHTS[idx];const ns=!L.on;L.on=ns;refreshCard(idx);
   ns?soundOn():soundOff();
-  // Bounce animation — purely visual, never blocks interaction
-  const card=document.getElementById('lc-'+idx);
-  if(card){
-    card.classList.add('just-toggled');
-    setTimeout(()=>{ if(card) card.classList.remove('just-toggled'); },360);
-  }
-  try{
-    await tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:ns}]);
-    showToast(CFG.devices[idx].name+' '+(ns?'on':'off'));
-  } catch(e){
-    L.on=!ns;
-    refreshCard(idx);
-    showToast('Failed to reach device','error');
-    soundError();
-  }
+  const card=document.getElementById('lc-'+idx);card.classList.add('loading-state');
+  try{await tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:ns}]);showToast(CFG.devices[idx].name+' '+(ns?'on':'off'));}
+  catch(e){L.on=!ns;refreshCard(idx);showToast('Failed to reach device','error');soundError();}
+  card.classList.remove('loading-state');
 }
 
 let brightTimers={};
