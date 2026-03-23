@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="icon" href="/home/favicon.png">
+<link rel="icon" href="/home/favicon.png
+  
 <link rel="apple-touch-icon" href="/home/apple-touch-icon.png">
 <title>Home</title>
 <style>
@@ -17,7 +18,6 @@
   --on-bg:rgba(255,255,255,0.12);--on-border:rgba(255,255,255,0.2);
   --t1:rgba(255,255,255,0.92);--t2:rgba(255,255,255,0.42);--t3:rgba(255,255,255,0.18);
   --green:rgba(120,210,140,0.9);--red:rgba(215,100,90,0.9);--orange:rgba(210,155,80,0.9);
-  --blue:rgba(90,160,255,0.9);
   --blur:blur(40px) saturate(140%);--blur-sm:blur(20px) saturate(130%);
   --r-xl:26px;--r-lg:20px;--r-md:14px;
 }
@@ -32,15 +32,37 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 /* Header */
 .page-header{padding:58px 22px 10px;display:flex;align-items:center;justify-content:space-between;}
 .page-title{font-size:34px;font-weight:700;letter-spacing:-1px;color:var(--t1);animation:titleSlide .5s cubic-bezier(.22,1,.36,1) both;}
-@keyframes titleSlide{from{opacity:0;transform:translateX(-18px);}to{opacity:1;transform:translateX(0);}}
 
-.icon-btn{width:36px;height:36px;border-radius:50%;background:var(--glass);border:1px solid var(--glass-border);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .18s,transform .14s,box-shadow .22s,border-color .22s;position:relative;overflow:hidden;}
+@keyframes titleSlide{
+  from{opacity:0;transform:translateX(-18px);}
+  to{opacity:1;transform:translateX(0);}
+}
+
+.icon-btn{
+  width:36px;height:36px;border-radius:50%;
+  background:var(--glass);border:1px solid var(--glass-border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+  transition:background .18s,transform .14s,box-shadow .22s,border-color .22s;
+  position:relative;overflow:hidden;
+}
 .icon-btn:active{transform:scale(.82);}
 .icon-btn:hover{background:var(--glass-hi);border-color:var(--glass-border-hi);}
+/* Spinning state */
 .icon-btn.spinning svg{animation:spinIcon .7s cubic-bezier(.4,0,.2,1) infinite;}
 .icon-btn.spinning{box-shadow:0 0 0 2px rgba(255,255,255,0.1),0 0 18px rgba(255,255,255,0.06);}
-@keyframes spinIcon{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
-.icon-btn-ripple{position:absolute;border-radius:50%;background:rgba(255,255,255,0.18);pointer-events:none;transform:scale(0);animation:iconRipple .45s ease-out forwards;width:100%;height:100%;top:0;left:0;}
+@keyframes spinIcon{
+  from{transform:rotate(0deg);}
+  to{transform:rotate(360deg);}
+}
+/* Ripple on press */
+.icon-btn-ripple{
+  position:absolute;border-radius:50%;
+  background:rgba(255,255,255,0.18);
+  pointer-events:none;transform:scale(0);
+  animation:iconRipple .45s ease-out forwards;
+  width:100%;height:100%;top:0;left:0;
+}
 @keyframes iconRipple{to{transform:scale(2.2);opacity:0;}}
 
 /* Weather */
@@ -66,24 +88,34 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .wc-loading{display:flex;align-items:center;gap:8px;color:var(--t2);font-size:13px;}
 .spin{width:14px;height:14px;border:1.5px solid rgba(255,255,255,0.12);border-top-color:rgba(255,255,255,0.55);border-radius:50%;animation:spin .85s linear infinite;}
 @keyframes spin{to{transform:rotate(360deg)}}
-@keyframes countUp{from{opacity:0;transform:translateY(8px) scale(.96);}to{opacity:1;transform:translateY(0) scale(1);}}
+
+/* Weather number count-up animation */
+@keyframes countUp{
+  from{opacity:0;transform:translateY(8px) scale(.96);}
+  to{opacity:1;transform:translateY(0) scale(1);}
+}
 .wc-temp-anim{animation:countUp .45s cubic-bezier(.22,1,.36,1) both .1s;}
 .wc-detail .wc-dv{animation:countUp .45s cubic-bezier(.22,1,.36,1) both;}
 .wc-detail:nth-child(1) .wc-dv{animation-delay:.12s;}
 .wc-detail:nth-child(2) .wc-dv{animation-delay:.18s;}
 .wc-detail:nth-child(3) .wc-dv{animation-delay:.24s;}
 .wc-detail:nth-child(4) .wc-dv{animation-delay:.30s;}
+/* Forecast slide-in */
 .fc-item{animation:fcSlide .4s cubic-bezier(.22,1,.36,1) both;}
 .fc-item:nth-child(1){animation-delay:.18s;}
 .fc-item:nth-child(2){animation-delay:.23s;}
 .fc-item:nth-child(3){animation-delay:.28s;}
 .fc-item:nth-child(4){animation-delay:.33s;}
 .fc-item:nth-child(5){animation-delay:.38s;}
-@keyframes fcSlide{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fcSlide{
+  from{opacity:0;transform:translateY(10px);}
+  to{opacity:1;transform:translateY(0);}
+}
 
 /* Section */
 .section-head{display:flex;justify-content:space-between;align-items:center;padding:4px 22px 8px;}
 .section-title{font-size:20px;font-weight:700;color:var(--t1);letter-spacing:-.4px;}
+/* Removed .section-link — no more "Refresh" text */
 
 /* Lights grid */
 .lights-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 14px;margin-bottom:12px;}
@@ -91,6 +123,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .light-card.off{background:rgba(255,255,255,0.03);border-color:rgba(255,255,255,0.07);}
 .light-card.on{background:rgba(255,255,255,0.065);border-color:rgba(255,255,255,0.13);}
 .light-card.loading-state{opacity:.5;}
+/* Entrance animation — only fires on initial render via .card-entrance */
 .light-card.card-entrance{animation:cardPop .45s cubic-bezier(.34,1.56,.64,1) both;}
 .lights-grid .light-card.card-entrance:nth-child(1){animation-delay:.1s;}
 .lights-grid .light-card.card-entrance:nth-child(2){animation-delay:.16s;}
@@ -107,7 +140,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .lc-pct{font-size:10px;color:var(--t3);min-width:28px;text-align:right;font-weight:700;transition:opacity .22s;}
 .light-card.off .lc-pct{opacity:.3;}
 
-/* Toggle */
+/* Toggle — exactly as original, no stacking context tricks */
 .sw{position:relative;width:46px;height:26px;border-radius:13px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.12);cursor:pointer;transition:background .22s,border-color .22s;flex-shrink:0;}
 .sw.on{background:rgba(255,255,255,0.88);border-color:rgba(255,255,255,0.4);}
 .sw::after{content:'';position:absolute;width:20px;height:20px;border-radius:50%;background:white;top:2px;left:2px;transition:transform .26s cubic-bezier(.34,1.56,.64,1);box-shadow:0 2px 5px rgba(0,0,0,0.5);}
@@ -124,12 +157,28 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .toast{position:fixed;bottom:96px;left:50%;transform:translateX(-50%) translateY(16px);background:rgba(30,32,36,0.97);backdrop-filter:var(--blur-sm);-webkit-backdrop-filter:var(--blur-sm);border:1px solid rgba(255,255,255,0.1);border-radius:50px;padding:9px 18px;font-size:13px;font-weight:600;color:var(--t1);opacity:0;transition:opacity .28s cubic-bezier(.22,1,.36,1),transform .28s cubic-bezier(.34,1.56,.64,1);pointer-events:none;z-index:300;white-space:nowrap;}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
 .toast.error{border-color:rgba(215,100,90,0.3);color:var(--red);}
-.toast.success{border-color:rgba(120,210,140,0.3);color:var(--green);}
 
-/* Bottom nav */
-.bottom-nav{position:fixed;bottom:0;left:0;right:0;z-index:100;display:flex;justify-content:center;background:transparent;padding:0 16px;padding-bottom:calc(10px + env(safe-area-inset-bottom));padding-top:10px;pointer-events:none;}
-.bottom-nav-inner{pointer-events:all;width:100%;max-width:398px;display:flex;background:rgba(28,30,34,0.88);backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);border:1px solid rgba(255,255,255,0.1);border-radius:26px;padding:11px 8px;box-shadow:0 10px 40px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.07);animation:navSlide .5s cubic-bezier(.22,1,.36,1) both .25s;}
-@keyframes navSlide{from{opacity:0;transform:translateY(22px);}to{opacity:1;transform:translateY(0);}}
+/* Bottom nav — floating pill */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;z-index:100;
+  display:flex;justify-content:center;
+  background:transparent;padding:0 16px;
+  padding-bottom:calc(10px + env(safe-area-inset-bottom));
+  padding-top:10px;pointer-events:none;
+}
+.bottom-nav-inner{
+  pointer-events:all;width:100%;max-width:398px;display:flex;
+  background:rgba(28,30,34,0.88);
+  backdrop-filter:var(--blur);-webkit-backdrop-filter:var(--blur);
+  border:1px solid rgba(255,255,255,0.1);border-radius:26px;
+  padding:11px 8px;
+  box-shadow:0 10px 40px rgba(0,0,0,0.4),inset 0 1px 0 rgba(255,255,255,0.07);
+  animation:navSlide .5s cubic-bezier(.22,1,.36,1) both .25s;
+}
+@keyframes navSlide{
+  from{opacity:0;transform:translateY(22px);}
+  to{opacity:1;transform:translateY(0);}
+}
 .nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;padding:2px 0;position:relative;}
 .nav-item svg{width:22px;height:22px;transition:transform .22s cubic-bezier(.34,1.56,.64,1),stroke .25s,opacity .25s;}
 .nav-item:active svg{transform:scale(.72);}
@@ -137,7 +186,12 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .nav-item.active svg{stroke:var(--t1);transform:scale(1.08);}
 .nav-item.active .nav-label{color:var(--t1);}
 .nav-item:not(.active){opacity:.3;}
-.nav-item.active::before{content:'';position:absolute;top:-6px;width:4px;height:4px;border-radius:50%;background:rgba(255,255,255,0.7);animation:navDotIn .3s cubic-bezier(.34,1.56,.64,1) both;}
+/* Active indicator dot */
+.nav-item.active::before{
+  content:'';position:absolute;top:-6px;width:4px;height:4px;border-radius:50%;
+  background:rgba(255,255,255,0.7);
+  animation:navDotIn .3s cubic-bezier(.34,1.56,.64,1) both;
+}
 @keyframes navDotIn{from{opacity:0;transform:scaleX(0);}to{opacity:1;transform:scaleX(1);}}
 
 /* Panel */
@@ -161,7 +215,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .config-label{font-size:10px;color:var(--t2);font-weight:700;letter-spacing:.6px;text-transform:uppercase;}
 .config-section{padding:0 20px 14px;}
 
-/* Automations */
+/* Automations builder */
 .auto-list{padding:0 20px;}
 .auto-item{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,0.05);animation:autoIn .3s cubic-bezier(.22,1,.36,1) both;}
 @keyframes autoIn{from{opacity:0;transform:translateX(-10px);}to{opacity:1;transform:translateX(0);}}
@@ -173,6 +227,8 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .auto-delete{width:28px;height:28px;border-radius:50%;background:rgba(215,100,90,0.1);border:1px solid rgba(215,100,90,0.2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .18s,transform .14s;}
 .auto-delete:active{transform:scale(.82);background:rgba(215,100,90,0.22);}
 .auto-empty{font-size:13px;color:var(--t3);text-align:center;padding:18px 0 6px;}
+
+/* Add automation form */
 .auto-form{padding:0 20px 4px;}
 .auto-form-title{font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;}
 .auto-row{display:flex;gap:8px;margin-bottom:8px;}
@@ -181,134 +237,26 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .auto-select option{background:#1e2024;color:white;}
 .auto-time-input{width:90px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:var(--r-md);padding:10px 12px;font-size:13px;color:white;font-family:inherit;outline:none;transition:border-color .18s;}
 .auto-time-input:focus{border-color:rgba(255,255,255,0.25);}
-.auto-add-btn{width:100%;padding:12px;border-radius:var(--r-md);background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:var(--t1);font-size:14px;font-weight:700;cursor:pointer;text-align:center;transition:background .18s,transform .14s;margin-top:2px;}
+.auto-add-btn{width:100%;padding:12px;border-radius:var(--r-md);background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:var(--t1);font-size:14px;font-weight:700;cursor:pointer;text-align:center;transition:background .18s,transform .14s,box-shadow .18s;margin-top:2px;}
 .auto-add-btn:active{background:rgba(255,255,255,0.12);transform:scale(.97);}
 
-/* ══════════════════════════════════════
-   COMPUTER CARD — reworked
-   ══════════════════════════════════════ */
-.computer-card{
-  margin:0 14px 12px;
-  padding:18px 18px 16px;
-  border-radius:var(--r-xl);
-  transition:box-shadow .4s;
-  animation:fadeUp .4s ease both .15s;
-}
-.computer-card.online-glow{
-  box-shadow:0 0 36px -10px rgba(120,210,140,0.22);
-}
-.computer-card-top{
-  display:flex;align-items:center;gap:12px;margin-bottom:16px;
-}
-.computer-dot{
-  width:8px;height:8px;border-radius:50%;
-  background:var(--green);
-  box-shadow:0 0 7px rgba(120,210,140,0.7);
-  flex-shrink:0;transition:background .5s,box-shadow .5s;
-}
+/* Computer card */
+.computer-card{margin:0 14px 12px;padding:14px 18px;display:flex;align-items:center;gap:14px;border-radius:var(--r-lg);cursor:default;transition:box-shadow .4s;}
+/* Online glow pulse on the card */
+.computer-card.online-glow{box-shadow:0 0 28px -10px rgba(120,210,140,0.25);}
+.computer-dot{width:8px;height:8px;border-radius:50%;background:var(--green);box-shadow:0 0 7px rgba(120,210,140,0.7);flex-shrink:0;transition:background .5s,box-shadow .5s;}
 .computer-dot.offline{background:rgba(255,255,255,0.2);box-shadow:none;}
-.computer-dot.waking{
-  background:var(--orange);
-  box-shadow:0 0 8px rgba(210,155,80,0.7);
-  animation:wakePulse 1s ease-in-out infinite;
-}
-@keyframes wakePulse{
-  0%,100%{opacity:1;transform:scale(1);}
-  50%{opacity:.5;transform:scale(1.5);}
-}
 .computer-name{font-size:15px;font-weight:700;color:var(--t1);flex:1;}
 .computer-sub{font-size:11px;color:var(--t2);margin-top:2px;transition:color .3s;}
-
-/* Two-button row */
-.computer-actions{
-  display:grid;grid-template-columns:1fr 1fr;gap:9px;
-}
-.comp-btn{
-  position:relative;overflow:hidden;
-  padding:12px 10px;border-radius:var(--r-md);
-  display:flex;align-items:center;justify-content:center;gap:7px;
-  cursor:pointer;
-  font-size:13px;font-weight:700;
-  border:1px solid;
-  transition:background .2s,transform .15s,opacity .2s,box-shadow .2s;
-  -webkit-user-select:none;user-select:none;touch-action:none;
-}
-.comp-btn:active{transform:scale(.95);}
-
-/* Wake button */
-.comp-btn-wake{
-  background:rgba(90,160,255,0.1);
-  border-color:rgba(90,160,255,0.25);
-  color:var(--blue);
-}
-.comp-btn-wake:hover{background:rgba(90,160,255,0.16);box-shadow:0 0 18px -6px rgba(90,160,255,0.3);}
-.comp-btn-wake.disabled{opacity:.3;pointer-events:none;}
-.comp-btn-wake.loading{opacity:.6;pointer-events:none;}
-
-/* Shutdown button — hold to confirm */
-.comp-btn-shutdown{
-  background:rgba(215,100,90,0.1);
-  border-color:rgba(215,100,90,0.25);
-  color:var(--red);
-}
-.comp-btn-shutdown:hover{background:rgba(215,100,90,0.16);}
-.comp-btn-shutdown.disabled{opacity:.3;pointer-events:none;}
-.comp-btn-shutdown.holding{animation:breathe .9s ease-in-out infinite;}
-@keyframes breathe{
-  0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(215,100,90,0);}
-  50%{transform:scale(1.03);box-shadow:0 0 22px 4px rgba(215,100,90,0.2);}
-}
-
-/* Hold ring — drawn as SVG overlay */
-.hold-ring-svg{
-  position:absolute;inset:0;width:100%;height:100%;
-  pointer-events:none;overflow:visible;
-}
-.hold-ring-path{
-  fill:none;stroke:rgba(215,100,90,0.65);stroke-width:2;stroke-linecap:round;
-  stroke-dasharray:1000;stroke-dashoffset:1000;
-  transition:stroke-dashoffset .05s linear;
-}
-
-/* Progress bar under wake button */
-.wake-progress{
-  height:2px;border-radius:1px;
-  background:rgba(90,160,255,0.15);
-  margin-top:10px;overflow:hidden;
-  opacity:0;transition:opacity .3s;
-}
-.wake-progress.visible{opacity:1;}
-.wake-progress-fill{
-  height:100%;width:0%;
-  background:rgba(90,160,255,0.7);
-  border-radius:1px;
-  transition:width .3s ease;
-}
-
-/* Wake icon spin */
-@keyframes wakeSpinAnim{
-  from{transform:rotate(0deg);}to{transform:rotate(360deg);}
-}
-.wake-spinning .wake-icon{animation:wakeSpinAnim .8s linear infinite;}
-
-/* Page entrance */
-@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
-
-/* Skeleton */
-.skeleton{background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.04) 75%);background-size:200% 100%;animation:shimmer 1.5s infinite;border-radius:6px;}
-@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
-
-.ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.08);pointer-events:none;transform:scale(0);animation:rpl .5s ease-out forwards;}
-@keyframes rpl{to{transform:scale(4);opacity:0}}
-
-.section-head{animation:fadeUp .4s ease both;}
-.section-head:nth-of-type(1){animation-delay:.08s;}
-.section-head:nth-of-type(2){animation-delay:.12s;}
 
 /* Confirm dialog */
 .confirm-overlay{position:fixed;inset:0;z-index:400;background:rgba(0,0,0,0.6);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .28s;}
 .confirm-overlay.open{opacity:1;pointer-events:all;}
-.confirm-box{background:rgba(22,24,28,0.98);border:1px solid rgba(255,255,255,0.1);border-radius:22px;padding:28px 24px 24px;width:calc(100% - 64px);max-width:320px;text-align:center;transform:scale(.88) translateY(12px);transition:transform .32s cubic-bezier(.34,1.56,.64,1);}
+.confirm-box{
+  background:rgba(22,24,28,0.98);border:1px solid rgba(255,255,255,0.1);border-radius:22px;
+  padding:28px 24px 24px;width:calc(100% - 64px);max-width:320px;text-align:center;
+  transform:scale(.88) translateY(12px);transition:transform .32s cubic-bezier(.34,1.56,.64,1);
+}
 .confirm-overlay.open .confirm-box{transform:scale(1) translateY(0);}
 .confirm-title{font-size:18px;font-weight:700;color:var(--t1);margin-bottom:8px;letter-spacing:-.3px;}
 .confirm-sub{font-size:13px;color:var(--t2);line-height:1.5;margin-bottom:24px;}
@@ -316,12 +264,50 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .confirm-btn{flex:1;padding:13px;border-radius:var(--r-md);font-size:15px;font-weight:700;cursor:pointer;transition:background .18s,transform .14s;border:1px solid rgba(255,255,255,0.09);}
 .confirm-btn:active{transform:scale(.96);}
 .confirm-btn.cancel{background:rgba(255,255,255,0.05);color:var(--t1);}
+
+/* Hold-to-shutdown button */
 .hold-btn-wrap{flex:1;position:relative;display:flex;align-items:center;justify-content:center;}
-.hold-btn{position:relative;width:100%;padding:13px;border-radius:var(--r-md);background:rgba(215,100,90,0.18);border:1px solid rgba(215,100,90,0.3);display:flex;align-items:center;justify-content:center;cursor:pointer;transition:background .2s,box-shadow .2s,transform .2s;-webkit-user-select:none;user-select:none;touch-action:none;overflow:hidden;}
+.hold-btn{
+  position:relative;width:100%;padding:13px;border-radius:var(--r-md);
+  background:rgba(215,100,90,0.18);border:1px solid rgba(215,100,90,0.3);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .2s,box-shadow .2s,transform .2s;
+  -webkit-user-select:none;user-select:none;touch-action:none;overflow:hidden;
+}
 .hold-btn.holding{animation:breathe 0.9s ease-in-out infinite;}
 .hold-btn-label{font-size:15px;font-weight:700;color:var(--red);text-align:center;}
 .hold-ring{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;}
-.hold-ring-fill{fill:none;stroke:rgba(215,100,90,0.7);stroke-width:2.5;stroke-linecap:round;stroke-dasharray:1000;stroke-dashoffset:1000;transition:stroke-dashoffset .05s linear;}
+.hold-ring-fill{
+  fill:none;stroke:rgba(215,100,90,0.7);stroke-width:2.5;stroke-linecap:round;
+  stroke-dasharray:1000;stroke-dashoffset:1000;transition:stroke-dashoffset .05s linear;
+}
+@keyframes breathe{
+  0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(215,100,90,0);}
+  50%{transform:scale(1.03);box-shadow:0 0 22px 6px rgba(215,100,90,0.22);}
+}
+
+/* Page entrance */
+@keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── Skeleton shimmer while loading ── */
+.skeleton{
+  background:linear-gradient(90deg,rgba(255,255,255,0.04) 25%,rgba(255,255,255,0.08) 50%,rgba(255,255,255,0.04) 75%);
+  background-size:200% 100%;
+  animation:shimmer 1.5s infinite;
+  border-radius:6px;
+}
+@keyframes shimmer{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
+
+.ripple-el{position:absolute;border-radius:50%;background:rgba(255,255,255,0.08);pointer-events:none;transform:scale(0);animation:rpl .5s ease-out forwards;}
+@keyframes rpl{to{transform:scale(4);opacity:0}}
+
+/* Section title slide */
+.section-head{animation:fadeUp .4s ease both;}
+.section-head:nth-of-type(1){animation-delay:.08s;}
+.section-head:nth-of-type(2){animation-delay:.12s;}
+
+/* Computer card entrance */
+.computer-card{animation:fadeUp .4s ease both .15s;}
 </style>
 </head>
 <body>
@@ -366,51 +352,13 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   <div class="section-head" style="animation:fadeUp .4s ease both .11s">
     <div class="section-title">Computer</div>
   </div>
-
-  <div class="g computer-card" id="computer-card">
-    <!-- Top row: dot + name + sub -->
-    <div class="computer-card-top">
-      <div class="computer-dot offline" id="computer-dot"></div>
-      <div style="flex:1">
-        <div class="computer-name" id="computer-name">My Computer</div>
-        <div class="computer-sub" id="computer-sub">Checking…</div>
-      </div>
+  <div class="g computer-card" style="animation:fadeUp .4s ease both .12s" id="computer-card">
+    <div class="computer-dot" id="computer-dot"></div>
+    <div style="flex:1">
+      <div class="computer-name" id="computer-name">My Computer</div>
+      <div class="computer-sub" id="computer-sub">Checking…</div>
     </div>
-
-    <!-- Action buttons -->
-    <div class="computer-actions">
-
-      <!-- Wake button -->
-      <div class="comp-btn comp-btn-wake disabled" id="comp-wake-btn" onclick="handleWake()">
-        <svg class="wake-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 2a10 10 0 0 1 10 10"/>
-          <polyline points="12 6 12 12 16 14"/>
-          <path d="M2 12a10 10 0 0 0 10 10"/>
-        </svg>
-        <span id="comp-wake-label">Wake</span>
-      </div>
-
-      <!-- Shutdown button (hold to confirm) -->
-      <div class="comp-btn comp-btn-shutdown disabled" id="comp-shutdown-btn"
-        onmousedown="startShutdownHold()" onmouseup="cancelShutdownHold()" onmouseleave="cancelShutdownHold()"
-        ontouchstart="startShutdownHold(event)" ontouchend="cancelShutdownHold()" ontouchcancel="cancelShutdownHold()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M18.36 6.64a9 9 0 1 1-12.73 0"/>
-          <line x1="12" y1="2" x2="12" y2="12"/>
-        </svg>
-        <span id="comp-shutdown-label">Hold off</span>
-        <!-- SVG ring overlay drawn dynamically -->
-        <svg class="hold-ring-svg" id="comp-shutdown-ring" preserveAspectRatio="none">
-          <rect class="hold-ring-path" id="comp-ring-path" x="1" y="1" rx="13" ry="13"/>
-        </svg>
-      </div>
-
-    </div>
-
-    <!-- Wake progress bar (shown while PC is booting) -->
-    <div class="wake-progress" id="wake-progress">
-      <div class="wake-progress-fill" id="wake-progress-fill"></div>
-    </div>
+    <div class="sw" id="computer-sw" onclick="handleComputerToggle()"></div>
   </div>
 
 </div>
@@ -418,22 +366,21 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 <!-- Nav -->
 <nav class="bottom-nav">
   <div class="bottom-nav-inner">
-    <div class="nav-item active" onclick="navTo(this)">
-      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-      <span class="nav-label">Home</span>
-    </div>
-    <div class="nav-item" onclick="navTo(this);openPanel('auto-panel')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-      <span class="nav-label">Auto</span>
-    </div>
-    <div class="nav-item" onclick="navTo(this);openPanel('config-panel')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M16.24 7.76a6 6 0 0 1 0 8.49M4.93 19.07a10 10 0 0 1 0-14.14M7.76 16.24a6 6 0 0 1 0-8.49"/></svg>
-      <span class="nav-label">Settings</span>
-    </div>
-    <div class="nav-item" onclick="navTo(this);openPanel('about-panel')">
-      <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-      <span class="nav-label">Profile</span>
-    </div>
+  <div class="nav-item active" onclick="navTo(this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+    <span class="nav-label">Home</span>
+  </div>
+  <div class="nav-item" onclick="navTo(this);openPanel('auto-panel')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <span class="nav-label">Auto</span>
+  </div>
+  <div class="nav-item" onclick="navTo(this);openPanel('config-panel')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M16.24 7.76a6 6 0 0 1 0 8.49M4.93 19.07a10 10 0 0 1 0-14.14M7.76 16.24a6 6 0 0 1 0-8.49"/></svg>
+    <span class="nav-label">Settings</span>
+  </div>
+  <div class="nav-item" onclick="navTo(this);openPanel('about-panel')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.92)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+    <span class="nav-label">Profile</span>
   </div>
 </nav>
 
@@ -482,16 +429,8 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
     <div class="config-section"><div class="config-label">Cloudflare Worker URL</div><input class="config-input" id="cfg-worker" type="url" placeholder="https://your-worker.workers.dev" autocomplete="off"></div>
     <div class="config-section"><div class="config-label">Light 1 — Name</div><input class="config-input" id="cfg-name0" type="text" placeholder="Led Lights Tak"><div class="config-label" style="margin-top:10px">Light 1 — Device ID</div><input class="config-input" id="cfg-dev0" type="text" placeholder="bf8b0e945d8c5f9861fjzy" autocomplete="off"></div>
     <div class="config-section"><div class="config-label">Light 2 — Name</div><input class="config-input" id="cfg-name1" type="text" placeholder="Led Lights Skrivbord"><div class="config-label" style="margin-top:10px">Light 2 — Device ID</div><input class="config-input" id="cfg-dev1" type="text" placeholder="bf1cf6aca13749cf898g3p" autocomplete="off"></div>
-    <div class="config-section">
-      <div class="config-label">Computer — Name</div><input class="config-input" id="cfg-comp-name" type="text" placeholder="My PC">
-      <div class="config-label" style="margin-top:10px">Computer — Tunnel URL</div>
-      <input class="config-input" id="cfg-comp-url" type="url" placeholder="https://abc.trycloudflare.com" autocomplete="off">
-      <div style="font-size:11px;color:var(--t3);margin-top:6px;line-height:1.5">Your cloudflared tunnel URL. Used for ping &amp; shutdown. Wake is sent via UniFi from your Worker.</div>
-    </div>
-    <div style="padding:0 20px 4px;display:flex;flex-direction:column;gap:10px">
-      <div class="panel-close-btn" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.16);margin:0" onclick="saveConfig()">Save &amp; Connect</div>
-      <div class="panel-close-btn" style="margin:0" onclick="closePanel(document.getElementById('config-panel'))">Cancel</div>
-    </div>
+    <div class="config-section"><div class="config-label">Computer — Name</div><input class="config-input" id="cfg-comp-name" type="text" placeholder="My MacBook"><div class="config-label" style="margin-top:10px">Computer — Local IP &amp; Port</div><input class="config-input" id="cfg-comp-url" type="url" placeholder="http://192.168.1.50:4242" autocomplete="off"><div style="font-size:11px;color:var(--t3);margin-top:6px;line-height:1.5">Enter your Cloudflare Tunnel URL (e.g. https://abc.trycloudflare.com). The same Worker handles both lights and shutdown.</div></div>
+    <div style="padding:0 20px 4px;display:flex;flex-direction:column;gap:10px"><div class="panel-close-btn" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.16);margin:0" onclick="saveConfig()">Save &amp; Connect</div><div class="panel-close-btn" style="margin:0" onclick="closePanel(document.getElementById('config-panel'))">Cancel</div></div>
   </div>
 </div>
 
@@ -499,41 +438,10 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 <div class="panel-overlay" id="about-panel" onclick="closePanel(this)">
   <div class="panel" onclick="event.stopPropagation()">
     <div class="panel-handle"></div><div class="panel-title">Profile</div>
-    <div style="padding:0 20px 15px;display:flex;align-items:center;gap:13px;border-bottom:1px solid rgba(255,255,255,.06)">
-      <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:rgba(255,255,255,0.65)">H</div>
-      <div><div style="font-size:16px;font-weight:700">Home</div><div style="font-size:12px;color:var(--t2);margin-top:2px">2 Tuya devices · EU Cloud</div></div>
-    </div>
-    <div class="panel-row">
-      <div class="panel-row-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M16.24 7.76a6 6 0 0 1 0 8.49M4.93 19.07a10 10 0 0 1 0-14.14M7.76 16.24a6 6 0 0 1 0-8.49"/></svg></div>
-      <div class="panel-row-text"><div class="panel-row-name" id="about-status-text">Tuya EU Cloud</div><div class="panel-row-sub" id="about-status-sub">openapi.tuyaeu.com</div></div>
-      <div class="pulse-dot" id="pulse-dot" style="flex-shrink:0"></div>
-    </div>
-    <div class="panel-row">
-      <div class="panel-row-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
-      <div class="panel-row-text"><div class="panel-row-name">Privacy</div><div class="panel-row-sub">Credentials stored locally on device</div></div>
-    </div>
+    <div style="padding:0 20px 15px;display:flex;align-items:center;gap:13px;border-bottom:1px solid rgba(255,255,255,.06)"><div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:rgba(255,255,255,0.65)">H</div><div><div style="font-size:16px;font-weight:700">Home</div><div style="font-size:12px;color:var(--t2);margin-top:2px">2 Tuya devices · EU Cloud</div></div></div>
+    <div class="panel-row"><div class="panel-row-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M16.24 7.76a6 6 0 0 1 0 8.49M4.93 19.07a10 10 0 0 1 0-14.14M7.76 16.24a6 6 0 0 1 0-8.49"/></svg></div><div class="panel-row-text"><div class="panel-row-name" id="about-status-text">Tuya EU Cloud</div><div class="panel-row-sub" id="about-status-sub">openapi.tuyaeu.com</div></div><div class="pulse-dot" id="pulse-dot" style="flex-shrink:0;animation:pulse 2.8s ease-in-out infinite"></div></div>
+    <div class="panel-row"><div class="panel-row-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div><div class="panel-row-text"><div class="panel-row-name">Privacy</div><div class="panel-row-sub">Credentials stored locally on device</div></div></div>
     <div class="panel-close-btn" onclick="closePanel(document.getElementById('about-panel'))">Done</div>
-  </div>
-</div>
-
-<!-- Confirm shutdown dialog (fallback / desktop) -->
-<div class="confirm-overlay" id="confirm-overlay">
-  <div class="confirm-box">
-    <div class="confirm-title">Shut down?</div>
-    <div class="confirm-sub">Make sure everything is saved. Hold the button to confirm.</div>
-    <div class="confirm-btns">
-      <div class="confirm-btn cancel" onclick="cancelShutdown()">Cancel</div>
-      <div class="hold-btn-wrap">
-        <div class="hold-btn" id="hold-btn"
-          onmousedown="startHold()" onmouseup="cancelHold()" onmouseleave="cancelHold()"
-          ontouchstart="startHold(event)" ontouchend="cancelHold()" ontouchcancel="cancelHold()">
-          <svg class="hold-ring" id="hold-ring-svg" preserveAspectRatio="none">
-            <rect class="hold-ring-fill" id="hold-ring-fill" x="1" y="1" width="calc(100%-2)" height="calc(100%-2)" rx="13" ry="13"/>
-          </svg>
-          <div class="hold-btn-label">Shut down</div>
-        </div>
-      </div>
-    </div>
   </div>
 </div>
 
@@ -556,31 +464,64 @@ document.addEventListener('touchstart',()=>{
   if(audioCtx&&audioCtx.state!=='running') audioCtx.resume().catch(()=>{audioCtx=null;});
 },{passive:true});
 
-function bubble(freq,startTime,vol=0.09,attack=0.06,hold=0.08,decay=0.55){
+function bubble(freq, startTime, vol=0.09, attack=0.06, hold=0.08, decay=0.55){
   try{
-    const ctx=getAudio(),osc=ctx.createOscillator(),gain=ctx.createGain(),lpf=ctx.createBiquadFilter();
-    lpf.type='lowpass';lpf.frequency.value=1800;lpf.Q.value=0.5;
-    osc.connect(lpf);lpf.connect(gain);gain.connect(ctx.destination);osc.type='sine';
-    osc.frequency.setValueAtTime(freq,startTime);
-    gain.gain.setValueAtTime(0.0001,startTime);
-    gain.gain.linearRampToValueAtTime(vol,startTime+attack);
-    gain.gain.setValueAtTime(vol,startTime+attack+hold);
-    gain.gain.exponentialRampToValueAtTime(0.0001,startTime+attack+hold+decay);
-    osc.start(startTime);osc.stop(startTime+attack+hold+decay+0.05);
+    const ctx = getAudio();
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    const lpf = ctx.createBiquadFilter();
+    lpf.type = 'lowpass'; lpf.frequency.value = 1800; lpf.Q.value = 0.5;
+    osc.connect(lpf); lpf.connect(gain); gain.connect(ctx.destination);
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(freq, startTime);
+    gain.gain.setValueAtTime(0.0001, startTime);
+    gain.gain.linearRampToValueAtTime(vol, startTime + attack);
+    gain.gain.setValueAtTime(vol, startTime + attack + hold);
+    gain.gain.exponentialRampToValueAtTime(0.0001, startTime + attack + hold + decay);
+    osc.start(startTime);
+    osc.stop(startTime + attack + hold + decay + 0.05);
   }catch(e){}
 }
-function soundOn(){try{const ctx=getAudio(),t=ctx.currentTime;bubble(392,t,.07,.07,.05,.6);bubble(523,t+.13,.08,.07,.05,.65);bubble(659,t+.26,.07,.08,.06,.75);bubble(1318,t+.26,.025,.1,.04,.55);}catch(e){}}
-function soundOff(){try{const ctx=getAudio(),t=ctx.currentTime;bubble(523,t,.07,.06,.04,.55);bubble(440,t+.14,.06,.07,.04,.65);bubble(330,t+.28,.055,.08,.05,.8);}catch(e){}}
-function soundClick(){try{const ctx=getAudio(),t=ctx.currentTime;bubble(880,t,.045,.04,.02,.28);bubble(1100,t+.03,.02,.04,.01,.2);}catch(e){}}
-function soundSave(){try{const ctx=getAudio(),t=ctx.currentTime;bubble(523,t,.07,.07,.06,.7);bubble(784,t+.18,.08,.08,.07,.9);bubble(1046,t+.18,.03,.09,.05,.8);}catch(e){}}
-function soundError(){try{const ctx=getAudio(),t=ctx.currentTime;const osc=ctx.createOscillator(),gain=ctx.createGain(),lpf=ctx.createBiquadFilter();lpf.type='lowpass';lpf.frequency.value=400;lpf.Q.value=0.6;osc.connect(lpf);lpf.connect(gain);gain.connect(ctx.destination);osc.type='sine';osc.frequency.setValueAtTime(220,t);osc.frequency.linearRampToValueAtTime(190,t+.3);gain.gain.setValueAtTime(0.0001,t);gain.gain.linearRampToValueAtTime(.07,t+.08);gain.gain.exponentialRampToValueAtTime(0.0001,t+.55);osc.start(t);osc.stop(t+.6);}catch(e){}}
-function soundAdd(){try{const ctx=getAudio(),t=ctx.currentTime;bubble(660,t,.065,.05,.04,.45);bubble(880,t+.1,.055,.06,.03,.5);}catch(e){}}
-function soundDelete(){try{const ctx=getAudio(),t=ctx.currentTime;const osc=ctx.createOscillator(),gain=ctx.createGain(),lpf=ctx.createBiquadFilter();lpf.type='lowpass';lpf.frequency.value=700;lpf.Q.value=0.4;osc.connect(lpf);lpf.connect(gain);gain.connect(ctx.destination);osc.type='sine';osc.frequency.setValueAtTime(440,t);osc.frequency.exponentialRampToValueAtTime(260,t+.45);gain.gain.setValueAtTime(0.0001,t);gain.gain.linearRampToValueAtTime(.065,t+.06);gain.gain.exponentialRampToValueAtTime(0.0001,t+.55);osc.start(t);osc.stop(t+.6);}catch(e){}}
-function soundWake(){
-  try{const ctx=getAudio(),t=ctx.currentTime;
-    bubble(330,t,.05,.08,.06,.7);bubble(440,t+.15,.06,.08,.06,.75);
-    bubble(554,t+.30,.07,.08,.07,.8);bubble(659,t+.45,.065,.09,.07,.9);
-  }catch(e){}
+function soundOn(){
+  try{const ctx = getAudio(); const t = ctx.currentTime;
+    bubble(392,t,0.07,0.07,0.05,0.6);bubble(523,t+0.13,0.08,0.07,0.05,0.65);
+    bubble(659,t+0.26,0.07,0.08,0.06,0.75);bubble(1318,t+0.26,0.025,0.1,0.04,0.55);}catch(e){}
+}
+function soundOff(){
+  try{const ctx = getAudio(); const t = ctx.currentTime;
+    bubble(523,t,0.07,0.06,0.04,0.55);bubble(440,t+0.14,0.06,0.07,0.04,0.65);
+    bubble(330,t+0.28,0.055,0.08,0.05,0.8);}catch(e){}
+}
+function soundClick(){
+  try{const ctx = getAudio(); const t = ctx.currentTime;
+    bubble(880,t,0.045,0.04,0.02,0.28);bubble(1100,t+0.03,0.02,0.04,0.01,0.2);}catch(e){}
+}
+function soundSave(){
+  try{const ctx = getAudio(); const t = ctx.currentTime;
+    bubble(523,t,0.07,0.07,0.06,0.7);bubble(784,t+0.18,0.08,0.08,0.07,0.9);
+    bubble(1046,t+0.18,0.03,0.09,0.05,0.8);}catch(e){}
+}
+function soundError(){
+  try{const ctx = getAudio(); const t = ctx.currentTime;
+    const osc=ctx.createOscillator(),gain=ctx.createGain(),lpf=ctx.createBiquadFilter();
+    lpf.type='lowpass';lpf.frequency.value=400;lpf.Q.value=0.6;
+    osc.connect(lpf);lpf.connect(gain);gain.connect(ctx.destination);osc.type='sine';
+    osc.frequency.setValueAtTime(220,t);osc.frequency.linearRampToValueAtTime(190,t+0.3);
+    gain.gain.setValueAtTime(0.0001,t);gain.gain.linearRampToValueAtTime(0.07,t+0.08);
+    gain.gain.exponentialRampToValueAtTime(0.0001,t+0.55);osc.start(t);osc.stop(t+0.6);}catch(e){}
+}
+function soundAdd(){
+  try{const ctx = getAudio(); const t = ctx.currentTime;
+    bubble(660,t,0.065,0.05,0.04,0.45);bubble(880,t+0.1,0.055,0.06,0.03,0.5);}catch(e){}
+}
+function soundDelete(){
+  try{const ctx = getAudio(); const t = ctx.currentTime;
+    const osc=ctx.createOscillator(),gain=ctx.createGain(),lpf=ctx.createBiquadFilter();
+    lpf.type='lowpass';lpf.frequency.value=700;lpf.Q.value=0.4;
+    osc.connect(lpf);lpf.connect(gain);gain.connect(ctx.destination);osc.type='sine';
+    osc.frequency.setValueAtTime(440,t);osc.frequency.exponentialRampToValueAtTime(260,t+0.45);
+    gain.gain.setValueAtTime(0.0001,t);gain.gain.linearRampToValueAtTime(0.065,t+0.06);
+    gain.gain.exponentialRampToValueAtTime(0.0001,t+0.55);osc.start(t);osc.stop(t+0.6);}catch(e){}
 }
 
 /* ══════════════════════════════════════════
@@ -599,16 +540,16 @@ function saveConfig(){
   if(!w){showToast('Enter your Worker URL','error');soundError();return;}
   if(!d0||!d1){showToast('Enter both Device IDs','error');soundError();return;}
   CFG.worker=w;
-  if(n0)CFG.devices[0].name=n0;if(d0)CFG.devices[0].id=d0;
-  if(n1)CFG.devices[1].name=n1;if(d1)CFG.devices[1].id=d1;
+  if(n0)CFG.devices[0].name=n0; if(d0)CFG.devices[0].id=d0;
+  if(n1)CFG.devices[1].name=n1; if(d1)CFG.devices[1].id=d1;
   try{localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){}
   const compName=document.getElementById('cfg-comp-name').value.trim();
   const compUrl=document.getElementById('cfg-comp-url').value.trim();
-  if(compName)localStorage.setItem('home_computer_name',compName);
-  if(compUrl)saveComputerUrl(compUrl);
+  if(compName) localStorage.setItem('home_computer_name',compName);
+  if(compUrl)  saveComputerUrl(compUrl);
   loadComputerName();
   closePanel(document.getElementById('config-panel'));
-  showToast('Saved — connecting…');soundSave();
+  showToast('Saved — connecting…'); soundSave();
   setTimeout(()=>{syncAllLights();startComputerPing();},400);
 }
 
@@ -636,10 +577,15 @@ function saveAutomations(){try{localStorage.setItem(AUTO_KEY,JSON.stringify(auto
 
 function renderAutomations(){
   const el=document.getElementById('auto-list');
-  if(!automations.length){el.innerHTML='<div class="auto-empty">No automations yet — add one below</div>';return;}
+  if(!automations.length){
+    el.innerHTML='<div class="auto-empty">No automations yet — add one below</div>';
+    return;
+  }
   el.innerHTML=automations.map((a,i)=>`
     <div class="auto-item" style="animation-delay:${i*0.04}s">
-      <div class="auto-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div class="auto-item-icon">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
       <div class="auto-item-body">
         <div class="auto-item-name">${ACTION_LABELS[a.action]} · ${a.light==='all'?'All lights':CFG.devices[+a.light]?.name||'Light '+(+a.light+1)}</div>
         <div class="auto-item-sub">${DAY_LABELS[a.days]} at ${a.time}</div>
@@ -658,15 +604,28 @@ function addAutomation(){
   const time=document.getElementById('auto-time').value;
   if(!time){showToast('Pick a time','error');soundError();return;}
   automations.push({action,light,days,time,enabled:true});
-  saveAutomations();renderAutomations();soundAdd();showToast('Automation added');
+  saveAutomations();
+  renderAutomations();
+  soundAdd();
+  showToast('Automation added');
 }
 function deleteAutomation(i){
+  // Animate out
   const items=document.querySelectorAll('.auto-item');
-  if(items[i]){items[i].style.transition='opacity .22s,transform .22s';items[i].style.opacity='0';items[i].style.transform='translateX(24px)';setTimeout(()=>{automations.splice(i,1);saveAutomations();renderAutomations();},220);}
-  else{automations.splice(i,1);saveAutomations();renderAutomations();}
+  if(items[i]){
+    items[i].style.transition='opacity .22s,transform .22s';
+    items[i].style.opacity='0';
+    items[i].style.transform='translateX(24px)';
+    setTimeout(()=>{automations.splice(i,1);saveAutomations();renderAutomations();},220);
+  } else {
+    automations.splice(i,1);saveAutomations();renderAutomations();
+  }
   soundDelete();
 }
-function toggleAutomation(i){automations[i].enabled=!automations[i].enabled;saveAutomations();renderAutomations();soundClick();}
+function toggleAutomation(i){
+  automations[i].enabled=!automations[i].enabled;
+  saveAutomations();renderAutomations();soundClick();
+}
 (function scheduleFirst(){
   const now=new Date();
   const msToNext=60000-now.getSeconds()*1000-now.getMilliseconds();
@@ -675,7 +634,7 @@ function toggleAutomation(i){automations[i].enabled=!automations[i].enabled;save
 function runAutomationScheduler(){
   const now=new Date();
   const hhmm=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;
-  const dow=now.getDay(),isWeekday=dow>=1&&dow<=5,isWeekend=dow===0||dow===6;
+  const dow=now.getDay();const isWeekday=dow>=1&&dow<=5;const isWeekend=dow===0||dow===6;
   automations.forEach(a=>{
     if(!a.enabled||a.time!==hhmm)return;
     const matchDay=(a.days==='every')||(a.days==='weekdays'&&isWeekday)||(a.days==='weekends'&&isWeekend);
@@ -703,7 +662,10 @@ function parseTuyaStatus(arr,i){if(!Array.isArray(arr))return;const find=c=>arr.
 let syncing=false;
 async function syncAllLights(){
   if(syncing)return;syncing=true;setStatus('Syncing…','Reaching Tuya cloud');
-  if(!CFG.worker){setStatus('Not configured','Open Settings and enter your Worker URL','warn');syncing=false;showToast('Open Settings to configure','error');soundError();renderGrid();return;}
+  if(!CFG.worker){
+    setStatus('Not configured','Open Settings and enter your Worker URL','warn');
+    syncing=false;showToast('Open Settings to configure','error');soundError();renderGrid();return;
+  }
   try{
     const res=await Promise.all(CFG.devices.map(async(dev,i)=>{const d=await tuyaStatus(dev.id);if(d.success&&d.result)parseTuyaStatus(d.result,i);return d.success;}));
     renderGrid();
@@ -716,15 +678,22 @@ async function syncAllLights(){
   syncing=false;
 }
 
+/* Refresh button: spin while syncing, stop on done */
 function triggerRefresh(btn){
   if(syncing)return;
-  const rip=document.createElement('div');rip.className='icon-btn-ripple';btn.appendChild(rip);setTimeout(()=>rip.remove(),500);
-  btn.classList.add('spinning');soundClick();
-  Promise.all([syncAllLights(),pingComputer()]).then(()=>{setTimeout(()=>btn.classList.remove('spinning'),600);}).catch(()=>btn.classList.remove('spinning'));
+  // Add ripple
+  const rip=document.createElement('div');rip.className='icon-btn-ripple';
+  btn.appendChild(rip);setTimeout(()=>rip.remove(),500);
+  btn.classList.add('spinning');
+  soundClick();
+  syncAllLights().then(()=>{
+    // Keep spinning at least 600ms for feel
+    setTimeout(()=>btn.classList.remove('spinning'),600);
+  }).catch(()=>btn.classList.remove('spinning'));
 }
 
 async function toggleLight(idx){
-  const L=LIGHTS[idx],ns=!L.on;L.on=ns;refreshCard(idx);
+  const L=LIGHTS[idx];const ns=!L.on;L.on=ns;refreshCard(idx);
   ns?soundOn():soundOff();
   const card=document.getElementById('lc-'+idx);card.classList.add('loading-state');
   try{await tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:ns}]);showToast(CFG.devices[idx].name+' '+(ns?'on':'off'));}
@@ -750,7 +719,10 @@ function setBright(idx,val){
 function renderCard(i){
   const l=LIGHTS[i],dev=CFG.devices[i];
   return`<div class="g light-card card-entrance ${l.on?'on':'off'}" id="lc-${i}">
-    <div class="lc-top"><div class="lc-name">${dev.name}</div><div class="sw ${l.on?'on':''}" onclick="toggleLight(${i})"></div></div>
+    <div class="lc-top">
+      <div class="lc-name">${dev.name}</div>
+      <div class="sw ${l.on?'on':''}" onclick="toggleLight(${i})"></div>
+    </div>
     <div class="lc-bottom">
       <div class="lc-status">${l.on?'On':'Off'}</div>
       <div class="lc-slider-row">
@@ -760,7 +732,9 @@ function renderCard(i){
     </div>
   </div>`;}
 
-function renderGrid(){document.getElementById('lightsGrid').innerHTML=LIGHTS.map((_,i)=>renderCard(i)).join('');}
+function renderGrid(){
+  document.getElementById('lightsGrid').innerHTML=LIGHTS.map((_,i)=>renderCard(i)).join('');
+}
 
 function refreshCard(i){
   const l=LIGHTS[i],card=document.getElementById('lc-'+i);if(!card)return;
@@ -772,20 +746,33 @@ function refreshCard(i){
 }
 
 function setStatus(text,sub,type='ok'){
+  ['about-status-text'].forEach(id=>{const el=document.getElementById(id);if(el&&type!=='ok')el.textContent=text;});
+  ['about-status-sub'].forEach(id=>{const el=document.getElementById(id);if(el&&type!=='ok')el.textContent=sub;});
   const col=type==='err'?'var(--red)':type==='warn'?'var(--orange)':'var(--green)';
   document.querySelectorAll('.pulse-dot').forEach(d=>{d.style.background=col;});
 }
 
 let toastTimer;
 function showToast(msg,type=''){
-  const t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(type==='error'?' error':type==='success'?' success':'');
+  const t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(type==='error'?' error':'');
   clearTimeout(toastTimer);requestAnimationFrame(()=>{t.classList.add('show');toastTimer=setTimeout(()=>t.classList.remove('show'),2400);});
 }
 
-function openPanel(id){if(id==='config-panel')loadConfigIntoPanel();if(id==='auto-panel')renderAutomations();document.getElementById(id).classList.add('open');soundClick();}
+function openPanel(id){
+  if(id==='config-panel')loadConfigIntoPanel();
+  if(id==='auto-panel')renderAutomations();
+  document.getElementById(id).classList.add('open');
+  soundClick();
+}
 function closePanel(el){el.classList.remove('open');soundClick();setTimeout(navHome,320);}
-function navTo(el){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active');}
-function navHome(){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.querySelector('.nav-item:first-child').classList.add('active');}
+function navTo(el){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  el.classList.add('active');
+}
+function navHome(){
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.querySelector('.nav-item:first-child').classList.add('active');
+}
 
 /* ══════════════════════════════════════════
    WEATHER
@@ -833,51 +820,27 @@ async function loadWeather(){
 const COMP_KEY='home_computer_url';
 let computerOnline=false;
 let compPingTimer=null;
-let wakingUp=false;       // true while we're waiting for PC to come online after /wake
-let wakeCheckTimer=null;
-let wakeProgressTimer=null;
 
 function getComputerUrl(){return localStorage.getItem(COMP_KEY)||CFG.worker||'';}
 function saveComputerUrl(url){if(url)localStorage.setItem(COMP_KEY,url.replace(/\/$/,''));}
 
-/* Update card UI based on state */
 function setComputerState(online){
   computerOnline=online;
   const dot=document.getElementById('computer-dot');
+  const sw=document.getElementById('computer-sw');
   const sub=document.getElementById('computer-sub');
   const card=document.getElementById('computer-card');
-  const wakeBtn=document.getElementById('comp-wake-btn');
-  const shutdownBtn=document.getElementById('comp-shutdown-btn');
-  const wakeLabel=document.getElementById('comp-wake-label');
   if(!dot)return;
-
-  if(wakingUp){
-    // Intermediate "waking" state — neither button enabled
-    dot.className='computer-dot waking';
-    sub.textContent='Waking up…';
-    card.classList.remove('online-glow');
-    wakeBtn.className='comp-btn comp-btn-wake disabled';
-    wakeLabel.textContent='Waking…';
-    shutdownBtn.className='comp-btn comp-btn-shutdown disabled';
-    return;
-  }
-
   if(online){
     dot.className='computer-dot';
-    sub.textContent='Online · hold to shut down';
+    sw.className='sw on';
+    sub.textContent='Online · tap toggle to shut down';
     card.classList.add('online-glow');
-    // Wake disabled (already on), shutdown enabled
-    wakeBtn.className='comp-btn comp-btn-wake disabled';
-    wakeLabel.textContent='Wake';
-    shutdownBtn.className='comp-btn comp-btn-shutdown';
   } else {
     dot.className='computer-dot offline';
-    sub.textContent=getComputerUrl()?'Offline · tap to wake':'Add tunnel URL in Settings';
+    sw.className='sw';
+    sub.textContent=getComputerUrl()?'Offline or unreachable':'Add IP in Settings';
     card.classList.remove('online-glow');
-    // Wake enabled, shutdown disabled
-    wakeBtn.className='comp-btn comp-btn-wake'+(CFG.worker?'':' disabled');
-    wakeLabel.textContent='Wake';
-    shutdownBtn.className='comp-btn comp-btn-shutdown disabled';
   }
 }
 
@@ -885,22 +848,10 @@ async function pingComputer(){
   const url=getComputerUrl();
   if(!url){setComputerState(false);return;}
   try{
-    const r=await fetch(workerUrl('/ping'),{signal:AbortSignal.timeout(3500)});
+    const r=await fetch(url+'/ping',{signal:AbortSignal.timeout(2500)});
     const t=await r.text();
-    const isOnline=t.includes('online');
-    if(isOnline&&wakingUp){
-      // PC came online! Cancel wake-up mode
-      wakingUp=false;
-      clearTimeout(wakeCheckTimer);
-      clearInterval(wakeProgressTimer);
-      document.getElementById('wake-progress').classList.remove('visible');
-      showToast('Computer is online!','success');
-      soundOn();
-    }
-    setComputerState(isOnline);
-  }catch(e){
-    if(!wakingUp) setComputerState(false);
-  }
+    setComputerState(t.includes('online'));
+  }catch(e){setComputerState(false);}
 }
 
 function startComputerPing(){
@@ -909,149 +860,80 @@ function startComputerPing(){
   compPingTimer=setInterval(pingComputer,8000);
 }
 
-/* ── Wake ────────────────────────────────── */
-async function handleWake(){
-  if(computerOnline||wakingUp||!CFG.worker)return;
-  soundWake();
-  wakingUp=true;
-  setComputerState(false); // renders waking state
-
-  // Show progress bar animating over ~60s (typical POST boot time)
-  const bar=document.getElementById('wake-progress');
-  const fill=document.getElementById('wake-progress-fill');
-  bar.classList.add('visible');
-  fill.style.width='0%';
-  let pct=0;
-  wakeProgressTimer=setInterval(()=>{
-    pct=Math.min(pct+100/60,95); // reaches 95% in ~60s, never 100 until confirmed
-    fill.style.width=pct+'%';
-  },1000);
-
-  // Send wake command
-  try{
-    const r=await fetch(workerUrl('/wake'),{signal:AbortSignal.timeout(8000)});
-    const d=await r.json();
-    if(!d.success)throw new Error(d.error||'Wake failed');
-    showToast('Magic packet sent — booting…');
-  }catch(e){
-    wakingUp=false;
-    clearInterval(wakeProgressTimer);
-    bar.classList.remove('visible');
-    setComputerState(false);
-    showToast('Wake failed: '+e.message,'error');
-    soundError();
-    return;
-  }
-
-  // Poll more aggressively every 5s for up to 3 minutes
-  let attempts=0;
-  const maxAttempts=36; // 3 min
-  clearInterval(compPingTimer);
-  compPingTimer=setInterval(async()=>{
-    attempts++;
-    await pingComputer();
-    if(!wakingUp||attempts>=maxAttempts){
-      clearInterval(compPingTimer);
-      compPingTimer=setInterval(pingComputer,8000); // back to normal
-      if(wakingUp){
-        wakingUp=false;
-        clearInterval(wakeProgressTimer);
-        bar.classList.remove('visible');
-        setComputerState(false);
-        showToast('PC did not respond — check BIOS WoL setting','error');
-        soundError();
-      }
-    }
-  },5000);
-}
-
-/* ── Shutdown (hold to confirm, inline) ─── */
-let shutdownHoldInterval=null;
-let shutdownHoldStart=null;
-const SHUTDOWN_HOLD_MS=2000;
-
-function startShutdownHold(e){
-  if(e)e.preventDefault();
-  if(!computerOnline)return;
+function handleComputerToggle(){
+  if(!computerOnline){showToast('Computer is offline','error');soundError();return;}
+  document.getElementById('confirm-overlay').classList.add('open');
   soundClick();
-  shutdownHoldStart=Date.now();
-  const btn=document.getElementById('comp-shutdown-btn');
-  if(btn)btn.classList.add('holding');
-  // Animate ring
-  const ring=document.getElementById('comp-ring-path');
-  const svg=document.getElementById('comp-shutdown-ring');
-  if(ring&&svg){
-    const w=svg.parentElement.offsetWidth-2;
-    const h=svg.parentElement.offsetHeight-2;
-    const r=13;
-    const perim=2*(w)+2*(h)-8*r+2*Math.PI*r;
-    ring.setAttribute('width',w);ring.setAttribute('height',h);
-    ring.style.strokeDasharray=perim;ring.style.strokeDashoffset=perim;
-    ring.style.transition='none';
-  }
-  shutdownHoldInterval=setInterval(()=>{
-    const elapsed=Date.now()-shutdownHoldStart;
-    const progress=Math.min(elapsed/SHUTDOWN_HOLD_MS,1);
-    const ring2=document.getElementById('comp-ring-path');
-    const svg2=document.getElementById('comp-shutdown-ring');
-    if(ring2&&svg2){
-      const w=svg2.parentElement.offsetWidth-2,h=svg2.parentElement.offsetHeight-2,r=13;
-      const perim=2*w+2*h-8*r+2*Math.PI*r;
-      ring2.style.strokeDashoffset=perim-(progress*perim);
-    }
-    if(progress>=1){clearInterval(shutdownHoldInterval);shutdownHoldInterval=null;confirmShutdownInline();}
-  },30);
 }
 
-function cancelShutdownHold(){
-  if(!shutdownHoldInterval)return;
-  clearInterval(shutdownHoldInterval);shutdownHoldInterval=null;shutdownHoldStart=null;
-  const btn=document.getElementById('comp-shutdown-btn');
-  if(btn)btn.classList.remove('holding');
-  // Reset ring
-  const ring=document.getElementById('comp-ring-path');
-  if(ring){
-    const svg=document.getElementById('comp-shutdown-ring');
-    if(svg){
-      const w=svg.parentElement.offsetWidth-2,h=svg.parentElement.offsetHeight-2,r=13;
-      const perim=2*w+2*h-8*r+2*Math.PI*r;
-      ring.style.transition='stroke-dashoffset .3s ease';
-      ring.style.strokeDashoffset=perim;
-    }
-  }
-}
-
-async function confirmShutdownInline(){
-  const btn=document.getElementById('comp-shutdown-btn');
-  if(btn)btn.classList.remove('holding');
-  soundOff();
-  const label=document.getElementById('comp-shutdown-label');
-  if(label)label.textContent='Shutting…';
-  try{
-    await fetch(workerUrl('/shutdown'),{signal:AbortSignal.timeout(4000)});
-    showToast('Shutting down…');
-    setComputerState(false);
-    clearInterval(compPingTimer);
-    compPingTimer=setInterval(pingComputer,15000);
-  }catch(e){
-    showToast('Shutdown sent');
-    setComputerState(false);
-  }
-  if(label)label.textContent='Hold off';
-}
-
-/* Legacy confirm overlay (kept for safety, not triggered by new UI) */
 function cancelShutdown(){
   cancelHold();
   document.getElementById('confirm-overlay').classList.remove('open');
   soundClick();
 }
-let holdTimer=null,holdInterval=null;
+
+/* Hold-to-confirm logic */
+let holdTimer=null;
+let holdInterval=null;
 const HOLD_DURATION=2000;
 let holdStart=null;
-function startHold(e){if(e)e.preventDefault();holdStart=Date.now();const btn=document.getElementById('hold-btn');if(btn)btn.classList.add('holding');holdInterval=setInterval(()=>{const elapsed=Date.now()-holdStart;if(elapsed/HOLD_DURATION>=1){clearInterval(holdInterval);confirmShutdown();}},30);}
-function cancelHold(){clearInterval(holdInterval);holdInterval=null;holdStart=null;const btn=document.getElementById('hold-btn');if(btn)btn.classList.remove('holding');}
-async function confirmShutdown(){document.getElementById('confirm-overlay').classList.remove('open');soundOff();try{await fetch(workerUrl('/shutdown'),{signal:AbortSignal.timeout(3000)});showToast('Shutting down…');setComputerState(false);}catch(e){showToast('Shutdown sent');setComputerState(false);}}
+
+function startHold(e){
+  if(e)e.preventDefault();
+  holdStart=Date.now();
+  const btn=document.getElementById('hold-btn');
+  if(btn)btn.classList.add('holding');
+  const ring=document.getElementById('hold-ring-fill');
+  const svg=document.getElementById('hold-ring-svg');
+  if(ring&&svg){
+    const w=svg.parentElement.offsetWidth;
+    const h=svg.parentElement.offsetHeight;
+    const r=13;
+    const perimeter=2*(w-2)+2*(h-2)-8*r+2*Math.PI*r;
+    ring.setAttribute('width',w-2);ring.setAttribute('height',h-2);
+    ring.style.strokeDasharray=perimeter;ring.style.strokeDashoffset=perimeter;
+  }
+  holdInterval=setInterval(()=>{
+    const elapsed=Date.now()-holdStart;
+    const progress=Math.min(elapsed/HOLD_DURATION,1);
+    const ring2=document.getElementById('hold-ring-fill');
+    const svg2=document.getElementById('hold-ring-svg');
+    if(ring2&&svg2){
+      const w=svg2.parentElement.offsetWidth;const h=svg2.parentElement.offsetHeight;
+      const r=13;const perimeter=2*(w-2)+2*(h-2)-8*r+2*Math.PI*r;
+      ring2.style.strokeDashoffset=perimeter-(progress*perimeter);
+    }
+    if(progress>=1){clearInterval(holdInterval);confirmShutdown();}
+  },30);
+}
+
+function cancelHold(){
+  clearInterval(holdInterval);holdInterval=null;holdStart=null;
+  const btn=document.getElementById('hold-btn');
+  if(btn)btn.classList.remove('holding');
+  const ring=document.getElementById('hold-ring-fill');
+  if(ring){
+    ring.style.transition='stroke-dashoffset .35s ease';
+    const svg=document.getElementById('hold-ring-svg');
+    if(svg){
+      const w=svg.parentElement.offsetWidth;const h=svg.parentElement.offsetHeight;
+      const r2=13;const perimeter=2*(w-2)+2*(h-2)-8*r2+2*Math.PI*r2;
+      ring.style.strokeDashoffset=perimeter;
+    }
+    setTimeout(()=>{ring.style.transition='stroke-dashoffset .05s linear';},400);
+  }
+}
+
+async function confirmShutdown(){
+  document.getElementById('confirm-overlay').classList.remove('open');
+  soundOff();
+  const url=getComputerUrl();if(!url)return;
+  try{
+    await fetch(url+'/shutdown',{signal:AbortSignal.timeout(3000)});
+    showToast('Shutting down…');setComputerState(false);
+    clearInterval(compPingTimer);compPingTimer=setInterval(pingComputer,15000);
+  }catch(e){showToast('Shutdown sent');setComputerState(false);}
+}
 
 function loadComputerName(){
   const name=localStorage.getItem('home_computer_name')||'My Computer';
@@ -1066,5 +948,27 @@ syncAllLights();
 loadComputerName();
 startComputerPing();
 </script>
+
+<!-- Confirm shutdown dialog -->
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <div class="confirm-title">Shut down?</div>
+    <div class="confirm-sub">Make sure everything is saved. Hold the button to confirm.</div>
+    <div class="confirm-btns">
+      <div class="confirm-btn cancel" onclick="cancelShutdown()">Cancel</div>
+      <div class="hold-btn-wrap">
+        <div class="hold-btn" id="hold-btn"
+          onmousedown="startHold()" onmouseup="cancelHold()" onmouseleave="cancelHold()"
+          ontouchstart="startHold(event)" ontouchend="cancelHold()" ontouchcancel="cancelHold()">
+          <svg class="hold-ring" id="hold-ring-svg" preserveAspectRatio="none">
+            <rect class="hold-ring-fill" id="hold-ring-fill" x="1" y="1" width="calc(100%-2)" height="calc(100%-2)" rx="13" ry="13"/>
+          </svg>
+          <div class="hold-btn-label">Shut down</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
