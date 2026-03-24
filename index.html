@@ -78,50 +78,57 @@ body.ipad-landscape{
   --light-card-name-size:16px;
 }
 
-/* iPad landscape uses a two-column main layout */
+/* iPad landscape — two-column layout
+   Left col:  weather (row2) → computer heading (row3) → computer card (row4)
+   Right col: lights heading (row2) → lights grid (rows 3-4, spans down)
+   This keeps lights grid right-aligned to its heading with no orphan gaps.
+*/
 body.ipad-landscape .app{
   display:grid;
-  grid-template-columns:1fr 1fr;
-  grid-template-rows:auto;
-  column-gap:24px;
-  padding-left:28px;
-  padding-right:28px;
+  grid-template-columns:minmax(0,1.05fr) minmax(0,0.95fr);
+  grid-template-rows:auto auto auto auto;
+  column-gap:22px;
+  padding-left:24px;
+  padding-right:24px;
 }
 body.ipad-landscape .page-header{
   grid-column:1 / -1;
+  grid-row:1;
   padding-left:0;
   padding-right:0;
 }
 body.ipad-landscape .weather-card{
   grid-column:1;
   grid-row:2;
-  margin:0 0 18px;
+  margin:0 0 16px;
 }
 body.ipad-landscape .lights-section-head{
   grid-column:2;
   grid-row:2;
-  align-self:start;
-  padding-left:0;padding-right:0;
-  padding-top:0;
+  align-self:end;
+  padding-left:0;
+  padding-right:0;
+  padding-bottom:10px;
 }
 body.ipad-landscape .lights-grid{
   grid-column:2;
-  grid-row:3;
+  grid-row:3 / 5;
   padding:0;
-  margin-bottom:18px;
+  margin-bottom:0;
+  align-content:start;
 }
 body.ipad-landscape .computer-section-head{
   grid-column:1;
   grid-row:3;
-  padding-left:0;padding-right:0;
+  padding-left:0;
+  padding-right:0;
   align-self:start;
 }
 body.ipad-landscape .computer-card{
   grid-column:1;
   grid-row:4;
-  margin:0 0 18px;
+  margin:0 0 16px;
 }
-/* hide automations/status strip in landscape (they live in panels) */
 
 html,body{height:100%;min-height:100dvh;font-family:-apple-system,'SF Pro Display','Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;user-select:none;-webkit-user-select:none;}
 body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:none;}
@@ -184,6 +191,21 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .wc-toggle{display:flex;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:3px;gap:2px;min-width:160px;}
 .wc-toggle-btn{flex:1;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--t3);padding:5px 18px;border-radius:16px;cursor:pointer;transition:background .2s,color .2s;text-align:center;}
 .wc-toggle-btn.active{background:rgba(255,255,255,0.13);color:rgba(255,255,255,0.85);}
+
+/* Weather view panels — animated height swap, no layout jumping */
+.wc-panel{
+  overflow:hidden;
+  transition:max-height .38s cubic-bezier(.22,1,.36,1), opacity .3s ease;
+}
+.wc-panel.wc-hidden{
+  max-height:0 !important;
+  opacity:0;
+  pointer-events:none;
+}
+.wc-panel.wc-visible{
+  opacity:1;
+  pointer-events:auto;
+}
 
 .hourly{display:flex;margin-top:14px;}
 .hr-item{flex:1;text-align:center;}
@@ -446,8 +468,12 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
           <div class="wc-toggle-btn" id="wc-btn-day" onclick="setWxView('day')">Today</div>
         </div>
       </div>
-      <div class="forecast" id="wc-forecast"></div>
-      <div class="hourly" id="wc-hourly" style="display:none"></div>
+      <div class="wc-panel wc-visible" id="wc-panel-week" style="max-height:160px">
+        <div class="forecast" id="wc-forecast"></div>
+      </div>
+      <div class="wc-panel wc-hidden" id="wc-panel-day" style="max-height:160px">
+        <div class="hourly" id="wc-hourly"></div>
+      </div>
     </div>
   </div>
 
@@ -1121,10 +1147,17 @@ function setWxView(v){
   wxView=v;
   document.getElementById('wc-btn-week').classList.toggle('active',v==='week');
   document.getElementById('wc-btn-day').classList.toggle('active',v==='day');
-  document.getElementById('wc-forecast').style.display=v==='week'?'flex':'none';
-  const hourlyEl=document.getElementById('wc-hourly');
-  hourlyEl.style.display=v==='day'?'flex':'none';
-  if(v==='day'&&wxSmhiSeries) renderHourly();
+  // Use animated max-height panels — no display:none so no layout jumps
+  const weekPanel=document.getElementById('wc-panel-week');
+  const dayPanel=document.getElementById('wc-panel-day');
+  if(v==='week'){
+    weekPanel.classList.remove('wc-hidden');weekPanel.classList.add('wc-visible');
+    dayPanel.classList.remove('wc-visible');dayPanel.classList.add('wc-hidden');
+  } else {
+    dayPanel.classList.remove('wc-hidden');dayPanel.classList.add('wc-visible');
+    weekPanel.classList.remove('wc-visible');weekPanel.classList.add('wc-hidden');
+    if(wxSmhiSeries) renderHourly();
+  }
 }
 
 function renderHourly(){
