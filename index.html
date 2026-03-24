@@ -839,7 +839,7 @@ function navHome(){
 }
 
 /* ══════════════════════════════════════════
-   WEATHER
+   WEATHER — SMHI API, Spånga Stockholm
    ══════════════════════════════════════════ */
 const WX={
   sun:`<svg width="58" height="58" viewBox="0 0 64 64" fill="none" stroke="#F5C842" stroke-width="2.2" stroke-linecap="round"><circle cx="32" cy="32" r="12" fill="rgba(245,200,66,0.14)"/><line x1="32" y1="7" x2="32" y2="13"/><line x1="32" y1="51" x2="32" y2="57"/><line x1="7" y1="32" x2="13" y2="32"/><line x1="51" y1="32" x2="57" y2="32"/><line x1="15" y1="15" x2="19.5" y2="19.5"/><line x1="44.5" y1="44.5" x2="49" y2="49"/><line x1="49" y1="15" x2="44.5" y2="19.5"/><line x1="19.5" y1="44.5" x2="15" y2="49"/></svg>`,
@@ -849,13 +849,45 @@ const WX={
   snow:`<svg width="58" height="58" viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-width="2.2"><path d="M41 37H19a11 11 0 1 1 2.3-21.8A13 13 0 1 1 41 37z" stroke="rgba(180,195,210,0.65)" fill="rgba(180,195,210,0.08)"/><line x1="23" y1="46" x2="23" y2="55" stroke="#A8CCEC"/><line x1="18.5" y1="50.5" x2="27.5" y2="50.5" stroke="#A8CCEC"/><line x1="37" y1="46" x2="37" y2="55" stroke="#A8CCEC"/><line x1="32.5" y1="50.5" x2="41.5" y2="50.5" stroke="#A8CCEC"/></svg>`,
   storm:`<svg width="58" height="58" viewBox="0 0 64 64" fill="none" stroke-linecap="round" stroke-width="2.2"><path d="M41 37H19a11 11 0 1 1 2.3-21.8A13 13 0 1 1 41 37z" stroke="rgba(160,170,185,0.6)" fill="rgba(160,170,185,0.08)"/><polyline points="33,39 26,51 33,51 26,63" stroke="#F5C842"/></svg>`
 };
-function wxI(w){if(w===0)return WX.sun;if(w<=2)return WX.partly;if(w<=49)return WX.cloud;if(w<=67)return WX.rain;if(w<=77)return WX.snow;if(w<=86)return WX.rain;return WX.storm;}
-function wxIs(w,sz){return wxI(w).replace('width="58" height="58"',`width="${sz}" height="${sz}"`);}
-function wxD(w){if(w===0)return'Clear sky';if(w<=1)return'Mainly clear';if(w<=2)return'Partly cloudy';if(w<=3)return'Overcast';if(w<=49)return'Foggy';if(w<=55)return'Drizzle';if(w<=67)return'Rain';if(w<=77)return'Snow';if(w<=82)return'Showers';if(w<=86)return'Snow showers';return'Thunderstorm';}
+
+/* SMHI Wsymb2 (1–27) → visual category */
+function smhiSymToKey(s){
+  // 1=clear, 2=nearly clear, 3=variable, 4=half cloudy, 5=cloudy, 6=overcast, 7=fog
+  // 8-10=light rain showers, 11=thunder showers, 12-14=light sleet/snow showers
+  // 15-18=light-heavy rain, 19=thunder, 20-23=sleet/snow, 24-27=more snow/sleet
+  if(s===1)return'sun';
+  if(s<=2)return'partly';
+  if(s<=4)return'partly';
+  if(s<=7)return'cloud';
+  if(s===11||s===19)return'storm';
+  if(s>=20&&s<=27)return'snow';
+  if(s>=8&&s<=14)return'rain'; // showers incl sleet showers → rain
+  if(s>=15&&s<=18)return'rain';
+  return'cloud';
+}
+function wxI(s){return WX[smhiSymToKey(s)]||WX.cloud;}
+function wxIs(s,sz){return wxI(s).replace('width="58" height="58"',`width="${sz}" height="${sz}"`);}
+function wxD(s){
+  const m={1:'Clear sky',2:'Nearly clear',3:'Variable cloudiness',4:'Half cloudy',5:'Cloudy',6:'Overcast',7:'Fog',
+    8:'Light rain showers',9:'Moderate rain showers',10:'Heavy rain showers',11:'Thunderstorm',
+    12:'Light sleet showers',13:'Moderate sleet showers',14:'Heavy sleet showers',
+    15:'Light rain',16:'Moderate rain',17:'Heavy rain',18:'Thunder',
+    19:'Light sleet',20:'Moderate sleet',21:'Heavy sleet',
+    22:'Light snowfall',23:'Moderate snowfall',24:'Heavy snowfall',
+    25:'Light snow showers',26:'Moderate snow showers',27:'Heavy snow showers'};
+  return m[s]||'—';
+}
+
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
+/* Helper: extract param value from SMHI parameters array */
+function smhiVal(params, name){
+  const p=params.find(x=>x.name===name);
+  return p?p.values[0]:null;
+}
+
 let wxView='week';
-let wxHourlyData=null;
+let wxSmhiSeries=null; // raw timeSeries from SMHI
 
 function setWxView(v){
   wxView=v;
@@ -864,57 +896,95 @@ function setWxView(v){
   document.getElementById('wc-forecast').style.display=v==='week'?'flex':'none';
   const hourlyEl=document.getElementById('wc-hourly');
   hourlyEl.style.display=v==='day'?'flex':'none';
-  if(v==='day'&&wxHourlyData) renderHourly();
+  if(v==='day'&&wxSmhiSeries) renderHourly();
 }
 
 function renderHourly(){
   const hourlyEl=document.getElementById('wc-hourly');
-  if(!wxHourlyData){hourlyEl.innerHTML='';return;}
+  if(!wxSmhiSeries){hourlyEl.innerHTML='';return;}
   const now=new Date();
   const nowH=now.getHours();
-  // Find current hour index in hourly arrays
-  const times=wxHourlyData.time;
-  let startIdx=0;
-  for(let i=0;i<times.length;i++){
-    const t=new Date(times[i]);
-    if(t.getHours()>=nowH&&t.toDateString()===now.toDateString()){startIdx=i;break;}
-  }
-  const slots=[];
-  for(let i=startIdx;i<Math.min(startIdx+5,times.length);i++) slots.push(i);
-  hourlyEl.innerHTML=slots.map((idx)=>{
-    const t=new Date(times[idx]);
+  // Find entries from current hour onward (SMHI times are UTC, convert to local)
+  const upcoming=wxSmhiSeries.filter(entry=>{
+    const t=new Date(entry.validTime);
+    const localH=t.getHours();
+    const isToday=t.toLocaleDateString()===now.toLocaleDateString();
+    return isToday&&localH>=nowH;
+  }).slice(0,5);
+  hourlyEl.innerHTML=upcoming.map(entry=>{
+    const t=new Date(entry.validTime);
     const h=t.getHours();
     const label=String(h).padStart(2,'0')+':00';
-    const temp=Math.round(wxHourlyData.temperature_2m[idx]);
-    const wc=wxHourlyData.weathercode[idx];
-    const rain=wxHourlyData.precipitation_probability[idx]||0;
+    const temp=Math.round(smhiVal(entry.parameters,'t'));
+    const sym=smhiVal(entry.parameters,'Wsymb2');
+    const precip=smhiVal(entry.parameters,'pmean')||0;
     return`<div class="hr-item">
       <div class="hr-time">${label}</div>
-      <div class="hr-icon">${wxIs(wc,22)}</div>
+      <div class="hr-icon">${wxIs(sym,22)}</div>
       <div class="hr-temp">${temp}°</div>
-      <div class="hr-rain">${rain>0?rain+'%':''}</div>
+      <div class="hr-rain">${precip>0?precip.toFixed(1)+'mm':''}</div>
     </div>`;
   }).join('');
 }
 
 async function loadWeather(){
   try{
-    const lat=59.3793,lon=17.9200,city='Stockholm';
-    const d=await fetch('https://api.open-meteo.com/v1/forecast?latitude='+lat+'&longitude='+lon+'&current=temperature_2m,weathercode,windspeed_10m,precipitation_probability&daily=weathercode,temperature_2m_max,temperature_2m_min,precipitation_probability_max&hourly=temperature_2m,weathercode,precipitation_probability&temperature_unit=celsius&wind_speed_unit=ms&forecast_days=5&timezone=Europe%2FStockholm').then(r=>r.json());
-    const cur=d.current,daily=d.daily;
-    wxHourlyData=d.hourly;
+    // Spånga, Stockholm: 59.3836°N, 17.9019°E
+    const lat=59.38,lon=17.90,city='Spånga';
+    const url=`https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/${lon}/lat/${lat}/data.json`;
+    const d=await fetch(url).then(r=>r.json());
+    const series=d.timeSeries;
+    wxSmhiSeries=series;
+
+    // Current: nearest entry to now
+    const now=new Date();
+    const cur=series.reduce((best,e)=>{
+      return Math.abs(new Date(e.validTime)-now)<Math.abs(new Date(best.validTime)-now)?e:best;
+    },series[0]);
+    const curTemp=smhiVal(cur.parameters,'t');
+    const curSym=smhiVal(cur.parameters,'Wsymb2');
+    const curWind=smhiVal(cur.parameters,'ws');
+    const curPrecip=smhiVal(cur.parameters,'pmean')||0;
+
+    // Build daily summary — group by local date
+    const byDay={};
+    series.forEach(e=>{
+      const t=new Date(e.validTime);
+      const key=t.toLocaleDateString('sv-SE'); // yyyy-mm-dd
+      if(!byDay[key]) byDay[key]={temps:[],syms:[],precips:[]};
+      byDay[key].temps.push(smhiVal(e.parameters,'t'));
+      byDay[key].syms.push(smhiVal(e.parameters,'Wsymb2'));
+      byDay[key].precips.push(smhiVal(e.parameters,'pmean')||0);
+    });
+    const dayKeys=Object.keys(byDay).sort().slice(0,5);
+    const todayKey=now.toLocaleDateString('sv-SE');
+    const todayData=byDay[todayKey]||byDay[dayKeys[0]];
+    const todayHi=Math.max(...todayData.temps);
+    const todayLo=Math.min(...todayData.temps);
+    // Today's total precip
+    const todayRain=todayData.precips.reduce((a,b)=>a+b,0);
+
     document.getElementById('wc-city').textContent=city;
-    document.getElementById('wc-temp').textContent=Math.round(cur.temperature_2m)+'°';
-    document.getElementById('wc-desc').textContent=wxD(cur.weathercode);
-    document.getElementById('wc-icon').innerHTML=wxI(cur.weathercode);
-    document.getElementById('wc-hi').textContent=Math.round(daily.temperature_2m_max[0])+'°';
-    document.getElementById('wc-lo').textContent=Math.round(daily.temperature_2m_min[0])+'°';
-    document.getElementById('wc-rain').textContent=(cur.precipitation_probability||daily.precipitation_probability_max[0]||0)+'%';
-    document.getElementById('wc-wind').textContent=Math.round(cur.windspeed_10m)+' m/s';
-    document.getElementById('wc-forecast').innerHTML=daily.weathercode.slice(0,5).map((_,i)=>{
-      const dt=new Date(daily.time[i]+'T12:00:00');
-      return`<div class="fc-item"><div class="fc-day">${DAYS[dt.getDay()].toUpperCase()}</div><div class="fc-icon">${wxIs(daily.weathercode[i],24)}</div><div class="fc-hi">${Math.round(daily.temperature_2m_max[i])}°</div><div class="fc-lo">${Math.round(daily.temperature_2m_min[i])}°</div></div>`;
+    document.getElementById('wc-temp').textContent=Math.round(curTemp)+'°';
+    document.getElementById('wc-desc').textContent=wxD(curSym);
+    document.getElementById('wc-icon').innerHTML=wxI(curSym);
+    document.getElementById('wc-hi').textContent=Math.round(todayHi)+'°';
+    document.getElementById('wc-lo').textContent=Math.round(todayLo)+'°';
+    document.getElementById('wc-rain').textContent=todayRain>0?todayRain.toFixed(1)+' mm':'0 mm';
+    document.getElementById('wc-wind').textContent=Math.round(curWind)+' m/s';
+
+    // Weekly forecast strip — one entry per day (midday representative)
+    document.getElementById('wc-forecast').innerHTML=dayKeys.map(key=>{
+      const day=byDay[key];
+      const hi=Math.max(...day.temps);
+      const lo=Math.min(...day.temps);
+      // pick most common symbol
+      const freq={};day.syms.forEach(s=>{freq[s]=(freq[s]||0)+1;});
+      const sym=+Object.entries(freq).sort((a,b)=>b[1]-a[1])[0][0];
+      const dt=new Date(key+'T12:00:00');
+      return`<div class="fc-item"><div class="fc-day">${DAYS[dt.getDay()].toUpperCase()}</div><div class="fc-icon">${wxIs(sym,24)}</div><div class="fc-hi">${Math.round(hi)}°</div><div class="fc-lo">${Math.round(lo)}°</div></div>`;
     }).join('');
+
     renderHourly();
     document.getElementById('wc-loading').style.display='none';
     document.getElementById('wc-content').style.display='block';
