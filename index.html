@@ -89,10 +89,10 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* Weather toggle */
-.wc-toggle-row{display:flex;justify-content:flex-end;margin-top:12px;}
-.wc-toggle{display:flex;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:2px;gap:1px;}
-.wc-toggle-btn{font-size:9px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--t3);padding:4px 9px;border-radius:16px;cursor:pointer;transition:background .2s,color .2s;}
-.wc-toggle-btn.active{background:rgba(255,255,255,0.12);color:rgba(255,255,255,0.8);}
+.wc-toggle-row{display:flex;justify-content:center;margin-top:14px;}
+.wc-toggle{display:flex;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:3px;gap:2px;min-width:160px;}
+.wc-toggle-btn{flex:1;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--t3);padding:5px 18px;border-radius:16px;cursor:pointer;transition:background .2s,color .2s;text-align:center;}
+.wc-toggle-btn.active{background:rgba(255,255,255,0.13);color:rgba(255,255,255,0.85);}
 
 /* Hourly forecast */
 .hourly{display:flex;margin-top:14px;}
@@ -227,7 +227,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .panel-row-sub{font-size:11px;color:var(--t2);margin-top:2px;}
 .panel-row-text{flex:1;}
 .panel-row-chevron{color:var(--t3);display:flex;align-items:center;}
-.panel-close-btn{margin:14px 20px 0;width:calc(100% - 40px);padding:14px;border-radius:var(--r-md);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);color:var(--t1);font-size:15px;font-weight:700;cursor:pointer;text-align:center;transition:background .18s,transform .14s;}
+.panel-close-btn{display:block;margin:14px 20px 0;width:calc(100% - 40px);padding:14px;border-radius:var(--r-md);background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.09);color:var(--t1);font-size:15px;font-weight:700;cursor:pointer;text-align:center;transition:background .18s,transform .14s;box-sizing:border-box;}
 .panel-close-btn:active{background:rgba(255,255,255,0.09);transform:scale(.97);}
 .config-input{width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:var(--r-md);padding:11px 13px;font-size:14px;color:white;font-family:inherit;outline:none;margin-top:5px;transition:border-color .22s,box-shadow .22s,background .22s;user-select:text;-webkit-user-select:text;}
 .config-input:focus{border-color:rgba(255,255,255,0.28);box-shadow:0 0 0 3px rgba(255,255,255,0.04);background:rgba(255,255,255,0.06);}
@@ -445,12 +445,17 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 <!-- Settings Panel (opened from Profile) -->
 <div class="panel-overlay" id="config-panel" onclick="closePanel(this)">
   <div class="panel" onclick="event.stopPropagation()">
-    <div class="panel-handle"></div><div class="panel-title">Settings</div>
-    <div class="config-section"><div class="config-label">Cloudflare Worker URL</div><input class="config-input" id="cfg-worker" type="url" placeholder="https://your-worker.workers.dev" autocomplete="off"></div>
-    <div class="config-section"><div class="config-label">Light 1 — Name</div><input class="config-input" id="cfg-name0" type="text" placeholder="Led Lights Tak"><div class="config-label" style="margin-top:10px">Light 1 — Device ID</div><input class="config-input" id="cfg-dev0" type="text" placeholder="bf8b0e945d8c5f9861fjzy" autocomplete="off"></div>
-    <div class="config-section"><div class="config-label">Light 2 — Name</div><input class="config-input" id="cfg-name1" type="text" placeholder="Led Lights Skrivbord"><div class="config-label" style="margin-top:10px">Light 2 — Device ID</div><input class="config-input" id="cfg-dev1" type="text" placeholder="bf1cf6aca13749cf898g3p" autocomplete="off"></div>
-    <div class="config-section"><div class="config-label">Computer — Name</div><input class="config-input" id="cfg-comp-name" type="text" placeholder="My MacBook"><div class="config-label" style="margin-top:10px">Computer — Local IP &amp; Port</div><input class="config-input" id="cfg-comp-url" type="url" placeholder="http://192.168.1.50:4242" autocomplete="off"><div style="font-size:11px;color:var(--t3);margin-top:6px;line-height:1.5">Enter your Cloudflare Tunnel URL (e.g. https://abc.trycloudflare.com). The same Worker handles both lights and shutdown.</div></div>
-    <div style="padding:0 20px 4px;display:flex;flex-direction:column;gap:10px"><div class="panel-close-btn" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.16);margin:0" onclick="saveConfig()">Save &amp; Connect</div><div class="panel-close-btn" style="margin:0" onclick="closePanel(document.getElementById('config-panel'))">Cancel</div></div>
+    <div class="panel-handle"></div>
+    <div class="panel-title">Settings</div>
+    <div class="config-section">
+      <div class="config-label">Cloudflare Worker URL</div>
+      <input class="config-input" id="cfg-worker" type="url" placeholder="https://your-worker.workers.dev" autocomplete="off">
+      <div style="font-size:11px;color:var(--t3);margin-top:8px;line-height:1.6">Used for both Tuya light control and computer shutdown via Cloudflare Tunnel. Enter your Worker URL once and everything connects.</div>
+    </div>
+    <div style="padding:0 20px 4px;display:flex;flex-direction:column;gap:10px">
+      <div class="panel-close-btn" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.16);margin:0;width:100%;box-sizing:border-box" onclick="saveConfig()">Save &amp; Connect</div>
+      <div class="panel-close-btn" style="margin:0;width:100%;box-sizing:border-box" onclick="closePanel(document.getElementById('config-panel'))">Cancel</div>
+    </div>
   </div>
 </div>
 
@@ -574,26 +579,26 @@ function soundDelete(){
    CONFIG
    ══════════════════════════════════════════ */
 const CFG_KEY='tuya_home_config';
-let CFG={worker:'',devices:[{id:'bf8b0e945d8c5f9861fjzy',name:'Led Lights Tak'},{id:'bf1cf6aca13749cf898g3p',name:'Led Lights Skrivbord'}]};
-try{const s=localStorage.getItem(CFG_KEY);if(s)CFG=JSON.parse(s);}catch(e){}
+// Device IDs and names are baked in — only the worker URL is user-configurable
+const BAKED_DEVICES=[
+  {id:'bf8b0e945d8c5f9861fjzy', name:'Led Lights Tak'},
+  {id:'bf1cf6aca13749cf898g3p', name:'Led Lights Skrivbord'}
+];
+const COMPUTER_NAME='Electra';
+let CFG={worker:'', devices: BAKED_DEVICES};
+try{
+  const s=localStorage.getItem(CFG_KEY);
+  if(s){const p=JSON.parse(s); CFG.worker=p.worker||''; CFG.devices=BAKED_DEVICES;}
+}catch(e){}
 
 function saveConfig(){
   const w=document.getElementById('cfg-worker').value.trim();
-  const n0=document.getElementById('cfg-name0').value.trim();
-  const d0=document.getElementById('cfg-dev0').value.trim();
-  const n1=document.getElementById('cfg-name1').value.trim();
-  const d1=document.getElementById('cfg-dev1').value.trim();
   if(!w){showToast('Enter your Worker URL','error');soundError();return;}
-  if(!d0||!d1){showToast('Enter both Device IDs','error');soundError();return;}
   CFG.worker=w;
-  if(n0)CFG.devices[0].name=n0; if(d0)CFG.devices[0].id=d0;
-  if(n1)CFG.devices[1].name=n1; if(d1)CFG.devices[1].id=d1;
-  try{localStorage.setItem(CFG_KEY,JSON.stringify(CFG));}catch(e){}
-  const compName=document.getElementById('cfg-comp-name').value.trim();
-  const compUrl=document.getElementById('cfg-comp-url').value.trim();
-  if(compName) localStorage.setItem('home_computer_name',compName);
-  if(compUrl)  saveComputerUrl(compUrl);
-  loadComputerName();
+  CFG.devices=BAKED_DEVICES;
+  try{localStorage.setItem(CFG_KEY,JSON.stringify({worker:w}));}catch(e){}
+  // Worker URL doubles as the computer tunnel endpoint
+  saveComputerUrl(w);
   closePanel(document.getElementById('config-panel'));
   showToast('Saved — connecting…'); soundSave();
   setTimeout(()=>{syncAllLights();startComputerPing();},400);
@@ -601,14 +606,9 @@ function saveConfig(){
 
 function loadConfigIntoPanel(){
   document.getElementById('cfg-worker').value=CFG.worker||'';
-  document.getElementById('cfg-name0').value=CFG.devices[0].name||'';
-  document.getElementById('cfg-dev0').value=CFG.devices[0].id||'';
-  document.getElementById('cfg-name1').value=CFG.devices[1].name||'';
-  document.getElementById('cfg-dev1').value=CFG.devices[1].id||'';
-  document.getElementById('auto-light').options[1].text=CFG.devices[0].name||'Light 1';
-  document.getElementById('auto-light').options[2].text=CFG.devices[1].name||'Light 2';
-  document.getElementById('cfg-comp-name').value=localStorage.getItem('home_computer_name')||'';
-  document.getElementById('cfg-comp-url').value=getComputerUrl();
+  // Automation light names stay in sync with baked values
+  document.getElementById('auto-light').options[1].text=BAKED_DEVICES[0].name;
+  document.getElementById('auto-light').options[2].text=BAKED_DEVICES[1].name;
 }
 
 /* ══════════════════════════════════════════
@@ -881,10 +881,10 @@ function renderHourly(){
   }
   const slots=[];
   for(let i=startIdx;i<Math.min(startIdx+5,times.length);i++) slots.push(i);
-  hourlyEl.innerHTML=slots.map((idx,pos)=>{
+  hourlyEl.innerHTML=slots.map((idx)=>{
     const t=new Date(times[idx]);
     const h=t.getHours();
-    const label=pos===0?'Now':(h===0?'12am':h<12?h+'am':h===12?'12pm':(h-12)+'pm');
+    const label=String(h).padStart(2,'0')+':00';
     const temp=Math.round(wxHourlyData.temperature_2m[idx]);
     const wc=wxHourlyData.weathercode[idx];
     const rain=wxHourlyData.precipitation_probability[idx]||0;
@@ -933,6 +933,11 @@ let compPingTimer=null;
 function getComputerUrl(){return localStorage.getItem(COMP_KEY)||CFG.worker||'';}
 function saveComputerUrl(url){if(url)localStorage.setItem(COMP_KEY,url.replace(/\/$/,''));}
 
+function loadComputerName(){
+  const el=document.getElementById('computer-name');
+  if(el)el.textContent=COMPUTER_NAME;
+}
+
 function setComputerState(online){
   computerOnline=online;
   const dot=document.getElementById('computer-dot');
@@ -948,7 +953,7 @@ function setComputerState(online){
   } else {
     dot.className='computer-dot offline';
     sw.className='sw';
-    sub.textContent=getComputerUrl()?'Offline or unreachable':'Add IP in Settings';
+    sub.textContent=getComputerUrl()?'Offline or unreachable':'Set Worker URL in Settings';
     card.classList.remove('online-glow');
   }
 }
@@ -1045,9 +1050,8 @@ async function confirmShutdown(){
 }
 
 function loadComputerName(){
-  const name=localStorage.getItem('home_computer_name')||'My Computer';
   const el=document.getElementById('computer-name');
-  if(el)el.textContent=name;
+  if(el)el.textContent=COMPUTER_NAME;
 }
 
 /* Boot */
