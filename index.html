@@ -93,6 +93,23 @@ body.ipad-landscape .lights-grid{grid-column:2;grid-row:3 / 6;padding:0;margin-b
 body.ipad-landscape .computer-section-head{grid-column:1;grid-row:4;padding-left:0;padding-right:0;align-self:start;}
 body.ipad-landscape .computer-card{grid-column:1;grid-row:5;margin:0 0 16px;}
 
+/* ═══ TABLET LIGHTS: portrait — 2 cards fill the padded row edge-to-edge ═══ */
+/* The grid already uses --lights-cols:1fr 1fr 1fr 1fr but only 2 items exist,
+   so they'd each take 1fr of 4 — override to 2 cols for portrait so each card
+   spans half the container, edge-to-edge just like phone but wider */
+body.ipad-portrait .lights-grid{
+  grid-template-columns: 1fr 1fr;
+  padding: 0 20px;
+  gap: 14px;
+  margin-bottom: 12px;
+}
+/* Landscape lights grid already has no padding set via the grid override above */
+body.ipad-landscape .lights-grid{
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
 html,body{height:100%;min-height:100dvh;font-family:-apple-system,'SF Pro Display','Helvetica Neue',sans-serif;-webkit-font-smoothing:antialiased;user-select:none;-webkit-user-select:none;}
 body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:none;}
 .app{position:relative;z-index:1;max-width:var(--app-max-width);margin:0 auto;padding:0 0 var(--app-padding-bottom);transition:max-width .35s cubic-bezier(.22,1,.36,1);}
@@ -126,8 +143,9 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .wc-detail{flex:1;}
 .wc-dl{font-size:9px;text-transform:uppercase;letter-spacing:1.3px;color:var(--t3);font-weight:700;margin-bottom:3px;}
 .wc-dv{font-size:15px;font-weight:600;color:rgba(255,255,255,0.8);}
-.forecast{display:flex;margin-top:14px;}
-.fc-item{flex:1;text-align:center;transition:transform .2s cubic-bezier(.34,1.56,.64,1),opacity .2s;}
+.forecast{display:flex;margin-top:14px;overflow-x:auto;scrollbar-width:none;}
+.forecast::-webkit-scrollbar{display:none;}
+.fc-item{flex:1;min-width:48px;text-align:center;transition:transform .2s cubic-bezier(.34,1.56,.64,1),opacity .2s;}
 .fc-item:active{transform:scale(.88);}
 .fc-day{font-size:9px;color:var(--t3);font-weight:700;letter-spacing:.9px;}
 .fc-icon{margin:5px 0;display:flex;justify-content:center;}
@@ -143,18 +161,25 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .wc-panel{overflow:hidden;transition:max-height .38s cubic-bezier(.22,1,.36,1), opacity .3s ease;}
 .wc-panel.wc-hidden{max-height:0 !important;opacity:0;pointer-events:none;}
 .wc-panel.wc-visible{opacity:1;pointer-events:auto;}
-.hourly{display:flex;margin-top:14px;}
-.hr-item{flex:1;text-align:center;}
+.hourly{display:flex;margin-top:14px;overflow-x:auto;scrollbar-width:none;}
+.hourly::-webkit-scrollbar{display:none;}
+.hr-item{flex:1;min-width:48px;text-align:center;}
 .hr-time{font-size:9px;color:var(--t3);font-weight:700;letter-spacing:.9px;}
 .hr-icon{margin:5px 0;display:flex;justify-content:center;}
 .hr-temp{font-size:13px;font-weight:600;color:rgba(255,255,255,0.75);}
 .hr-rain{font-size:10px;color:rgba(100,170,220,0.7);font-weight:600;margin-top:1px;}
+/* Staggered animations for up to 10 items */
 .hr-item{animation:fcSlide .4s cubic-bezier(.22,1,.36,1) both;}
 .hr-item:nth-child(1){animation-delay:.18s;}
-.hr-item:nth-child(2){animation-delay:.23s;}
-.hr-item:nth-child(3){animation-delay:.28s;}
-.hr-item:nth-child(4){animation-delay:.33s;}
-.hr-item:nth-child(5){animation-delay:.38s;}
+.hr-item:nth-child(2){animation-delay:.22s;}
+.hr-item:nth-child(3){animation-delay:.26s;}
+.hr-item:nth-child(4){animation-delay:.30s;}
+.hr-item:nth-child(5){animation-delay:.34s;}
+.hr-item:nth-child(6){animation-delay:.38s;}
+.hr-item:nth-child(7){animation-delay:.42s;}
+.hr-item:nth-child(8){animation-delay:.46s;}
+.hr-item:nth-child(9){animation-delay:.50s;}
+.hr-item:nth-child(10){animation-delay:.54s;}
 @keyframes countUp{from{opacity:0;transform:translateY(8px) scale(.96);}to{opacity:1;transform:translateY(0) scale(1);}}
 .wc-temp-anim{animation:countUp .45s cubic-bezier(.22,1,.36,1) both .1s;}
 .wc-detail .wc-dv{animation:countUp .45s cubic-bezier(.22,1,.36,1) both;}
@@ -164,10 +189,15 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .wc-detail:nth-child(4) .wc-dv{animation-delay:.30s;}
 .fc-item{animation:fcSlide .4s cubic-bezier(.22,1,.36,1) both;}
 .fc-item:nth-child(1){animation-delay:.18s;}
-.fc-item:nth-child(2){animation-delay:.23s;}
-.fc-item:nth-child(3){animation-delay:.28s;}
-.fc-item:nth-child(4){animation-delay:.33s;}
-.fc-item:nth-child(5){animation-delay:.38s;}
+.fc-item:nth-child(2){animation-delay:.22s;}
+.fc-item:nth-child(3){animation-delay:.26s;}
+.fc-item:nth-child(4){animation-delay:.30s;}
+.fc-item:nth-child(5){animation-delay:.34s;}
+.fc-item:nth-child(6){animation-delay:.38s;}
+.fc-item:nth-child(7){animation-delay:.42s;}
+.fc-item:nth-child(8){animation-delay:.46s;}
+.fc-item:nth-child(9){animation-delay:.50s;}
+.fc-item:nth-child(10){animation-delay:.54s;}
 @keyframes fcSlide{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
 /* ══ SL DEPARTURE BOARD ══ */
@@ -187,7 +217,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .sl-header-left{display:flex;align-items:center;gap:10px;}
 .sl-stop-icon{
   width:28px;height:28px;border-radius:8px;
-  background:var(--sl-blue);
+  background:rgba(255,255,255,0.10);
   display:flex;align-items:center;justify-content:center;
   flex-shrink:0;
 }
@@ -223,15 +253,16 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   display:flex;align-items:center;gap:5px;
 }
 .sl-tab.active{background:rgba(255,255,255,0.09);color:var(--t1);}
+/* ── Neutral line badge — no blue ── */
 .sl-tab-badge{
   display:inline-flex;align-items:center;justify-content:center;
   min-width:18px;height:16px;border-radius:5px;
-  background:rgba(0,137,202,0.25);
-  color:rgba(0,180,255,0.85);
+  background:rgba(255,255,255,0.09);
+  color:rgba(255,255,255,0.55);
   font-size:9px;font-weight:800;
   padding:0 4px;
 }
-.sl-tab.active .sl-tab-badge{background:rgba(0,137,202,0.4);color:rgba(120,210,255,1);}
+.sl-tab.active .sl-tab-badge{background:rgba(255,255,255,0.16);color:rgba(255,255,255,0.88);}
 
 /* Departure rows */
 .sl-departures{padding:8px 0 4px;}
@@ -253,11 +284,12 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .sl-row:nth-child(5){animation-delay:.20s;}
 .sl-row:nth-child(6){animation-delay:.24s;}
 
+/* ── Neutral line number badge — no blue ── */
 .sl-line-badge{
   width:34px;height:24px;border-radius:7px;
-  background:rgba(0,0,0,0.55);border:1px solid rgba(255,255,255,0.1);
+  background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.10);
   display:flex;align-items:center;justify-content:center;
-  font-size:12px;font-weight:800;color:rgba(255,255,255,0.9);
+  font-size:12px;font-weight:800;color:rgba(255,255,255,0.82);
   letter-spacing:-.3px;flex-shrink:0;
   position:relative;
 }
@@ -289,7 +321,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   color:var(--t2);font-size:13px;
   display:flex;flex-direction:column;align-items:center;gap:8px;
 }
-.sl-spinner{width:18px;height:18px;border:2px solid rgba(0,137,202,0.2);border-top-color:var(--sl-blue);border-radius:50%;animation:spin .85s linear infinite;}
+.sl-spinner{width:18px;height:18px;border:2px solid rgba(255,255,255,0.07);border-top-color:rgba(255,255,255,0.4);border-radius:50%;animation:spin .85s linear infinite;}
 
 .sl-updated{
   font-size:10px;color:var(--t3);font-weight:600;
@@ -398,29 +430,6 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .orient-icon{display:flex;align-items:center;justify-content:center;opacity:.65;}
 .orient-btn.active .orient-icon{opacity:1;}
 
-/* Automations */
-.auto-list{padding:0 20px;}
-.auto-item{display:flex;align-items:center;gap:12px;padding:13px 0;border-bottom:1px solid rgba(255,255,255,0.05);animation:autoIn .3s cubic-bezier(.22,1,.36,1) both;}
-@keyframes autoIn{from{opacity:0;transform:translateX(-10px);}to{opacity:1;transform:translateX(0);}}
-.auto-item:last-child{border:none;}
-.auto-item-icon{width:32px;height:32px;border-radius:9px;background:rgba(255,255,255,0.06);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
-.auto-item-body{flex:1;min-width:0;}
-.auto-item-name{font-size:14px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.auto-item-sub{font-size:11px;color:var(--t2);margin-top:2px;}
-.auto-delete{width:28px;height:28px;border-radius:50%;background:rgba(215,100,90,0.1);border:1px solid rgba(215,100,90,0.2);display:flex;align-items:center;justify-content:center;cursor:pointer;flex-shrink:0;transition:background .18s,transform .14s;}
-.auto-delete:active{transform:scale(.82);background:rgba(215,100,90,0.22);}
-.auto-empty{font-size:13px;color:var(--t3);text-align:center;padding:18px 0 6px;}
-.auto-form{padding:0 20px 4px;}
-.auto-form-title{font-size:12px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px;}
-.auto-row{display:flex;gap:8px;margin-bottom:8px;}
-.auto-select{flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:var(--r-md);padding:10px 12px;font-size:13px;color:white;font-family:inherit;outline:none;-webkit-appearance:none;cursor:pointer;transition:border-color .18s;}
-.auto-select:focus{border-color:rgba(255,255,255,0.25);}
-.auto-select option{background:#1e2024;color:white;}
-.auto-time-input{width:90px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.09);border-radius:var(--r-md);padding:10px 12px;font-size:13px;color:white;font-family:inherit;outline:none;transition:border-color .18s;}
-.auto-time-input:focus{border-color:rgba(255,255,255,0.25);}
-.auto-add-btn{width:100%;padding:12px;border-radius:var(--r-md);background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.12);color:var(--t1);font-size:14px;font-weight:700;cursor:pointer;text-align:center;transition:background .18s,transform .14s,box-shadow .18s;margin-top:2px;}
-.auto-add-btn:active{background:rgba(255,255,255,0.12);transform:scale(.97);}
-
 /* Computer card */
 .computer-card{margin:var(--computer-margin);padding:14px 18px;display:flex;align-items:center;gap:14px;border-radius:var(--r-lg);cursor:default;transition:box-shadow .4s,margin .35s cubic-bezier(.22,1,.36,1);}
 .computer-card.online-glow{box-shadow:0 0 28px -10px rgba(120,210,140,0.25);}
@@ -487,7 +496,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
       </div>
       <div class="wc-toggle-row">
         <div class="wc-toggle">
-          <div class="wc-toggle-btn active" id="wc-btn-week" onclick="setWxView('week')">Week</div>
+          <div class="wc-toggle-btn active" id="wc-btn-week" onclick="setWxView('week')">10 Days</div>
           <div class="wc-toggle-btn" id="wc-btn-day" onclick="setWxView('day')">Today</div>
         </div>
       </div>
@@ -505,7 +514,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
     <div class="sl-header">
       <div class="sl-header-left">
         <div class="sl-stop-icon">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M17 8C8 10 5.9 16.17 3.82 21L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20c4 0 4-2 8-2s4 2 8 2l2-10c-4 0-4-2-8-2zm-1.5 7.5A1.5 1.5 0 1 1 17 14a1.5 1.5 0 0 1-1.5 1.5zM5 10C2.24 10 0 12.24 0 15v3h2c0-1.1.9-2 2-2s2 .9 2 2h2v-3C8 12.24 5.76 10 5 10z"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="rgba(255,255,255,0.65)"><path d="M17 8C8 10 5.9 16.17 3.82 21L5.71 22l1-2.3A4.49 4.49 0 0 0 8 20c4 0 4-2 8-2s4 2 8 2l2-10c-4 0-4-2-8-2zm-1.5 7.5A1.5 1.5 0 1 1 17 14a1.5 1.5 0 0 1-1.5 1.5zM5 10C2.24 10 0 12.24 0 15v3h2c0-1.1.9-2 2-2s2 .9 2 2h2v-3C8 12.24 5.76 10 5 10z"/></svg>
         </div>
         <div>
           <div class="sl-stop-name">Västergöksvägen</div>
@@ -517,10 +526,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
       </div>
     </div>
 
-    <!-- Direction tabs -->
     <div class="sl-tabs" id="sl-tabs"></div>
-
-    <!-- Departure rows -->
     <div id="sl-body">
       <div class="sl-state">
         <div class="sl-spinner"></div>
@@ -567,42 +573,6 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 
 <div class="toast" id="toast"></div>
 
-<!-- Automations Panel -->
-<div class="panel-overlay" id="auto-panel" onclick="closePanel(this)">
-  <div class="panel" onclick="event.stopPropagation()">
-    <div class="panel-handle"></div>
-    <div class="panel-title">Automations</div>
-    <div class="auto-list" id="auto-list"></div>
-    <div style="height:1px;background:rgba(255,255,255,0.06);margin:4px 20px 16px"></div>
-    <div class="auto-form">
-      <div class="auto-form-title">New Automation</div>
-      <div class="auto-row">
-        <select class="auto-select" id="auto-action">
-          <option value="on">Turn ON</option>
-          <option value="off">Turn OFF</option>
-          <option value="dim">Dim to 20%</option>
-          <option value="bright">Set 100%</option>
-        </select>
-        <select class="auto-select" id="auto-light">
-          <option value="all">All lights</option>
-          <option value="0">Light 1</option>
-          <option value="1">Light 2</option>
-        </select>
-      </div>
-      <div class="auto-row">
-        <select class="auto-select" id="auto-days">
-          <option value="every">Every day</option>
-          <option value="weekdays">Weekdays</option>
-          <option value="weekends">Weekends</option>
-        </select>
-        <input class="auto-time-input" id="auto-time" type="time" value="07:00">
-      </div>
-      <div class="auto-add-btn" onclick="addAutomation()">+ Add</div>
-    </div>
-    <div class="panel-close-btn" onclick="closePanel(document.getElementById('auto-panel'))">Done</div>
-  </div>
-</div>
-
 <!-- Settings Panel -->
 <div class="panel-overlay" id="config-panel" onclick="closePanel(this)">
   <div class="panel" onclick="event.stopPropagation()">
@@ -616,7 +586,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
     <div class="config-section" style="margin-top:4px;">
       <div class="config-label">SL Stop ID</div>
       <input class="config-input" id="cfg-sl-site" type="text" placeholder="3870 (Västergöksvägen)" autocomplete="off">
-      <div style="font-size:11px;color:var(--t3);margin-top:8px;line-height:1.6">Find your stop ID at <span style="color:rgba(0,180,255,0.7)">transport.integration.sl.se</span>. Leave blank to use Västergöksvägen.</div>
+      <div style="font-size:11px;color:var(--t3);margin-top:8px;line-height:1.6">Find your stop ID at <span style="color:rgba(200,200,200,0.55)">transport.integration.sl.se</span>. Leave blank to use Västergöksvägen.</div>
     </div>
     <div class="device-mode-section">
       <div class="device-mode-label">Display Mode</div>
@@ -658,7 +628,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   </div>
 </div>
 
-<!-- Profile Panel -->
+<!-- Profile Panel — Automations row removed -->
 <div class="panel-overlay" id="about-panel" onclick="closePanel(this)">
   <div class="panel" onclick="event.stopPropagation()">
     <div class="panel-handle"></div><div class="panel-title">Profile</div>
@@ -667,11 +637,6 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
       <div class="panel-row-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M16.24 7.76a6 6 0 0 1 0 8.49M4.93 19.07a10 10 0 0 1 0-14.14M7.76 16.24a6 6 0 0 1 0-8.49"/></svg></div>
       <div class="panel-row-text"><div class="panel-row-name" id="about-status-text">Tuya EU Cloud</div><div class="panel-row-sub" id="about-status-sub">openapi.tuyaeu.com</div></div>
       <div class="pulse-dot" id="pulse-dot" style="flex-shrink:0;animation:pulse 2.8s ease-in-out infinite"></div>
-    </div>
-    <div class="panel-row" onclick="openNestedPanel('auto-panel')">
-      <div class="panel-row-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
-      <div class="panel-row-text"><div class="panel-row-name">Automations</div><div class="panel-row-sub" id="auto-count-sub">Manage schedules</div></div>
-      <div class="panel-row-chevron"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.25)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg></div>
     </div>
     <div class="panel-row" onclick="openNestedPanel('config-panel')">
       <div class="panel-row-icon"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></div>
@@ -719,8 +684,6 @@ function soundOff(){try{const ctx=getAudio();const t=ctx.currentTime;bubble(523,
 function soundClick(){try{const ctx=getAudio();const t=ctx.currentTime;bubble(880,t,0.045,0.04,0.02,0.28);bubble(1100,t+0.03,0.02,0.04,0.01,0.2);}catch(e){}}
 function soundSave(){try{const ctx=getAudio();const t=ctx.currentTime;bubble(523,t,0.07,0.07,0.06,0.7);bubble(784,t+0.18,0.08,0.08,0.07,0.9);bubble(1046,t+0.18,0.03,0.09,0.05,0.8);}catch(e){}}
 function soundError(){try{const ctx=getAudio();const t=ctx.currentTime;const osc=ctx.createOscillator(),gain=ctx.createGain(),lpf=ctx.createBiquadFilter();lpf.type='lowpass';lpf.frequency.value=400;lpf.Q.value=0.6;osc.connect(lpf);lpf.connect(gain);gain.connect(ctx.destination);osc.type='sine';osc.frequency.setValueAtTime(220,t);osc.frequency.linearRampToValueAtTime(190,t+0.3);gain.gain.setValueAtTime(0.0001,t);gain.gain.linearRampToValueAtTime(0.07,t+0.08);gain.gain.exponentialRampToValueAtTime(0.0001,t+0.55);osc.start(t);osc.stop(t+0.6);}catch(e){}}
-function soundAdd(){try{const ctx=getAudio();const t=ctx.currentTime;bubble(660,t,0.065,0.05,0.04,0.45);bubble(880,t+0.1,0.055,0.06,0.03,0.5);}catch(e){}}
-function soundDelete(){try{const ctx=getAudio();const t=ctx.currentTime;const osc=ctx.createOscillator(),gain=ctx.createGain(),lpf=ctx.createBiquadFilter();lpf.type='lowpass';lpf.frequency.value=700;lpf.Q.value=0.4;osc.connect(lpf);lpf.connect(gain);gain.connect(ctx.destination);osc.type='sine';osc.frequency.setValueAtTime(440,t);osc.frequency.exponentialRampToValueAtTime(260,t+0.45);gain.gain.setValueAtTime(0.0001,t);gain.gain.linearRampToValueAtTime(0.065,t+0.06);gain.gain.exponentialRampToValueAtTime(0.0001,t+0.55);osc.start(t);osc.stop(t+0.6);}catch(e){}}
 
 /* ══ DEVICE MODE ══ */
 const MODE_KEY='home_device_mode';
@@ -761,25 +724,8 @@ function saveConfig(){
 function loadConfigIntoPanel(){
   document.getElementById('cfg-worker').value=CFG.worker||'';
   document.getElementById('cfg-sl-site').value=slSiteId==='3870'?'':slSiteId;
-  document.getElementById('auto-light').options[1].text=BAKED_DEVICES[0].name;
-  document.getElementById('auto-light').options[2].text=BAKED_DEVICES[1].name;
   syncModeUI();
 }
-
-/* ══ AUTOMATIONS ══ */
-const AUTO_KEY='tuya_automations';
-let automations=[];
-try{const s=localStorage.getItem(AUTO_KEY);if(s)automations=JSON.parse(s);}catch(e){}
-const ACTION_LABELS={on:'Turn ON',off:'Turn OFF',dim:'Dim to 20%',bright:'Set 100%'};
-const DAY_LABELS={every:'Every day',weekdays:'Weekdays',weekends:'Weekends'};
-function saveAutomations(){try{localStorage.setItem(AUTO_KEY,JSON.stringify(automations));}catch(e){}}
-function updateAutoCountSub(){const el=document.getElementById('auto-count-sub');if(!el)return;const enabled=automations.filter(a=>a.enabled).length;if(!automations.length)el.textContent='Manage schedules';else el.textContent=automations.length+' schedule'+(automations.length!==1?'s':'')+' · '+enabled+' active';}
-function renderAutomations(){const el=document.getElementById('auto-list');if(!automations.length){el.innerHTML='<div class="auto-empty">No automations yet — add one below</div>';updateAutoCountSub();return;}el.innerHTML=automations.map((a,i)=>`<div class="auto-item" style="animation-delay:${i*0.04}s"><div class="auto-item-icon"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.55)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div><div class="auto-item-body"><div class="auto-item-name">${ACTION_LABELS[a.action]} · ${a.light==='all'?'All lights':CFG.devices[+a.light]?.name||'Light '+(+a.light+1)}</div><div class="auto-item-sub">${DAY_LABELS[a.days]} at ${a.time}</div></div><div class="sw ${a.enabled?'on':''}" onclick="toggleAutomation(${i})" style="width:40px;height:22px"></div><div class="auto-delete" onclick="deleteAutomation(${i})"><svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="rgba(215,100,90,0.8)" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></div></div>`).join('');updateAutoCountSub();}
-function addAutomation(){const action=document.getElementById('auto-action').value;const light=document.getElementById('auto-light').value;const days=document.getElementById('auto-days').value;const time=document.getElementById('auto-time').value;if(!time){showToast('Pick a time','error');soundError();return;}automations.push({action,light,days,time,enabled:true});saveAutomations();renderAutomations();soundAdd();showToast('Automation added');}
-function deleteAutomation(i){const items=document.querySelectorAll('.auto-item');if(items[i]){items[i].style.transition='opacity .22s,transform .22s';items[i].style.opacity='0';items[i].style.transform='translateX(24px)';setTimeout(()=>{automations.splice(i,1);saveAutomations();renderAutomations();},220);}else{automations.splice(i,1);saveAutomations();renderAutomations();}soundDelete();}
-function toggleAutomation(i){automations[i].enabled=!automations[i].enabled;saveAutomations();renderAutomations();soundClick();}
-(function scheduleFirst(){const now=new Date();const msToNext=60000-now.getSeconds()*1000-now.getMilliseconds();setTimeout(()=>{runAutomationScheduler();setInterval(runAutomationScheduler,60000);},msToNext);})();
-function runAutomationScheduler(){const now=new Date();const hhmm=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}`;const dow=now.getDay();const isWeekday=dow>=1&&dow<=5;const isWeekend=dow===0||dow===6;automations.forEach(a=>{if(!a.enabled||a.time!==hhmm)return;const matchDay=(a.days==='every')||(a.days==='weekdays'&&isWeekday)||(a.days==='weekends'&&isWeekend);if(!matchDay)return;const targets=a.light==='all'?[0,1]:[+a.light];targets.forEach(idx=>{if(a.action==='on'){LIGHTS[idx].on=true;refreshCard(idx);tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:true}]).catch(()=>{});}else if(a.action==='off'){LIGHTS[idx].on=false;refreshCard(idx);tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:false}]).catch(()=>{});}else if(a.action==='dim'){LIGHTS[idx].on=true;LIGHTS[idx].bright=20;refreshCard(idx);tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:true},{code:'work_mode',value:'colour'},{code:'colour_data',value:JSON.stringify({h:0,s:0,v:200})}]).catch(()=>{});}else if(a.action==='bright'){LIGHTS[idx].on=true;LIGHTS[idx].bright=100;refreshCard(idx);tuyaCommand(CFG.devices[idx].id,[{code:'switch_led',value:true},{code:'work_mode',value:'colour'},{code:'colour_data',value:JSON.stringify({h:0,s:0,v:1000})}]).catch(()=>{});}});showToast(`Auto: ${ACTION_LABELS[a.action]}`);soundOn();});}
 
 /* ══ TUYA / LIGHTS ══ */
 const LIGHTS=[{idx:0,on:false,bright:100},{idx:1,on:false,bright:100}];
@@ -801,23 +747,19 @@ function refreshCard(i){const l=LIGHTS[i],card=document.getElementById('lc-'+i);
 function setStatus(text,sub,type='ok'){['about-status-text'].forEach(id=>{const el=document.getElementById(id);if(el&&type!=='ok')el.textContent=text;});['about-status-sub'].forEach(id=>{const el=document.getElementById(id);if(el&&type!=='ok')el.textContent=sub;});const col=type==='err'?'var(--red)':type==='warn'?'var(--orange)':'var(--green)';document.querySelectorAll('.pulse-dot').forEach(d=>{d.style.background=col;});}
 
 /* ══ SL DEPARTURES ══ */
-// Groups: we define ordered direction buckets based on known lines at this stop
-// Dynamically built from actual API response
 let slDepartures = [];
 let slActiveTab = 0;
-let slGroups = []; // [{label, badge, deps:[]}]
+let slGroups = [];
 let slRefreshing = false;
 let slRefreshInterval = null;
 
 function slBuildGroups(deps) {
-  // Group by line+direction — collect unique combos
   const seen = new Map();
   deps.forEach(d => {
     const key = d.line.designation + '|' + d.destination;
     if (!seen.has(key)) seen.set(key, {line: d.line.designation, dest: d.destination, deps: []});
     seen.get(key).deps.push(d);
   });
-  // Convert to array, sort by line number then dest
   const groups = Array.from(seen.values()).sort((a,b)=>{
     const la = parseInt(a.line)||0, lb = parseInt(b.line)||0;
     if(la !== lb) return la - lb;
@@ -836,10 +778,7 @@ function getDelayMinutes(dep) {
   return Math.round(diff);
 }
 
-function slTimeDisplay(dep) {
-  // Use the display field from API (e.g. "Nu", "2 min", "14:35")
-  return dep.display || '—';
-}
+function slTimeDisplay(dep) { return dep.display || '—'; }
 
 function slTimeClass(dep) {
   const d = dep.display || '';
@@ -913,14 +852,19 @@ async function loadSLDepartures() {
     const r = await fetch(url, {headers: {'Accept':'application/json'}});
     if (!r.ok) throw new Error('HTTP ' + r.status);
     const data = await r.json();
-    slDepartures = (data.departures || []).filter(d => d.line.transport_mode === 'BUS' || d.line.transport_mode === 'METRO' || d.line.transport_mode === 'TRAM' || d.line.transport_mode === 'TRAIN');
+    slDepartures = (data.departures || []).filter(d =>
+      d.line.transport_mode === 'BUS' ||
+      d.line.transport_mode === 'METRO' ||
+      d.line.transport_mode === 'TRAM' ||
+      d.line.transport_mode === 'TRAIN'
+    );
     slGroups = slBuildGroups(slDepartures);
-    // Keep active tab within range
     if (slActiveTab >= slGroups.length) slActiveTab = 0;
     renderSLTabs();
     renderSLBody();
     const now = new Date();
-    document.getElementById('sl-updated').textContent = `Updated ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')} · transport.integration.sl.se`;
+    document.getElementById('sl-updated').textContent =
+      `Updated ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')} · transport.integration.sl.se`;
   } catch(e) {
     body.innerHTML = `<div class="sl-state"><span style="color:var(--red)">Could not load departures</span></div>`;
     document.getElementById('sl-updated').textContent = 'Failed to reach SL API';
@@ -932,15 +876,14 @@ function triggerSLRefresh() {
   const btn = document.getElementById('sl-refresh-btn');
   btn.classList.add('spinning');
   soundClick();
-  loadSLDepartures().then(() => {
-    setTimeout(() => btn.classList.remove('spinning'), 600);
-  }).catch(() => btn.classList.remove('spinning'));
+  loadSLDepartures().then(() => setTimeout(() => btn.classList.remove('spinning'), 600))
+    .catch(() => btn.classList.remove('spinning'));
 }
 
-// Auto-refresh every 30s
+// Auto-refresh departures every 20 seconds for live accuracy
 function startSLRefresh() {
   if (slRefreshInterval) clearInterval(slRefreshInterval);
-  slRefreshInterval = setInterval(loadSLDepartures, 30000);
+  slRefreshInterval = setInterval(loadSLDepartures, 20000);
 }
 
 /* ══ TOAST ══ */
@@ -948,8 +891,8 @@ let toastTimer;
 function showToast(msg,type=''){const t=document.getElementById('toast');t.textContent=msg;t.className='toast'+(type==='error'?' error':'');clearTimeout(toastTimer);requestAnimationFrame(()=>{t.classList.add('show');toastTimer=setTimeout(()=>t.classList.remove('show'),2400);});}
 
 /* ══ PANELS ══ */
-function openPanel(id){if(id==='config-panel')loadConfigIntoPanel();if(id==='auto-panel')renderAutomations();document.getElementById(id).classList.add('open');soundClick();}
-function openNestedPanel(id){soundClick();const about=document.getElementById('about-panel');about.classList.remove('open');setTimeout(()=>{if(id==='config-panel')loadConfigIntoPanel();if(id==='auto-panel')renderAutomations();document.getElementById(id).classList.add('open');},320);}
+function openPanel(id){if(id==='config-panel')loadConfigIntoPanel();document.getElementById(id).classList.add('open');soundClick();}
+function openNestedPanel(id){soundClick();const about=document.getElementById('about-panel');about.classList.remove('open');setTimeout(()=>{if(id==='config-panel')loadConfigIntoPanel();document.getElementById(id).classList.add('open');},320);}
 function closePanel(el){el.classList.remove('open');soundClick();setTimeout(navHome,320);}
 function navTo(el){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));el.classList.add('active');}
 function navHome(){document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));document.querySelector('.nav-item:first-child').classList.add('active');}
@@ -971,9 +914,105 @@ const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 function smhiVal(params,name){const p=params.find(x=>x.name===name);return p?p.values[0]:null;}
 let wxView='week';
 let wxSmhiSeries=null;
-function setWxView(v){wxView=v;document.getElementById('wc-btn-week').classList.toggle('active',v==='week');document.getElementById('wc-btn-day').classList.toggle('active',v==='day');const weekPanel=document.getElementById('wc-panel-week');const dayPanel=document.getElementById('wc-panel-day');if(v==='week'){weekPanel.classList.remove('wc-hidden');weekPanel.classList.add('wc-visible');dayPanel.classList.remove('wc-visible');dayPanel.classList.add('wc-hidden');}else{dayPanel.classList.remove('wc-hidden');dayPanel.classList.add('wc-visible');weekPanel.classList.remove('wc-visible');weekPanel.classList.add('wc-hidden');if(wxSmhiSeries)renderHourly();}}
-function renderHourly(){const hourlyEl=document.getElementById('wc-hourly');if(!wxSmhiSeries){hourlyEl.innerHTML='';return;}const now=new Date();const nowH=now.getHours();const upcoming=wxSmhiSeries.filter(entry=>{const t=new Date(entry.validTime);const localH=t.getHours();const isToday=t.toLocaleDateString()===now.toLocaleDateString();return isToday&&localH>=nowH;}).slice(0,5);hourlyEl.innerHTML=upcoming.map(entry=>{const t=new Date(entry.validTime);const h=t.getHours();const label=String(h).padStart(2,'0')+':00';const temp=Math.round(smhiVal(entry.parameters,'t'));const sym=smhiVal(entry.parameters,'Wsymb2');const precip=smhiVal(entry.parameters,'pmean')||0;return`<div class="hr-item"><div class="hr-time">${label}</div><div class="hr-icon">${wxIs(sym,22)}</div><div class="hr-temp">${temp}°</div><div class="hr-rain">${precip>0?precip.toFixed(1)+'mm':''}</div></div>`;}).join('');}
-async function loadWeather(){try{const lat=59.38,lon=17.90,city='Spånga';const url=`https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/${lon}/lat/${lat}/data.json`;const d=await fetch(url).then(r=>r.json());const series=d.timeSeries;wxSmhiSeries=series;const now=new Date();const cur=series.reduce((best,e)=>{return Math.abs(new Date(e.validTime)-now)<Math.abs(new Date(best.validTime)-now)?e:best;},series[0]);const curTemp=smhiVal(cur.parameters,'t');const curSym=smhiVal(cur.parameters,'Wsymb2');const curWind=smhiVal(cur.parameters,'ws');const curPrecip=smhiVal(cur.parameters,'pmean')||0;const byDay={};series.forEach(e=>{const t=new Date(e.validTime);const key=t.toLocaleDateString('sv-SE');if(!byDay[key])byDay[key]={temps:[],syms:[],precips:[]};byDay[key].temps.push(smhiVal(e.parameters,'t'));byDay[key].syms.push(smhiVal(e.parameters,'Wsymb2'));byDay[key].precips.push(smhiVal(e.parameters,'pmean')||0);});const dayKeys=Object.keys(byDay).sort().slice(0,5);const todayKey=now.toLocaleDateString('sv-SE');const todayData=byDay[todayKey]||byDay[dayKeys[0]];const todayHi=Math.max(...todayData.temps);const todayLo=Math.min(...todayData.temps);const todayRain=todayData.precips.reduce((a,b)=>a+b,0);document.getElementById('wc-city').textContent=city;document.getElementById('wc-temp').textContent=Math.round(curTemp)+'°';document.getElementById('wc-desc').textContent=wxD(curSym);document.getElementById('wc-icon').innerHTML=wxI(curSym);document.getElementById('wc-hi').textContent=Math.round(todayHi)+'°';document.getElementById('wc-lo').textContent=Math.round(todayLo)+'°';document.getElementById('wc-rain').textContent=todayRain>0?todayRain.toFixed(1)+' mm':'0 mm';document.getElementById('wc-wind').textContent=Math.round(curWind)+' m/s';document.getElementById('wc-forecast').innerHTML=dayKeys.map(key=>{const day=byDay[key];const hi=Math.max(...day.temps);const lo=Math.min(...day.temps);const freq={};day.syms.forEach(s=>{freq[s]=(freq[s]||0)+1;});const sym=+Object.entries(freq).sort((a,b)=>b[1]-a[1])[0][0];const dt=new Date(key+'T12:00:00');return`<div class="fc-item"><div class="fc-day">${DAYS[dt.getDay()].toUpperCase()}</div><div class="fc-icon">${wxIs(sym,24)}</div><div class="fc-hi">${Math.round(hi)}°</div><div class="fc-lo">${Math.round(lo)}°</div></div>`;}).join('');renderHourly();document.getElementById('wc-loading').style.display='none';document.getElementById('wc-content').style.display='block';}catch(e){document.getElementById('wc-loading').innerHTML='<span style="color:rgba(215,100,90,0.7);font-size:12px">Weather unavailable</span>';}}
+
+function isTablet(){return document.body.classList.contains('ipad-portrait')||document.body.classList.contains('ipad-landscape');}
+
+function setWxView(v){
+  wxView=v;
+  document.getElementById('wc-btn-week').classList.toggle('active',v==='week');
+  document.getElementById('wc-btn-day').classList.toggle('active',v==='day');
+  const weekPanel=document.getElementById('wc-panel-week');
+  const dayPanel=document.getElementById('wc-panel-day');
+  if(v==='week'){
+    weekPanel.classList.remove('wc-hidden');weekPanel.classList.add('wc-visible');
+    dayPanel.classList.remove('wc-visible');dayPanel.classList.add('wc-hidden');
+  }else{
+    dayPanel.classList.remove('wc-hidden');dayPanel.classList.add('wc-visible');
+    weekPanel.classList.remove('wc-visible');weekPanel.classList.add('wc-hidden');
+    if(wxSmhiSeries)renderHourly();
+  }
+}
+
+function renderHourly(){
+  const hourlyEl=document.getElementById('wc-hourly');
+  if(!wxSmhiSeries){hourlyEl.innerHTML='';return;}
+  const now=new Date();
+  const hourCount = isTablet() ? 10 : 5;
+  // All entries from current hour onwards
+  const upcoming=wxSmhiSeries.filter(entry=>{
+    const t=new Date(entry.validTime);
+    return t >= new Date(now.getFullYear(),now.getMonth(),now.getDate(),now.getHours(),0,0,0);
+  }).slice(0,hourCount);
+  hourlyEl.innerHTML=upcoming.map(entry=>{
+    const t=new Date(entry.validTime);
+    const label=String(t.getHours()).padStart(2,'0')+':00';
+    const temp=Math.round(smhiVal(entry.parameters,'t'));
+    const sym=smhiVal(entry.parameters,'Wsymb2');
+    const precip=smhiVal(entry.parameters,'pmean')||0;
+    return`<div class="hr-item"><div class="hr-time">${label}</div><div class="hr-icon">${wxIs(sym,22)}</div><div class="hr-temp">${temp}°</div><div class="hr-rain">${precip>0?precip.toFixed(1)+'mm':''}</div></div>`;
+  }).join('');
+}
+
+async function loadWeather(){
+  try{
+    const lat=59.38,lon=17.90,city='Spånga';
+    const url=`https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/${lon}/lat/${lat}/data.json`;
+    const d=await fetch(url).then(r=>r.json());
+    const series=d.timeSeries;
+    wxSmhiSeries=series;
+    const now=new Date();
+    const cur=series.reduce((best,e)=>{return Math.abs(new Date(e.validTime)-now)<Math.abs(new Date(best.validTime)-now)?e:best;},series[0]);
+    const curTemp=smhiVal(cur.parameters,'t');
+    const curSym=smhiVal(cur.parameters,'Wsymb2');
+    const curWind=smhiVal(cur.parameters,'ws');
+    const byDay={};
+    series.forEach(e=>{
+      const t=new Date(e.validTime);
+      const key=t.toLocaleDateString('sv-SE');
+      if(!byDay[key])byDay[key]={temps:[],syms:[],precips:[]};
+      byDay[key].temps.push(smhiVal(e.parameters,'t'));
+      byDay[key].syms.push(smhiVal(e.parameters,'Wsymb2'));
+      byDay[key].precips.push(smhiVal(e.parameters,'pmean')||0);
+    });
+    // Tablet shows 10 days, phone shows 5 — chosen at render time
+    const dayCount = isTablet() ? 10 : 5;
+    const allDayKeys=Object.keys(byDay).sort();
+    const dayKeys=allDayKeys.slice(0,dayCount);
+    const todayKey=now.toLocaleDateString('sv-SE');
+    const todayData=byDay[todayKey]||byDay[dayKeys[0]];
+    const todayHi=Math.max(...todayData.temps);
+    const todayLo=Math.min(...todayData.temps);
+    const todayRain=todayData.precips.reduce((a,b)=>a+b,0);
+    document.getElementById('wc-city').textContent=city;
+    document.getElementById('wc-temp').textContent=Math.round(curTemp)+'°';
+    document.getElementById('wc-desc').textContent=wxD(curSym);
+    document.getElementById('wc-icon').innerHTML=wxI(curSym);
+    document.getElementById('wc-hi').textContent=Math.round(todayHi)+'°';
+    document.getElementById('wc-lo').textContent=Math.round(todayLo)+'°';
+    document.getElementById('wc-rain').textContent=todayRain>0?todayRain.toFixed(1)+' mm':'0 mm';
+    document.getElementById('wc-wind').textContent=Math.round(curWind)+' m/s';
+    document.getElementById('wc-forecast').innerHTML=dayKeys.map(key=>{
+      const day=byDay[key];
+      const hi=Math.max(...day.temps);
+      const lo=Math.min(...day.temps);
+      const freq={};
+      day.syms.forEach(s=>{freq[s]=(freq[s]||0)+1;});
+      const sym=+Object.entries(freq).sort((a,b)=>b[1]-a[1])[0][0];
+      const dt=new Date(key+'T12:00:00');
+      return`<div class="fc-item"><div class="fc-day">${DAYS[dt.getDay()].toUpperCase()}</div><div class="fc-icon">${wxIs(sym,24)}</div><div class="fc-hi">${Math.round(hi)}°</div><div class="fc-lo">${Math.round(lo)}°</div></div>`;
+    }).join('');
+    renderHourly();
+    // Expand panel max-heights on tablet to accommodate more items
+    if(isTablet()){
+      document.getElementById('wc-panel-week').style.maxHeight='200px';
+      document.getElementById('wc-panel-day').style.maxHeight='200px';
+    }
+    document.getElementById('wc-loading').style.display='none';
+    document.getElementById('wc-content').style.display='block';
+  }catch(e){
+    document.getElementById('wc-loading').innerHTML='<span style="color:rgba(215,100,90,0.7);font-size:12px">Weather unavailable</span>';
+  }
+}
 
 /* ══ COMPUTER CONTROL ══ */
 const COMP_KEY='home_computer_url';
@@ -1002,7 +1041,6 @@ loadWeather();
 syncAllLights();
 loadComputerName();
 startComputerPing();
-updateAutoCountSub();
 loadSLDepartures();
 startSLRefresh();
 </script>
