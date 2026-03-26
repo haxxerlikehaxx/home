@@ -93,17 +93,12 @@ body.ipad-landscape .lights-grid{grid-column:2;grid-row:3 / 6;padding:0;margin-b
 body.ipad-landscape .computer-section-head{grid-column:1;grid-row:4;padding-left:0;padding-right:0;align-self:start;}
 body.ipad-landscape .computer-card{grid-column:1;grid-row:5;margin:0 0 16px;}
 
-/* ═══ TABLET LIGHTS: portrait — 2 cards fill the padded row edge-to-edge ═══ */
-/* The grid already uses --lights-cols:1fr 1fr 1fr 1fr but only 2 items exist,
-   so they'd each take 1fr of 4 — override to 2 cols for portrait so each card
-   spans half the container, edge-to-edge just like phone but wider */
 body.ipad-portrait .lights-grid{
   grid-template-columns: 1fr 1fr;
   padding: 0 20px;
   gap: 14px;
   margin-bottom: 12px;
 }
-/* Landscape lights grid already has no padding set via the grid override above */
 body.ipad-landscape .lights-grid{
   grid-template-columns: 1fr 1fr;
   gap: 16px;
@@ -145,8 +140,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .wc-dv{font-size:15px;font-weight:600;color:rgba(255,255,255,0.8);}
 .forecast{display:flex;margin-top:14px;overflow-x:auto;scrollbar-width:none;}
 .forecast::-webkit-scrollbar{display:none;}
-.fc-item{flex:1;min-width:48px;text-align:center;transition:transform .2s cubic-bezier(.34,1.56,.64,1),opacity .2s;}
-.fc-item:active{transform:scale(.88);}
+.fc-item{flex:1;min-width:48px;text-align:center;}
 .fc-day{font-size:9px;color:var(--t3);font-weight:700;letter-spacing:.9px;}
 .fc-icon{margin:5px 0;display:flex;justify-content:center;}
 .fc-hi{font-size:13px;font-weight:600;color:rgba(255,255,255,0.75);}
@@ -158,9 +152,20 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .wc-toggle{display:flex;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:3px;gap:2px;min-width:160px;}
 .wc-toggle-btn{flex:1;font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--t3);padding:5px 18px;border-radius:16px;cursor:pointer;transition:background .2s,color .2s;text-align:center;}
 .wc-toggle-btn.active{background:rgba(255,255,255,0.13);color:rgba(255,255,255,0.85);}
-.wc-panel{overflow:hidden;transition:max-height .38s cubic-bezier(.22,1,.36,1), opacity .3s ease;}
+
+/* Smooth panel transitions for weather */
+.wc-panel{
+  overflow:hidden;
+  transition:max-height .38s cubic-bezier(.22,1,.36,1), opacity .28s ease;
+}
+.wc-panel-inner{
+  transition:opacity .22s ease, transform .28s cubic-bezier(.22,1,.36,1);
+}
 .wc-panel.wc-hidden{max-height:0 !important;opacity:0;pointer-events:none;}
 .wc-panel.wc-visible{opacity:1;pointer-events:auto;}
+.wc-panel.wc-hidden .wc-panel-inner{opacity:0;transform:translateY(4px);}
+.wc-panel.wc-visible .wc-panel-inner{opacity:1;transform:translateY(0);}
+
 .hourly{display:flex;margin-top:14px;overflow-x:auto;scrollbar-width:none;}
 .hourly::-webkit-scrollbar{display:none;}
 .hr-item{flex:1;min-width:48px;text-align:center;}
@@ -168,18 +173,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .hr-icon{margin:5px 0;display:flex;justify-content:center;}
 .hr-temp{font-size:13px;font-weight:600;color:rgba(255,255,255,0.75);}
 .hr-rain{font-size:10px;color:rgba(100,170,220,0.7);font-weight:600;margin-top:1px;}
-/* Staggered animations for up to 10 items */
-.hr-item{animation:fcSlide .4s cubic-bezier(.22,1,.36,1) both;}
-.hr-item:nth-child(1){animation-delay:.18s;}
-.hr-item:nth-child(2){animation-delay:.22s;}
-.hr-item:nth-child(3){animation-delay:.26s;}
-.hr-item:nth-child(4){animation-delay:.30s;}
-.hr-item:nth-child(5){animation-delay:.34s;}
-.hr-item:nth-child(6){animation-delay:.38s;}
-.hr-item:nth-child(7){animation-delay:.42s;}
-.hr-item:nth-child(8){animation-delay:.46s;}
-.hr-item:nth-child(9){animation-delay:.50s;}
-.hr-item:nth-child(10){animation-delay:.54s;}
+
 @keyframes countUp{from{opacity:0;transform:translateY(8px) scale(.96);}to{opacity:1;transform:translateY(0) scale(1);}}
 .wc-temp-anim{animation:countUp .45s cubic-bezier(.22,1,.36,1) both .1s;}
 .wc-detail .wc-dv{animation:countUp .45s cubic-bezier(.22,1,.36,1) both;}
@@ -187,6 +181,8 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .wc-detail:nth-child(2) .wc-dv{animation-delay:.18s;}
 .wc-detail:nth-child(3) .wc-dv{animation-delay:.24s;}
 .wc-detail:nth-child(4) .wc-dv{animation-delay:.30s;}
+
+@keyframes fcSlide{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 .fc-item{animation:fcSlide .4s cubic-bezier(.22,1,.36,1) both;}
 .fc-item:nth-child(1){animation-delay:.18s;}
 .fc-item:nth-child(2){animation-delay:.22s;}
@@ -198,7 +194,6 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .fc-item:nth-child(8){animation-delay:.46s;}
 .fc-item:nth-child(9){animation-delay:.50s;}
 .fc-item:nth-child(10){animation-delay:.54s;}
-@keyframes fcSlide{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
 
 /* ══ SL DEPARTURE BOARD ══ */
 .sl-card{
@@ -253,7 +248,6 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   display:flex;align-items:center;gap:5px;
 }
 .sl-tab.active{background:rgba(255,255,255,0.09);color:var(--t1);}
-/* ── Neutral line badge — no blue ── */
 .sl-tab-badge{
   display:inline-flex;align-items:center;justify-content:center;
   min-width:18px;height:16px;border-radius:5px;
@@ -271,20 +265,23 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   padding:9px 18px;
   gap:11px;
   border-bottom:1px solid rgba(255,255,255,0.04);
-  transition:background .15s;
-  animation:depIn .35s cubic-bezier(.22,1,.36,1) both;
+  transition:background .15s, opacity .2s ease;
 }
 .sl-row:last-child{border-bottom:none;}
 .sl-row:active{background:rgba(255,255,255,0.03);}
-@keyframes depIn{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
-.sl-row:nth-child(1){animation-delay:.04s;}
-.sl-row:nth-child(2){animation-delay:.08s;}
-.sl-row:nth-child(3){animation-delay:.12s;}
-.sl-row:nth-child(4){animation-delay:.16s;}
-.sl-row:nth-child(5){animation-delay:.20s;}
-.sl-row:nth-child(6){animation-delay:.24s;}
 
-/* ── Neutral line number badge — no blue ── */
+/* Smooth fade-in only on first load — not on updates */
+.sl-row.sl-row-appear {
+  animation: depIn .35s cubic-bezier(.22,1,.36,1) both;
+}
+.sl-row.sl-row-appear:nth-child(1){animation-delay:.04s;}
+.sl-row.sl-row-appear:nth-child(2){animation-delay:.08s;}
+.sl-row.sl-row-appear:nth-child(3){animation-delay:.12s;}
+.sl-row.sl-row-appear:nth-child(4){animation-delay:.16s;}
+.sl-row.sl-row-appear:nth-child(5){animation-delay:.20s;}
+.sl-row.sl-row-appear:nth-child(6){animation-delay:.24s;}
+@keyframes depIn{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
+
 .sl-line-badge{
   width:34px;height:24px;border-radius:7px;
   background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.10);
@@ -298,6 +295,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   width:7px;height:7px;border-radius:50%;
   background:var(--green);
   border:1.5px solid rgba(28,30,34,0.9);
+  transition:background .4s ease;
 }
 .sl-realtime-dot.delayed{background:var(--orange);}
 .sl-realtime-dot.cancelled{background:var(--red);}
@@ -311,9 +309,32 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   font-size:13px;font-weight:700;color:var(--t1);
   white-space:nowrap;flex-shrink:0;
   font-variant-numeric:tabular-nums;
+  transition:color .3s ease;
 }
 .sl-time.soon{color:var(--green);}
 .sl-time.imminent{color:var(--orange);}
+
+/* SL body wrapper with crossfade for tab switching */
+.sl-body-wrap {
+  position:relative;
+  min-height:60px;
+}
+.sl-departures-pane {
+  transition: opacity .22s ease, transform .22s cubic-bezier(.22,1,.36,1);
+}
+.sl-departures-pane.sl-pane-exit {
+  opacity: 0;
+  transform: translateX(-6px);
+  pointer-events: none;
+}
+.sl-departures-pane.sl-pane-enter {
+  opacity: 0;
+  transform: translateX(6px);
+}
+.sl-departures-pane.sl-pane-active {
+  opacity: 1;
+  transform: translateX(0);
+}
 
 /* Loading / empty state */
 .sl-state{
@@ -327,6 +348,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   font-size:10px;color:var(--t3);font-weight:600;
   text-align:center;padding:6px 18px 14px;
   letter-spacing:.3px;
+  transition:opacity .3s ease;
 }
 
 /* Section */
@@ -496,15 +518,19 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
       </div>
       <div class="wc-toggle-row">
         <div class="wc-toggle">
-          <div class="wc-toggle-btn active" id="wc-btn-week" onclick="setWxView('week')">10 Days</div>
+          <div class="wc-toggle-btn active" id="wc-btn-week" onclick="setWxView('week')">Days</div>
           <div class="wc-toggle-btn" id="wc-btn-day" onclick="setWxView('day')">Today</div>
         </div>
       </div>
       <div class="wc-panel wc-visible" id="wc-panel-week" style="max-height:160px">
-        <div class="forecast" id="wc-forecast"></div>
+        <div class="wc-panel-inner">
+          <div class="forecast" id="wc-forecast"></div>
+        </div>
       </div>
       <div class="wc-panel wc-hidden" id="wc-panel-day" style="max-height:160px">
-        <div class="hourly" id="wc-hourly"></div>
+        <div class="wc-panel-inner">
+          <div class="hourly" id="wc-hourly"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -527,7 +553,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
     </div>
 
     <div class="sl-tabs" id="sl-tabs"></div>
-    <div id="sl-body">
+    <div class="sl-body-wrap" id="sl-body">
       <div class="sl-state">
         <div class="sl-spinner"></div>
         <span>Fetching departures…</span>
@@ -628,7 +654,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   </div>
 </div>
 
-<!-- Profile Panel — Automations row removed -->
+<!-- Profile Panel -->
 <div class="panel-overlay" id="about-panel" onclick="closePanel(this)">
   <div class="panel" onclick="event.stopPropagation()">
     <div class="panel-handle"></div><div class="panel-title">Profile</div>
@@ -746,12 +772,16 @@ function renderGrid(){document.getElementById('lightsGrid').innerHTML=LIGHTS.map
 function refreshCard(i){const l=LIGHTS[i],card=document.getElementById('lc-'+i);if(!card)return;card.className=`g light-card ${l.on?'on':'off'}`;card.querySelector('.sw').className=`sw ${l.on?'on':''}`;card.querySelector('.lc-status').textContent=l.on?'On':'Off';const p=document.getElementById('pct-'+i);if(p)p.textContent=l.bright+'%';const sl=card.querySelector('.lc-slider');if(sl)sl.value=l.bright;}
 function setStatus(text,sub,type='ok'){['about-status-text'].forEach(id=>{const el=document.getElementById(id);if(el&&type!=='ok')el.textContent=text;});['about-status-sub'].forEach(id=>{const el=document.getElementById(id);if(el&&type!=='ok')el.textContent=sub;});const col=type==='err'?'var(--red)':type==='warn'?'var(--orange)':'var(--green)';document.querySelectorAll('.pulse-dot').forEach(d=>{d.style.background=col;});}
 
-/* ══ SL DEPARTURES ══ */
+/* ══ SL DEPARTURES ══
+ * Smart diff-based update: on auto-refresh, updates individual row elements
+ * in place rather than destroying and recreating the DOM. Full re-render
+ * only happens on first load or tab switch (with crossfade). */
 let slDepartures = [];
 let slActiveTab = 0;
 let slGroups = [];
 let slRefreshing = false;
 let slRefreshInterval = null;
+let slInitialLoad = true; // true until first successful render
 
 function slBuildGroups(deps) {
   const seen = new Map();
@@ -788,6 +818,115 @@ function slTimeClass(dep) {
   return '';
 }
 
+/* Render only the time + dot elements in existing rows — no layout shift */
+function slUpdateRowsInPlace(g) {
+  const rows = document.querySelectorAll('#sl-body .sl-row');
+  if (!g || !g.deps.length || rows.length !== g.deps.length) return false;
+  g.deps.forEach((dep, i) => {
+    const row = rows[i];
+    if (!row) return;
+    // Update time
+    const timeEl = row.querySelector('.sl-time');
+    if (timeEl) {
+      const tc = slTimeClass(dep);
+      timeEl.textContent = slTimeDisplay(dep);
+      timeEl.className = 'sl-time' + (tc ? ' ' + tc : '');
+    }
+    // Update realtime dot
+    const dotEl = row.querySelector('.sl-realtime-dot');
+    if (dotEl) {
+      const delay = getDelayMinutes(dep);
+      dotEl.className = 'sl-realtime-dot' +
+        (dep.state === 'CANCELLED' ? ' cancelled' : delay >= 3 ? ' delayed' : '');
+    }
+    // Update delay label if it exists or needs to appear/disappear
+    const destEl = row.querySelector('.sl-dest');
+    if (destEl) {
+      const delay = getDelayMinutes(dep);
+      let delayEl = destEl.querySelector('.sl-dest-delay');
+      if (dep.state === 'CANCELLED') {
+        if (!delayEl || !delayEl.dataset.cancelled) {
+          if (delayEl) delayEl.remove();
+          const d = document.createElement('div');
+          d.className = 'sl-dest-delay';
+          d.dataset.cancelled = '1';
+          d.style.color = 'var(--red)';
+          d.innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Cancelled`;
+          destEl.appendChild(d);
+        }
+      } else if (delay >= 3) {
+        if (!delayEl || delayEl.dataset.cancelled) {
+          if (delayEl) delayEl.remove();
+          const d = document.createElement('div');
+          d.className = 'sl-dest-delay';
+          d.innerHTML = `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${delay} min late`;
+          destEl.appendChild(d);
+        } else if (delayEl) {
+          // Update delay minutes without replacing element
+          delayEl.lastChild.textContent = ` ${delay} min late`;
+        }
+      } else {
+        if (delayEl) delayEl.remove();
+      }
+    }
+  });
+  return true;
+}
+
+function buildRowHtml(dep, animate) {
+  const delay = getDelayMinutes(dep);
+  const dotClass = dep.state === 'CANCELLED' ? 'cancelled' : delay >= 3 ? 'delayed' : '';
+  const timeClass = slTimeClass(dep);
+  const delayHtml = delay >= 3
+    ? `<div class="sl-dest-delay"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${delay} min late</div>` : '';
+  const cancelHtml = dep.state === 'CANCELLED'
+    ? `<div class="sl-dest-delay" style="color:var(--red)" data-cancelled="1"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Cancelled</div>` : '';
+  return `<div class="sl-row${animate?' sl-row-appear':''}">
+    <div class="sl-line-badge">
+      ${dep.line.designation}
+      <div class="sl-realtime-dot ${dotClass}"></div>
+    </div>
+    <div class="sl-dest">
+      <div class="sl-dest-name">${dep.destination}</div>
+      ${delayHtml}${cancelHtml}
+    </div>
+    <div class="sl-time ${timeClass}">${slTimeDisplay(dep)}</div>
+  </div>`;
+}
+
+/* Crossfade pane for tab switching */
+function slRenderPaneWithFade(html, direction='right') {
+  const body = document.getElementById('sl-body');
+  // Remove old pane with exit animation
+  const old = body.querySelector('.sl-departures-pane');
+  if (old) {
+    old.classList.add('sl-pane-exit');
+    old.style.transform = direction === 'right' ? 'translateX(-8px)' : 'translateX(8px)';
+    setTimeout(() => { if (old.parentNode) old.parentNode.removeChild(old); }, 230);
+  }
+  // Create new pane entering from opposite side
+  const pane = document.createElement('div');
+  pane.className = 'sl-departures-pane sl-pane-enter';
+  pane.style.transform = direction === 'right' ? 'translateX(8px)' : 'translateX(-8px)';
+  pane.innerHTML = html;
+  body.appendChild(pane);
+  // Trigger enter animation on next frame
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      pane.classList.remove('sl-pane-enter');
+      pane.classList.add('sl-pane-active');
+      pane.style.transform = '';
+    });
+  });
+}
+
+function buildDeparturesHtml(g, animate) {
+  if (!g || !g.deps.length) {
+    return '<div class="sl-state"><span>No upcoming departures</span></div>';
+  }
+  return '<div class="sl-departures">' + g.deps.map(dep => buildRowHtml(dep, animate)).join('') + '</div>';
+}
+
 function renderSLTabs() {
   const el = document.getElementById('sl-tabs');
   if (!slGroups.length) { el.innerHTML = ''; return; }
@@ -799,52 +938,49 @@ function renderSLTabs() {
   `).join('');
 }
 
-function renderSLBody() {
+/* Full re-render with crossfade — used on first load and tab switch */
+function renderSLBodyFull(animate, direction) {
   const body = document.getElementById('sl-body');
   if (!slGroups.length) {
     body.innerHTML = '<div class="sl-state"><span>No departures found</span></div>';
     return;
   }
   const g = slGroups[slActiveTab] || slGroups[0];
-  if (!g || !g.deps.length) {
-    body.innerHTML = '<div class="sl-state"><span>No upcoming departures</span></div>';
-    return;
+  slRenderPaneWithFade(buildDeparturesHtml(g, animate), direction);
+}
+
+/* Smart update: try in-place first, fall back to crossfade only if structure changed */
+function renderSLBodySmart() {
+  if (!slGroups.length) return;
+  const g = slGroups[slActiveTab] || slGroups[0];
+  if (!g) return;
+  // Check if current DOM rows match — if so, update in place (no flash)
+  const body = document.getElementById('sl-body');
+  const pane = body.querySelector('.sl-departures-pane');
+  const rows = pane ? pane.querySelectorAll('.sl-row') : [];
+
+  if (pane && rows.length === (g.deps ? g.deps.length : 0) && rows.length > 0) {
+    // Structure unchanged — silently update values in place
+    slUpdateRowsInPlace(g);
+  } else {
+    // Structure changed (e.g. new bus arrived, one left) — crossfade
+    slRenderPaneWithFade(buildDeparturesHtml(g, false), 'none');
   }
-  body.innerHTML = '<div class="sl-departures">' + g.deps.map(dep => {
-    const delay = getDelayMinutes(dep);
-    const dotClass = dep.state === 'CANCELLED' ? 'cancelled' : delay >= 3 ? 'delayed' : '';
-    const timeClass = slTimeClass(dep);
-    const delayHtml = delay >= 3
-      ? `<div class="sl-dest-delay"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> ${delay} min late</div>` : '';
-    const cancelHtml = dep.state === 'CANCELLED'
-      ? `<div class="sl-dest-delay" style="color:var(--red)"><svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg> Cancelled</div>` : '';
-    return `
-      <div class="sl-row">
-        <div class="sl-line-badge">
-          ${dep.line.designation}
-          <div class="sl-realtime-dot ${dotClass}"></div>
-        </div>
-        <div class="sl-dest">
-          <div class="sl-dest-name">${dep.destination}</div>
-          ${delayHtml}${cancelHtml}
-        </div>
-        <div class="sl-time ${timeClass}">${slTimeDisplay(dep)}</div>
-      </div>`;
-  }).join('') + '</div>';
 }
 
 function setSLTab(i) {
+  const direction = i > slActiveTab ? 'right' : 'left';
   slActiveTab = i;
   soundClick();
   renderSLTabs();
-  renderSLBody();
+  renderSLBodyFull(false, direction);
 }
 
 async function loadSLDepartures() {
   if (slRefreshing) return;
   slRefreshing = true;
   const body = document.getElementById('sl-body');
-  if (!slDepartures.length) {
+  if (slInitialLoad) {
     body.innerHTML = '<div class="sl-state"><div class="sl-spinner"></div><span>Fetching departures…</span></div>';
   }
   try {
@@ -858,15 +994,32 @@ async function loadSLDepartures() {
       d.line.transport_mode === 'TRAM' ||
       d.line.transport_mode === 'TRAIN'
     );
+    const prevGroupCount = slGroups.length;
     slGroups = slBuildGroups(slDepartures);
     if (slActiveTab >= slGroups.length) slActiveTab = 0;
+
+    // Update tabs (only text changes, no layout disruption)
     renderSLTabs();
-    renderSLBody();
+
+    if (slInitialLoad) {
+      // First load: full render with entrance animations
+      renderSLBodyFull(true, 'right');
+      slInitialLoad = false;
+    } else if (prevGroupCount !== slGroups.length) {
+      // Tab count changed: crossfade
+      renderSLBodyFull(false, 'none');
+    } else {
+      // Auto-refresh: smart in-place update — no jumping
+      renderSLBodySmart();
+    }
+
     const now = new Date();
     document.getElementById('sl-updated').textContent =
       `Updated ${now.getHours().toString().padStart(2,'0')}:${now.getMinutes().toString().padStart(2,'0')}:${now.getSeconds().toString().padStart(2,'0')} · transport.integration.sl.se`;
   } catch(e) {
-    body.innerHTML = `<div class="sl-state"><span style="color:var(--red)">Could not load departures</span></div>`;
+    if (slInitialLoad) {
+      body.innerHTML = `<div class="sl-state"><span style="color:var(--red)">Could not load departures</span></div>`;
+    }
     document.getElementById('sl-updated').textContent = 'Failed to reach SL API';
   }
   slRefreshing = false;
@@ -880,7 +1033,7 @@ function triggerSLRefresh() {
     .catch(() => btn.classList.remove('spinning'));
 }
 
-// Auto-refresh departures every 20 seconds for live accuracy
+// Auto-refresh every 20 seconds — now visually silent
 function startSLRefresh() {
   if (slRefreshInterval) clearInterval(slRefreshInterval);
   slRefreshInterval = setInterval(loadSLDepartures, 20000);
@@ -911,25 +1064,31 @@ function wxI(s){return WX[smhiSymToKey(s)]||WX.cloud;}
 function wxIs(s,sz){return wxI(s).replace('width="58" height="58"',`width="${sz}" height="${sz}"`);}
 function wxD(s){const m={1:'Clear sky',2:'Nearly clear',3:'Variable cloudiness',4:'Half cloudy',5:'Cloudy',6:'Overcast',7:'Fog',8:'Light rain showers',9:'Moderate rain showers',10:'Heavy rain showers',11:'Thunderstorm',12:'Light sleet showers',13:'Moderate sleet showers',14:'Heavy sleet showers',15:'Light rain',16:'Moderate rain',17:'Heavy rain',18:'Thunder',19:'Light sleet',20:'Moderate sleet',21:'Heavy sleet',22:'Light snowfall',23:'Moderate snowfall',24:'Heavy snowfall',25:'Light snow showers',26:'Moderate snow showers',27:'Heavy snow showers'};return m[s]||'—';}
 const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
-function smhiVal(params,name){const p=params.find(x=>x.name===name);return p?p.values[0]:null;}
 let wxView='week';
 let wxSmhiSeries=null;
 
 function isTablet(){return document.body.classList.contains('ipad-portrait')||document.body.classList.contains('ipad-landscape');}
 
+/* Weather panel switch with smooth cross-fade */
 function setWxView(v){
   wxView=v;
   document.getElementById('wc-btn-week').classList.toggle('active',v==='week');
   document.getElementById('wc-btn-day').classList.toggle('active',v==='day');
   const weekPanel=document.getElementById('wc-panel-week');
   const dayPanel=document.getElementById('wc-panel-day');
+
+  // Hide current, show target — CSS handles the height + opacity transition
   if(v==='week'){
-    weekPanel.classList.remove('wc-hidden');weekPanel.classList.add('wc-visible');
-    dayPanel.classList.remove('wc-visible');dayPanel.classList.add('wc-hidden');
-  }else{
-    dayPanel.classList.remove('wc-hidden');dayPanel.classList.add('wc-visible');
-    weekPanel.classList.remove('wc-visible');weekPanel.classList.add('wc-hidden');
-    if(wxSmhiSeries)renderHourly();
+    dayPanel.classList.remove('wc-visible');
+    dayPanel.classList.add('wc-hidden');
+    weekPanel.classList.remove('wc-hidden');
+    weekPanel.classList.add('wc-visible');
+  } else {
+    weekPanel.classList.remove('wc-visible');
+    weekPanel.classList.add('wc-hidden');
+    dayPanel.classList.remove('wc-hidden');
+    dayPanel.classList.add('wc-visible');
+    if(wxSmhiSeries) renderHourly();
   }
 }
 
@@ -938,7 +1097,6 @@ function renderHourly(){
   if(!wxSmhiSeries){hourlyEl.innerHTML='';return;}
   const now=new Date();
   const hourCount = isTablet() ? 10 : 5;
-  // All entries from current hour onwards
   const upcoming=wxSmhiSeries.filter(entry=>{
     const t=new Date(entry.validTime);
     return t >= new Date(now.getFullYear(),now.getMonth(),now.getDate(),now.getHours(),0,0,0);
@@ -952,6 +1110,8 @@ function renderHourly(){
     return`<div class="hr-item"><div class="hr-time">${label}</div><div class="hr-icon">${wxIs(sym,22)}</div><div class="hr-temp">${temp}°</div><div class="hr-rain">${precip>0?precip.toFixed(1)+'mm':''}</div></div>`;
   }).join('');
 }
+
+function smhiVal(params,name){const p=params.find(x=>x.name===name);return p?p.values[0]:null;}
 
 async function loadWeather(){
   try{
@@ -974,7 +1134,8 @@ async function loadWeather(){
       byDay[key].syms.push(smhiVal(e.parameters,'Wsymb2'));
       byDay[key].precips.push(smhiVal(e.parameters,'pmean')||0);
     });
-    // Tablet shows 10 days, phone shows 5 — chosen at render time
+
+    // iPhone shows 5 days only; tablet shows 10 days
     const dayCount = isTablet() ? 10 : 5;
     const allDayKeys=Object.keys(byDay).sort();
     const dayKeys=allDayKeys.slice(0,dayCount);
@@ -1002,7 +1163,6 @@ async function loadWeather(){
       return`<div class="fc-item"><div class="fc-day">${DAYS[dt.getDay()].toUpperCase()}</div><div class="fc-icon">${wxIs(sym,24)}</div><div class="fc-hi">${Math.round(hi)}°</div><div class="fc-lo">${Math.round(lo)}°</div></div>`;
     }).join('');
     renderHourly();
-    // Expand panel max-heights on tablet to accommodate more items
     if(isTablet()){
       document.getElementById('wc-panel-week').style.maxHeight='200px';
       document.getElementById('wc-panel-day').style.maxHeight='200px';
