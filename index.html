@@ -1119,7 +1119,7 @@ async function confirmShutdown(){document.getElementById('confirm-overlay').clas
  */
 const SLEEP_TIMEOUT_MS    = 1 * 15 * 1000; // ← change to e.g. 30 * 1000 for quick testing
 const SLEEP_DAYTIME_START = 8;              // ← inclusive start hour for daytime mode
-const SLEEP_DAYTIME_END   = 22;             // ← exclusive end hour (22:00 triggers night)
+const SLEEP_DAYTIME_END   = 21;             // ← exclusive end hour (22:00 triggers night)
 
 /* Internal state */
 let sleepTimer      = null;
