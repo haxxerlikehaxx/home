@@ -496,7 +496,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
       </div>
       <div class="wc-toggle-row">
         <div class="wc-toggle">
-          <div class="wc-toggle-btn active" id="wc-btn-week" onclick="setWxView('week')">10 Days</div>
+          <div class="wc-toggle-btn active" id="wc-btn-week" onclick="setWxView('week')">Days</div>
           <div class="wc-toggle-btn" id="wc-btn-day" onclick="setWxView('day')">Today</div>
         </div>
       </div>
@@ -926,6 +926,7 @@ function setWxView(v){
   if(v==='week'){
     weekPanel.classList.remove('wc-hidden');weekPanel.classList.add('wc-visible');
     dayPanel.classList.remove('wc-visible');dayPanel.classList.add('wc-hidden');
+    if(wxAllDayKeys.length)renderForecast();
   }else{
     dayPanel.classList.remove('wc-hidden');dayPanel.classList.add('wc-visible');
     weekPanel.classList.remove('wc-visible');weekPanel.classList.add('wc-hidden');
@@ -933,84 +934,98 @@ function setWxView(v){
   }
 }
 
+// Stored day-bucket data so renderForecast() can re-render at any time
+let wxByDay = {};
+let wxAllDayKeys = [];
+
+function renderForecast(){
+  if(!wxAllDayKeys.length) return;
+  // Phone: 5 days, tablet: 10 days — evaluated at render time so mode switches work
+  const dayCount = isTablet() ? 10 : 5;
+  const dayKeys = wxAllDayKeys.slice(0, dayCount);
+  // Expand panel height to fit content on tablet (10 items need more room)
+  const panelH = isTablet() ? '220px' : '160px';
+  document.getElementById('wc-panel-week').style.maxHeight = panelH;
+  document.getElementById('wc-forecast').innerHTML = dayKeys.map(key => {
+    const day = wxByDay[key];
+    const hi = Math.max(...day.temps);
+    const lo = Math.min(...day.temps);
+    const freq = {};
+    day.syms.forEach(s => { freq[s] = (freq[s] || 0) + 1; });
+    const sym = +Object.entries(freq).sort((a,b) => b[1]-a[1])[0][0];
+    const dt = new Date(key + 'T12:00:00');
+    return `<div class="fc-item"><div class="fc-day">${DAYS[dt.getDay()].toUpperCase()}</div><div class="fc-icon">${wxIs(sym,24)}</div><div class="fc-hi">${Math.round(hi)}°</div><div class="fc-lo">${Math.round(lo)}°</div></div>`;
+  }).join('');
+}
+
 function renderHourly(){
-  const hourlyEl=document.getElementById('wc-hourly');
-  if(!wxSmhiSeries){hourlyEl.innerHTML='';return;}
-  const now=new Date();
+  const hourlyEl = document.getElementById('wc-hourly');
+  if(!wxSmhiSeries){ hourlyEl.innerHTML = ''; return; }
+  const now = new Date();
+  // Phone: 5 hours, tablet: 10 hours — evaluated at render time
   const hourCount = isTablet() ? 10 : 5;
-  // All entries from current hour onwards
-  const upcoming=wxSmhiSeries.filter(entry=>{
-    const t=new Date(entry.validTime);
-    return t >= new Date(now.getFullYear(),now.getMonth(),now.getDate(),now.getHours(),0,0,0);
-  }).slice(0,hourCount);
-  hourlyEl.innerHTML=upcoming.map(entry=>{
-    const t=new Date(entry.validTime);
-    const label=String(t.getHours()).padStart(2,'0')+':00';
-    const temp=Math.round(smhiVal(entry.parameters,'t'));
-    const sym=smhiVal(entry.parameters,'Wsymb2');
-    const precip=smhiVal(entry.parameters,'pmean')||0;
-    return`<div class="hr-item"><div class="hr-time">${label}</div><div class="hr-icon">${wxIs(sym,22)}</div><div class="hr-temp">${temp}°</div><div class="hr-rain">${precip>0?precip.toFixed(1)+'mm':''}</div></div>`;
+  const panelH = isTablet() ? '220px' : '160px';
+  document.getElementById('wc-panel-day').style.maxHeight = panelH;
+  const upcoming = wxSmhiSeries.filter(entry => {
+    const t = new Date(entry.validTime);
+    return t >= new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours(), 0, 0, 0);
+  }).slice(0, hourCount);
+  hourlyEl.innerHTML = upcoming.map(entry => {
+    const t = new Date(entry.validTime);
+    const label = String(t.getHours()).padStart(2,'0') + ':00';
+    const temp = Math.round(smhiVal(entry.parameters, 't'));
+    const sym = smhiVal(entry.parameters, 'Wsymb2');
+    const precip = smhiVal(entry.parameters, 'pmean') || 0;
+    return `<div class="hr-item"><div class="hr-time">${label}</div><div class="hr-icon">${wxIs(sym,22)}</div><div class="hr-temp">${temp}°</div><div class="hr-rain">${precip > 0 ? precip.toFixed(1) + 'mm' : ''}</div></div>`;
   }).join('');
 }
 
 async function loadWeather(){
   try{
-    const lat=59.38,lon=17.90,city='Spånga';
-    const url=`https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/${lon}/lat/${lat}/data.json`;
-    const d=await fetch(url).then(r=>r.json());
-    const series=d.timeSeries;
-    wxSmhiSeries=series;
-    const now=new Date();
-    const cur=series.reduce((best,e)=>{return Math.abs(new Date(e.validTime)-now)<Math.abs(new Date(best.validTime)-now)?e:best;},series[0]);
-    const curTemp=smhiVal(cur.parameters,'t');
-    const curSym=smhiVal(cur.parameters,'Wsymb2');
-    const curWind=smhiVal(cur.parameters,'ws');
-    const byDay={};
-    series.forEach(e=>{
-      const t=new Date(e.validTime);
-      const key=t.toLocaleDateString('sv-SE');
-      if(!byDay[key])byDay[key]={temps:[],syms:[],precips:[]};
-      byDay[key].temps.push(smhiVal(e.parameters,'t'));
-      byDay[key].syms.push(smhiVal(e.parameters,'Wsymb2'));
-      byDay[key].precips.push(smhiVal(e.parameters,'pmean')||0);
+    const lat=59.38, lon=17.90, city='Spånga';
+    const url = `https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/${lon}/lat/${lat}/data.json`;
+    const d = await fetch(url).then(r => r.json());
+    const series = d.timeSeries;
+    wxSmhiSeries = series;
+    const now = new Date();
+    const cur = series.reduce((best,e) => {
+      return Math.abs(new Date(e.validTime)-now) < Math.abs(new Date(best.validTime)-now) ? e : best;
+    }, series[0]);
+    const curTemp = smhiVal(cur.parameters, 't');
+    const curSym  = smhiVal(cur.parameters, 'Wsymb2');
+    const curWind = smhiVal(cur.parameters, 'ws');
+    // Build per-day buckets — store ALL available days (up to ~10) for dynamic slicing
+    wxByDay = {};
+    series.forEach(e => {
+      const t = new Date(e.validTime);
+      const key = t.toLocaleDateString('sv-SE');
+      if(!wxByDay[key]) wxByDay[key] = {temps:[], syms:[], precips:[]};
+      wxByDay[key].temps.push(smhiVal(e.parameters, 't'));
+      wxByDay[key].syms.push(smhiVal(e.parameters, 'Wsymb2'));
+      wxByDay[key].precips.push(smhiVal(e.parameters, 'pmean') || 0);
     });
-    // Tablet shows 10 days, phone shows 5 — chosen at render time
-    const dayCount = isTablet() ? 10 : 5;
-    const allDayKeys=Object.keys(byDay).sort();
-    const dayKeys=allDayKeys.slice(0,dayCount);
-    const todayKey=now.toLocaleDateString('sv-SE');
-    const todayData=byDay[todayKey]||byDay[dayKeys[0]];
-    const todayHi=Math.max(...todayData.temps);
-    const todayLo=Math.min(...todayData.temps);
-    const todayRain=todayData.precips.reduce((a,b)=>a+b,0);
-    document.getElementById('wc-city').textContent=city;
-    document.getElementById('wc-temp').textContent=Math.round(curTemp)+'°';
-    document.getElementById('wc-desc').textContent=wxD(curSym);
-    document.getElementById('wc-icon').innerHTML=wxI(curSym);
-    document.getElementById('wc-hi').textContent=Math.round(todayHi)+'°';
-    document.getElementById('wc-lo').textContent=Math.round(todayLo)+'°';
-    document.getElementById('wc-rain').textContent=todayRain>0?todayRain.toFixed(1)+' mm':'0 mm';
-    document.getElementById('wc-wind').textContent=Math.round(curWind)+' m/s';
-    document.getElementById('wc-forecast').innerHTML=dayKeys.map(key=>{
-      const day=byDay[key];
-      const hi=Math.max(...day.temps);
-      const lo=Math.min(...day.temps);
-      const freq={};
-      day.syms.forEach(s=>{freq[s]=(freq[s]||0)+1;});
-      const sym=+Object.entries(freq).sort((a,b)=>b[1]-a[1])[0][0];
-      const dt=new Date(key+'T12:00:00');
-      return`<div class="fc-item"><div class="fc-day">${DAYS[dt.getDay()].toUpperCase()}</div><div class="fc-icon">${wxIs(sym,24)}</div><div class="fc-hi">${Math.round(hi)}°</div><div class="fc-lo">${Math.round(lo)}°</div></div>`;
-    }).join('');
+    // Keep up to 10 sorted day keys (SMHI provides ~10 days of data)
+    wxAllDayKeys = Object.keys(wxByDay).sort().slice(0, 10);
+    const todayKey = now.toLocaleDateString('sv-SE');
+    const todayData = wxByDay[todayKey] || wxByDay[wxAllDayKeys[0]];
+    const todayHi  = Math.max(...todayData.temps);
+    const todayLo  = Math.min(...todayData.temps);
+    const todayRain = todayData.precips.reduce((a,b) => a+b, 0);
+    document.getElementById('wc-city').textContent = city;
+    document.getElementById('wc-temp').textContent = Math.round(curTemp) + '°';
+    document.getElementById('wc-desc').textContent = wxD(curSym);
+    document.getElementById('wc-icon').innerHTML   = wxI(curSym);
+    document.getElementById('wc-hi').textContent   = Math.round(todayHi) + '°';
+    document.getElementById('wc-lo').textContent   = Math.round(todayLo) + '°';
+    document.getElementById('wc-rain').textContent = todayRain > 0 ? todayRain.toFixed(1) + ' mm' : '0 mm';
+    document.getElementById('wc-wind').textContent = Math.round(curWind) + ' m/s';
+    // Render both panels — each reads isTablet() live so count is always correct
+    renderForecast();
     renderHourly();
-    // Expand panel max-heights on tablet to accommodate more items
-    if(isTablet()){
-      document.getElementById('wc-panel-week').style.maxHeight='200px';
-      document.getElementById('wc-panel-day').style.maxHeight='200px';
-    }
-    document.getElementById('wc-loading').style.display='none';
-    document.getElementById('wc-content').style.display='block';
-  }catch(e){
-    document.getElementById('wc-loading').innerHTML='<span style="color:rgba(215,100,90,0.7);font-size:12px">Weather unavailable</span>';
+    document.getElementById('wc-loading').style.display = 'none';
+    document.getElementById('wc-content').style.display = 'block';
+  } catch(e) {
+    document.getElementById('wc-loading').innerHTML = '<span style="color:rgba(215,100,90,0.7);font-size:12px">Weather unavailable</span>';
   }
 }
 
