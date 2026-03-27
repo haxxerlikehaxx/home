@@ -1117,7 +1117,7 @@ async function confirmShutdown(){document.getElementById('confirm-overlay').clas
  * backdrop-filter is never left to CSS interpolation (which snaps/jumps in
  * all major browsers). Each frame we write the exact numeric value ourselves.
  */
-const SLEEP_TIMEOUT_MS    = 1 * 15 * 1000; // ← change to e.g. 30 * 1000 for quick testing
+const SLEEP_TIMEOUT_MS    = 60 * 60 * 1000; // ← change to e.g. 30 * 1000 for quick testing
 const SLEEP_DAYTIME_START = 8;              // ← inclusive start hour for daytime mode
 const SLEEP_DAYTIME_END   = 21;             // ← exclusive end hour (22:00 triggers night)
 
