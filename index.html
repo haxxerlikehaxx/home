@@ -457,55 +457,39 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .computer-card{animation:fadeUp .4s ease both .15s;}
 
 /* ══ SLEEP MODE ══ */
+/*
+ * Architecture: three stacked layers inside #sleep-overlay, all driven by JS
+ * raf loops so there is zero CSS backdrop-filter interpolation (browsers cannot
+ * animate that property smoothly — it always snaps or jumps at keyframes).
+ *
+ *  #sleep-overlay        — pointer-events gate; never transitions itself
+ *  #sleep-blur-layer     — carries backdrop-filter; value is written every frame by JS
+ *  #sleep-dim-layer      — plain rgba black background; opacity driven by JS
+ *  #sleep-label          — "Wake me up?" text; opacity driven by JS
+ */
 #sleep-overlay{
   position:fixed;
   inset:0;
   z-index:9999;
   pointer-events:none;
-  opacity:0;
-  /* The overlay itself fades in, acting as the base dim layer */
-  transition:opacity 2.2s cubic-bezier(.4,0,.2,1);
+  /* no transition — JS owns everything */
 }
 #sleep-overlay.sleep-active{
   pointer-events:all;
-  opacity:1;
 }
-
-/* Daytime: blurred, dimmed, prominent text */
-#sleep-overlay.sleep-day{
-  background:rgba(0,0,0,0.62);
-}
-/* The blur is applied via a pseudo-element so it can be animated separately
-   from the opacity, creating the "edges toward center" gradual feel */
-#sleep-overlay.sleep-day::before{
-  content:'';
+#sleep-blur-layer{
   position:absolute;
   inset:0;
-  backdrop-filter:blur(0px) saturate(100%);
-  -webkit-backdrop-filter:blur(0px) saturate(100%);
-  transition:backdrop-filter 2.6s cubic-bezier(.4,0,.2,1), -webkit-backdrop-filter 2.6s cubic-bezier(.4,0,.2,1);
+  /* backdrop-filter written inline by JS each frame */
+  will-change:backdrop-filter;
 }
-#sleep-overlay.sleep-day.sleep-active::before{
-  backdrop-filter:blur(20px) saturate(130%);
-  -webkit-backdrop-filter:blur(20px) saturate(130%);
-}
-
-/* Nighttime: near-black, no blur */
-#sleep-overlay.sleep-night{
-  background:rgba(0,0,0,0);
-}
-#sleep-overlay.sleep-night.sleep-active{
-  background:rgba(0,0,0,0.97);
-}
-#sleep-overlay.sleep-night::before{
-  content:'';
+#sleep-dim-layer{
   position:absolute;
   inset:0;
-  backdrop-filter:none;
-  -webkit-backdrop-filter:none;
+  background:rgba(0,0,0,1);
+  opacity:0;
+  will-change:opacity;
 }
-
-/* Wake label — shared base */
 #sleep-label{
   position:absolute;
   top:50%;
@@ -514,17 +498,13 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   font-family:-apple-system,'SF Pro Display','Helvetica Neue',sans-serif;
   -webkit-font-smoothing:antialiased;
   opacity:0;
-  transition:opacity 1.4s cubic-bezier(.4,0,.2,1) 0.8s;
   pointer-events:none;
   user-select:none;
   -webkit-user-select:none;
   white-space:nowrap;
+  will-change:opacity;
 }
-#sleep-overlay.sleep-active #sleep-label{
-  opacity:1;
-}
-
-/* Daytime label style */
+/* Daytime label style — applied by JS adding class to #sleep-overlay */
 #sleep-overlay.sleep-day #sleep-label{
   font-size:22px;
   font-weight:600;
@@ -532,7 +512,6 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   letter-spacing:-0.4px;
   text-shadow:0 2px 24px rgba(0,0,0,0.5);
 }
-
 /* Nighttime label style */
 #sleep-overlay.sleep-night #sleep-label{
   font-size:12px;
@@ -650,8 +629,10 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 
 <div class="toast" id="toast"></div>
 
-<!-- Sleep overlay (injected via JS but declared here for clarity) -->
+<!-- Sleep overlay: blur-layer + dim-layer + label, all driven by JS rAF loops -->
 <div id="sleep-overlay">
+  <div id="sleep-blur-layer"></div>
+  <div id="sleep-dim-layer"></div>
   <div id="sleep-label">Wake me up?</div>
 </div>
 
@@ -1125,23 +1106,113 @@ async function confirmShutdown(){document.getElementById('confirm-overlay').clas
 /* ══ SLEEP MODE ══
  *
  * Configurable constants — edit these freely:
- *   SLEEP_TIMEOUT_MS  — inactivity duration before sleep triggers (default: 5 minutes)
+ *   SLEEP_TIMEOUT_MS    — inactivity duration before sleep triggers (default: 5 minutes)
  *   SLEEP_DAYTIME_START — hour (0–23) when daytime mode begins, inclusive (default: 8 = 08:00)
  *   SLEEP_DAYTIME_END   — hour (0–23) when daytime mode ends, exclusive (default: 22 = 22:00)
  *
- * Daytime  (08:00–21:59): dimmed + blurred overlay, prominent "Wake me up?" label
- * Nighttime (22:00–07:59): near-black overlay, no blur, small subtle label
+ * Daytime  (08:00–21:59): gradual blur + dim overlay, prominent "Wake me up?" label
+ * Nighttime (22:00–07:59): near-black fade only, no blur, small subtle label
+ *
+ * All animation is driven frame-by-frame via requestAnimationFrame so that
+ * backdrop-filter is never left to CSS interpolation (which snaps/jumps in
+ * all major browsers). Each frame we write the exact numeric value ourselves.
  */
-const SLEEP_TIMEOUT_MS    = 1 * 30 * 1000; // ← change to e.g. 30 * 1000 for 30-second testing
+const SLEEP_TIMEOUT_MS    = 1 * 15 * 1000; // ← change to e.g. 30 * 1000 for quick testing
 const SLEEP_DAYTIME_START = 8;              // ← inclusive start hour for daytime mode
-const SLEEP_DAYTIME_END   = 22;             // ← exclusive end hour  (22 = 22:00 triggers night)
+const SLEEP_DAYTIME_END   = 22;             // ← exclusive end hour (22:00 triggers night)
 
-let sleepTimer  = null;
-let sleepActive = false;
+/* Internal state */
+let sleepTimer      = null;
+let sleepActive     = false;
+let sleepRafId      = null;  // active rAF handle so we can cancel mid-animation
+let sleepAnimStart  = null;  // timestamp when the current animation began
+let sleepAnimDir    = 0;     // +1 = entering sleep, -1 = waking up
+let sleepCurrentDim = 0;     // live dim opacity  [0..1]
+let sleepCurrentBlur= 0;     // live blur px value [0..TARGET]
+
+/* Per-mode targets */
+const SLEEP_DIM_DAY   = 0.62;  // dim layer opacity for daytime
+const SLEEP_DIM_NIGHT = 0.97;  // dim layer opacity for nighttime
+const SLEEP_BLUR_DAY  = 20;    // blur px for daytime
+const SLEEP_BLUR_NIGHT= 0;     // no blur at night
+const SLEEP_ANIM_MS   = 2200;  // total enter/exit animation duration (ms)
+const SLEEP_LABEL_DELAY_MS = 900; // label starts fading in after this many ms into enter
 
 function sleepIsDaytime() {
   const h = new Date().getHours();
   return h >= SLEEP_DAYTIME_START && h < SLEEP_DAYTIME_END;
+}
+
+/* Ease function: smooth cubic ease-in-out */
+function sleepEase(t) {
+  return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+}
+
+/* Write the current animated values to the DOM */
+function sleepApplyFrame(dimTarget, blurTarget, labelProgress) {
+  const blurLayer = document.getElementById('sleep-blur-layer');
+  const dimLayer  = document.getElementById('sleep-dim-layer');
+  const label     = document.getElementById('sleep-label');
+  if (!blurLayer || !dimLayer || !label) return;
+
+  dimLayer.style.opacity = sleepCurrentDim.toFixed(4);
+
+  if (blurTarget > 0) {
+    const bv = sleepCurrentBlur.toFixed(3);
+    blurLayer.style.backdropFilter         = `blur(${bv}px) saturate(130%)`;
+    blurLayer.style.webkitBackdropFilter   = `blur(${bv}px) saturate(130%)`;
+  } else {
+    blurLayer.style.backdropFilter         = 'none';
+    blurLayer.style.webkitBackdropFilter   = 'none';
+  }
+
+  label.style.opacity = Math.max(0, Math.min(1, labelProgress)).toFixed(4);
+}
+
+/* rAF loop — handles both enter (+1) and wake (-1) directions */
+function sleepAnimTick(now) {
+  if (!sleepAnimStart) sleepAnimStart = now;
+  const elapsed = now - sleepAnimStart;
+  const rawT    = Math.min(elapsed / SLEEP_ANIM_MS, 1);
+  const easedT  = sleepEase(rawT);
+
+  const overlay = document.getElementById('sleep-overlay');
+  const daytime = overlay && overlay.classList.contains('sleep-day');
+  const dimTarget  = daytime ? SLEEP_DIM_DAY  : SLEEP_DIM_NIGHT;
+  const blurTarget = daytime ? SLEEP_BLUR_DAY : SLEEP_BLUR_NIGHT;
+
+  if (sleepAnimDir === 1) {
+    /* Entering sleep: ramp dim and blur up */
+    sleepCurrentDim  = easedT * dimTarget;
+    sleepCurrentBlur = easedT * blurTarget;
+    /* Label fades in after SLEEP_LABEL_DELAY_MS has elapsed */
+    const labelElapsed = Math.max(0, elapsed - SLEEP_LABEL_DELAY_MS);
+    const labelT = Math.min(labelElapsed / (SLEEP_ANIM_MS - SLEEP_LABEL_DELAY_MS), 1);
+    sleepApplyFrame(dimTarget, blurTarget, sleepEase(labelT));
+  } else {
+    /* Waking: ramp dim and blur down, label fades out immediately */
+    sleepCurrentDim  = (1 - easedT) * dimTarget;
+    sleepCurrentBlur = (1 - easedT) * blurTarget;
+    const labelT = Math.min(elapsed / (SLEEP_ANIM_MS * 0.35), 1); // label exits fast
+    sleepApplyFrame(dimTarget, blurTarget, 1 - sleepEase(labelT));
+  }
+
+  if (rawT < 1) {
+    sleepRafId = requestAnimationFrame(sleepAnimTick);
+  } else {
+    /* Animation complete */
+    sleepRafId = null;
+    if (sleepAnimDir === -1) {
+      /* Fully woken — clean up classes and reset values */
+      sleepCurrentDim  = 0;
+      sleepCurrentBlur = 0;
+      sleepApplyFrame(0, 0, 0);
+      const ov = document.getElementById('sleep-overlay');
+      if (ov) {
+        ov.classList.remove('sleep-active', 'sleep-day', 'sleep-night');
+      }
+    }
+  }
 }
 
 function enterSleep() {
@@ -1151,53 +1222,41 @@ function enterSleep() {
   const overlay = document.getElementById('sleep-overlay');
   if (!overlay) return;
 
-  // Remove any previous mode class before applying the current one
   overlay.classList.remove('sleep-day', 'sleep-night');
+  overlay.classList.add(sleepIsDaytime() ? 'sleep-day' : 'sleep-night');
+  overlay.classList.add('sleep-active');
 
-  if (sleepIsDaytime()) {
-    overlay.classList.add('sleep-day');
-  } else {
-    overlay.classList.add('sleep-night');
-  }
-
-  // Allow the browser to paint the base state (opacity:0, correct mode class)
-  // before adding sleep-active so the CSS transition fires properly
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      overlay.classList.add('sleep-active');
-    });
-  });
+  /* Cancel any in-progress wake animation and start enter from current values */
+  if (sleepRafId) { cancelAnimationFrame(sleepRafId); sleepRafId = null; }
+  sleepAnimDir   = 1;
+  sleepAnimStart = null;
+  sleepRafId     = requestAnimationFrame(sleepAnimTick);
 }
 
 function wakeFromSleep() {
   if (!sleepActive) return;
   sleepActive = false;
 
+  /* Cancel any in-progress enter animation and start wake from current values */
+  if (sleepRafId) { cancelAnimationFrame(sleepRafId); sleepRafId = null; }
+
   const overlay = document.getElementById('sleep-overlay');
-  if (!overlay) return;
+  if (overlay) overlay.classList.remove('sleep-active');
 
-  overlay.classList.remove('sleep-active');
+  sleepAnimDir   = -1;
+  sleepAnimStart = null;
+  sleepRafId     = requestAnimationFrame(sleepAnimTick);
 
-  // Clean up mode classes after the fade-out transition completes
-  // (2.2s matches the CSS opacity transition duration)
-  setTimeout(() => {
-    if (!sleepActive) {
-      overlay.classList.remove('sleep-day', 'sleep-night');
-    }
-  }, 2400);
-
-  // Restart the inactivity timer immediately after waking
   resetSleepTimer();
 }
 
 function resetSleepTimer() {
-  // Do not restart the countdown while sleep is still visually fading in/out
   if (sleepActive) return;
   clearTimeout(sleepTimer);
   sleepTimer = setTimeout(enterSleep, SLEEP_TIMEOUT_MS);
 }
 
-// Wake on any meaningful pointer or keyboard interaction
+/* Attach interaction listeners — capture phase so overlay doesn't swallow them */
 (function attachSleepListeners() {
   const WAKE_EVENTS = ['pointerdown', 'pointermove', 'keydown', 'touchstart', 'scroll', 'wheel', 'click'];
   WAKE_EVENTS.forEach(evt => {
