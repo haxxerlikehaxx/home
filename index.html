@@ -95,17 +95,12 @@ body.ipad-landscape .lights-grid{grid-column:2;grid-row:3 / 6;padding:0;margin-b
 body.ipad-landscape .computer-section-head{grid-column:1;grid-row:4;padding-left:0;padding-right:0;align-self:start;}
 body.ipad-landscape .computer-card{grid-column:1;grid-row:5;margin:0 0 16px;}
 
-/* ═══ TABLET LIGHTS: portrait — 2 cards fill the padded row edge-to-edge ═══ */
-/* The grid already uses --lights-cols:1fr 1fr 1fr 1fr but only 2 items exist,
-   so they'd each take 1fr of 4 — override to 2 cols for portrait so each card
-   spans half the container, edge-to-edge just like phone but wider */
 body.ipad-portrait .lights-grid{
   grid-template-columns: 1fr 1fr;
   padding: 0 20px;
   gap: 14px;
   margin-bottom: 12px;
 }
-/* Landscape lights grid already has no padding set via the grid override above */
 body.ipad-landscape .lights-grid{
   grid-template-columns: 1fr 1fr;
   gap: 16px;
@@ -170,7 +165,6 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .hr-icon{margin:5px 0;display:flex;justify-content:center;}
 .hr-temp{font-size:13px;font-weight:600;color:rgba(255,255,255,0.75);}
 .hr-rain{font-size:10px;color:rgba(100,170,220,0.7);font-weight:600;margin-top:1px;}
-/* Staggered animations for up to 10 items */
 .hr-item{animation:fcSlide .4s cubic-bezier(.22,1,.36,1) both;}
 .hr-item:nth-child(1){animation-delay:.18s;}
 .hr-item:nth-child(2){animation-delay:.22s;}
@@ -234,7 +228,6 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .sl-refresh-btn:active{transform:scale(.82);}
 .sl-refresh-btn.spinning svg{animation:spinIcon .7s linear infinite;}
 
-/* Direction tabs */
 .sl-tabs{
   display:flex;gap:0;
   padding:10px 14px 0;
@@ -255,7 +248,6 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   display:flex;align-items:center;gap:5px;
 }
 .sl-tab.active{background:rgba(255,255,255,0.09);color:var(--t1);}
-/* ── Neutral line badge — no blue ── */
 .sl-tab-badge{
   display:inline-flex;align-items:center;justify-content:center;
   min-width:18px;height:16px;border-radius:5px;
@@ -266,7 +258,6 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 }
 .sl-tab.active .sl-tab-badge{background:rgba(255,255,255,0.16);color:rgba(255,255,255,0.88);}
 
-/* Departure rows */
 .sl-departures{padding:8px 0 4px;}
 .sl-row{
   display:flex;align-items:center;
@@ -286,7 +277,6 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .sl-row:nth-child(5){animation-delay:.20s;}
 .sl-row:nth-child(6){animation-delay:.24s;}
 
-/* ── Neutral line number badge — no blue ── */
 .sl-line-badge{
   width:34px;height:24px;border-radius:7px;
   background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.10);
@@ -317,7 +307,6 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 .sl-time.soon{color:var(--green);}
 .sl-time.imminent{color:var(--orange);}
 
-/* Loading / empty state */
 .sl-state{
   padding:20px;text-align:center;
   color:var(--t2);font-size:13px;
@@ -466,6 +455,92 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 @keyframes rpl{to{transform:scale(4);opacity:0}}
 .section-head{animation:fadeUp .4s ease both;}
 .computer-card{animation:fadeUp .4s ease both .15s;}
+
+/* ══ SLEEP MODE ══ */
+#sleep-overlay{
+  position:fixed;
+  inset:0;
+  z-index:9999;
+  pointer-events:none;
+  opacity:0;
+  /* The overlay itself fades in, acting as the base dim layer */
+  transition:opacity 2.2s cubic-bezier(.4,0,.2,1);
+}
+#sleep-overlay.sleep-active{
+  pointer-events:all;
+  opacity:1;
+}
+
+/* Daytime: blurred, dimmed, prominent text */
+#sleep-overlay.sleep-day{
+  background:rgba(0,0,0,0.62);
+}
+/* The blur is applied via a pseudo-element so it can be animated separately
+   from the opacity, creating the "edges toward center" gradual feel */
+#sleep-overlay.sleep-day::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  backdrop-filter:blur(0px) saturate(100%);
+  -webkit-backdrop-filter:blur(0px) saturate(100%);
+  transition:backdrop-filter 2.6s cubic-bezier(.4,0,.2,1), -webkit-backdrop-filter 2.6s cubic-bezier(.4,0,.2,1);
+}
+#sleep-overlay.sleep-day.sleep-active::before{
+  backdrop-filter:blur(20px) saturate(130%);
+  -webkit-backdrop-filter:blur(20px) saturate(130%);
+}
+
+/* Nighttime: near-black, no blur */
+#sleep-overlay.sleep-night{
+  background:rgba(0,0,0,0);
+}
+#sleep-overlay.sleep-night.sleep-active{
+  background:rgba(0,0,0,0.97);
+}
+#sleep-overlay.sleep-night::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  backdrop-filter:none;
+  -webkit-backdrop-filter:none;
+}
+
+/* Wake label — shared base */
+#sleep-label{
+  position:absolute;
+  top:50%;
+  left:50%;
+  transform:translate(-50%,-50%);
+  font-family:-apple-system,'SF Pro Display','Helvetica Neue',sans-serif;
+  -webkit-font-smoothing:antialiased;
+  opacity:0;
+  transition:opacity 1.4s cubic-bezier(.4,0,.2,1) 0.8s;
+  pointer-events:none;
+  user-select:none;
+  -webkit-user-select:none;
+  white-space:nowrap;
+}
+#sleep-overlay.sleep-active #sleep-label{
+  opacity:1;
+}
+
+/* Daytime label style */
+#sleep-overlay.sleep-day #sleep-label{
+  font-size:22px;
+  font-weight:600;
+  color:rgba(255,255,255,0.92);
+  letter-spacing:-0.4px;
+  text-shadow:0 2px 24px rgba(0,0,0,0.5);
+}
+
+/* Nighttime label style */
+#sleep-overlay.sleep-night #sleep-label{
+  font-size:12px;
+  font-weight:500;
+  color:rgba(255,255,255,0.22);
+  letter-spacing:0.6px;
+  text-shadow:none;
+}
 </style>
 </head>
 <body>
@@ -575,6 +650,11 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
 
 <div class="toast" id="toast"></div>
 
+<!-- Sleep overlay (injected via JS but declared here for clarity) -->
+<div id="sleep-overlay">
+  <div id="sleep-label">Wake me up?</div>
+</div>
+
 <!-- Settings Panel -->
 <div class="panel-overlay" id="config-panel" onclick="closePanel(this)">
   <div class="panel" onclick="event.stopPropagation()">
@@ -630,7 +710,7 @@ body{background:var(--bg);color:var(--t1);overflow-x:hidden;overscroll-behavior:
   </div>
 </div>
 
-<!-- Profile Panel — Automations row removed -->
+<!-- Profile Panel -->
 <div class="panel-overlay" id="about-panel" onclick="closePanel(this)">
   <div class="panel" onclick="event.stopPropagation()">
     <div class="panel-handle"></div><div class="panel-title">Profile</div>
@@ -762,7 +842,7 @@ function slBuildGroups(deps) {
     if (!seen.has(key)) seen.set(key, {line: d.line.designation, dest: d.destination, deps: []});
     seen.get(key).deps.push(d);
   });
-  const groups = Array.from(seen.values()).sort((a,b)=>{
+  const groups = Array.from(seen.values()).sort((a,b) => {
     const la = parseInt(a.line)||0, lb = parseInt(b.line)||0;
     if(la !== lb) return la - lb;
     return a.dest.localeCompare(b.dest,'sv');
@@ -882,7 +962,6 @@ function triggerSLRefresh() {
     .catch(() => btn.classList.remove('spinning'));
 }
 
-// Auto-refresh departures every 20 seconds for live accuracy
 function startSLRefresh() {
   if (slRefreshInterval) clearInterval(slRefreshInterval);
   slRefreshInterval = setInterval(loadSLDepartures, 20000);
@@ -936,16 +1015,13 @@ function setWxView(v){
   }
 }
 
-// Stored day-bucket data so renderForecast() can re-render at any time
 let wxByDay = {};
 let wxAllDayKeys = [];
 
 function renderForecast(){
   if(!wxAllDayKeys.length) return;
-  // Phone: 5 days, tablet: 10 days — evaluated at render time so mode switches work
   const dayCount = isTablet() ? 10 : 5;
   const dayKeys = wxAllDayKeys.slice(0, dayCount);
-  // Expand panel height to fit content on tablet (10 items need more room)
   const panelH = isTablet() ? '220px' : '160px';
   document.getElementById('wc-panel-week').style.maxHeight = panelH;
   document.getElementById('wc-forecast').innerHTML = dayKeys.map(key => {
@@ -964,7 +1040,6 @@ function renderHourly(){
   const hourlyEl = document.getElementById('wc-hourly');
   if(!wxSmhiSeries){ hourlyEl.innerHTML = ''; return; }
   const now = new Date();
-  // Phone: 5 hours, tablet: 10 hours — evaluated at render time
   const hourCount = isTablet() ? 10 : 5;
   const panelH = isTablet() ? '220px' : '160px';
   document.getElementById('wc-panel-day').style.maxHeight = panelH;
@@ -996,7 +1071,6 @@ async function loadWeather(){
     const curTemp = smhiVal(cur.parameters, 't');
     const curSym  = smhiVal(cur.parameters, 'Wsymb2');
     const curWind = smhiVal(cur.parameters, 'ws');
-    // Build per-day buckets — store ALL available days (up to ~10) for dynamic slicing
     wxByDay = {};
     series.forEach(e => {
       const t = new Date(e.validTime);
@@ -1006,7 +1080,6 @@ async function loadWeather(){
       wxByDay[key].syms.push(smhiVal(e.parameters, 'Wsymb2'));
       wxByDay[key].precips.push(smhiVal(e.parameters, 'pmean') || 0);
     });
-    // Keep up to 10 sorted day keys (SMHI provides ~10 days of data)
     wxAllDayKeys = Object.keys(wxByDay).sort().slice(0, 10);
     const todayKey = now.toLocaleDateString('sv-SE');
     const todayData = wxByDay[todayKey] || wxByDay[wxAllDayKeys[0]];
@@ -1021,7 +1094,6 @@ async function loadWeather(){
     document.getElementById('wc-lo').textContent   = Math.round(todayLo) + '°';
     document.getElementById('wc-rain').textContent = todayRain > 0 ? todayRain.toFixed(1) + ' mm' : '0 mm';
     document.getElementById('wc-wind').textContent = Math.round(curWind) + ' m/s';
-    // Render both panels — each reads isTablet() live so count is always correct
     renderForecast();
     renderHourly();
     document.getElementById('wc-loading').style.display = 'none';
@@ -1050,6 +1122,95 @@ function startHold(e){if(e)e.preventDefault();holdStart=Date.now();const btn=doc
 function cancelHold(){clearInterval(holdInterval);holdInterval=null;holdStart=null;const btn=document.getElementById('hold-btn');if(btn)btn.classList.remove('holding');const ring=document.getElementById('hold-ring-fill');if(ring){ring.style.transition='stroke-dashoffset .35s ease';const svg=document.getElementById('hold-ring-svg');if(svg){const w=svg.parentElement.offsetWidth;const h=svg.parentElement.offsetHeight;const r2=13;const perimeter=2*(w-2)+2*(h-2)-8*r2+2*Math.PI*r2;ring.style.strokeDashoffset=perimeter;}setTimeout(()=>{ring.style.transition='stroke-dashoffset .05s linear';},400);}}
 async function confirmShutdown(){document.getElementById('confirm-overlay').classList.remove('open');soundOff();const url=getComputerUrl();if(!url)return;try{await fetch(url+'/shutdown',{signal:AbortSignal.timeout(3000)});showToast('Shutting down…');setComputerState(false);clearInterval(compPingTimer);compPingTimer=setInterval(pingComputer,15000);}catch(e){showToast('Shutdown sent');setComputerState(false);}}
 
+/* ══ SLEEP MODE ══
+ *
+ * Configurable constants — edit these freely:
+ *   SLEEP_TIMEOUT_MS  — inactivity duration before sleep triggers (default: 5 minutes)
+ *   SLEEP_DAYTIME_START — hour (0–23) when daytime mode begins, inclusive (default: 8 = 08:00)
+ *   SLEEP_DAYTIME_END   — hour (0–23) when daytime mode ends, exclusive (default: 22 = 22:00)
+ *
+ * Daytime  (08:00–21:59): dimmed + blurred overlay, prominent "Wake me up?" label
+ * Nighttime (22:00–07:59): near-black overlay, no blur, small subtle label
+ */
+const SLEEP_TIMEOUT_MS    = 1 * 30 * 1000; // ← change to e.g. 30 * 1000 for 30-second testing
+const SLEEP_DAYTIME_START = 8;              // ← inclusive start hour for daytime mode
+const SLEEP_DAYTIME_END   = 22;             // ← exclusive end hour  (22 = 22:00 triggers night)
+
+let sleepTimer  = null;
+let sleepActive = false;
+
+function sleepIsDaytime() {
+  const h = new Date().getHours();
+  return h >= SLEEP_DAYTIME_START && h < SLEEP_DAYTIME_END;
+}
+
+function enterSleep() {
+  if (sleepActive) return;
+  sleepActive = true;
+
+  const overlay = document.getElementById('sleep-overlay');
+  if (!overlay) return;
+
+  // Remove any previous mode class before applying the current one
+  overlay.classList.remove('sleep-day', 'sleep-night');
+
+  if (sleepIsDaytime()) {
+    overlay.classList.add('sleep-day');
+  } else {
+    overlay.classList.add('sleep-night');
+  }
+
+  // Allow the browser to paint the base state (opacity:0, correct mode class)
+  // before adding sleep-active so the CSS transition fires properly
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      overlay.classList.add('sleep-active');
+    });
+  });
+}
+
+function wakeFromSleep() {
+  if (!sleepActive) return;
+  sleepActive = false;
+
+  const overlay = document.getElementById('sleep-overlay');
+  if (!overlay) return;
+
+  overlay.classList.remove('sleep-active');
+
+  // Clean up mode classes after the fade-out transition completes
+  // (2.2s matches the CSS opacity transition duration)
+  setTimeout(() => {
+    if (!sleepActive) {
+      overlay.classList.remove('sleep-day', 'sleep-night');
+    }
+  }, 2400);
+
+  // Restart the inactivity timer immediately after waking
+  resetSleepTimer();
+}
+
+function resetSleepTimer() {
+  // Do not restart the countdown while sleep is still visually fading in/out
+  if (sleepActive) return;
+  clearTimeout(sleepTimer);
+  sleepTimer = setTimeout(enterSleep, SLEEP_TIMEOUT_MS);
+}
+
+// Wake on any meaningful pointer or keyboard interaction
+(function attachSleepListeners() {
+  const WAKE_EVENTS = ['pointerdown', 'pointermove', 'keydown', 'touchstart', 'scroll', 'wheel', 'click'];
+  WAKE_EVENTS.forEach(evt => {
+    document.addEventListener(evt, () => {
+      if (sleepActive) {
+        wakeFromSleep();
+      } else {
+        resetSleepTimer();
+      }
+    }, { passive: true, capture: true });
+  });
+})();
+
 /* ══ BOOT ══ */
 loadSavedMode();
 applyMode(currentMode);
@@ -1060,6 +1221,8 @@ loadComputerName();
 startComputerPing();
 loadSLDepartures();
 startSLRefresh();
+// Kick off the inactivity timer after everything is initialised
+resetSleepTimer();
 </script>
 </body>
 </html>
